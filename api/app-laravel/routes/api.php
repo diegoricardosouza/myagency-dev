@@ -38,4 +38,4 @@ Route::prefix('v1')->group(function() {
     // Route::post('/users/{id}', [UserController::class, 'update']);
 });
 
-Route::get('/', fn () => response()->json(['message' => 'ok']));
+Route::get('/', fn () => response()->json(['message' => 'ok myagency-dev']));

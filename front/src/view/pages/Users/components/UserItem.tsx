@@ -6,34 +6,22 @@ import { Link } from "react-router-dom"
 
 interface UserItemProps {
   id: string;
-  company: string;
+  corporate_name: string;
   email: string;
   responsible: string;
-  logo: string;
   level: string;
-  credits: string | number;
   deleteItem(id: string): void;
 }
 
-export function UserItem({ id, company, email, responsible, logo, level, credits, deleteItem }: UserItemProps) {
+export function UserItem({ id, corporate_name, email, responsible, level, deleteItem }: UserItemProps) {
   return (
     <>
       <TableRow>
         <TableCell className="hidden sm:table-cell">
           <div className="flex items-center gap-4">
-            {logo && (
-              <img
-                alt="Product image"
-                className="aspect-square rounded-md object-contain"
-                height="64"
-                src={logo}
-                width="64"
-              />
-            )}
-
             <div className="grid gap-1">
               <p className="text-sm font-medium leading-none">
-                {company}
+                {corporate_name}
               </p>
               <p className="text-sm text-muted-foreground">
                 {email}
@@ -44,9 +32,6 @@ export function UserItem({ id, company, email, responsible, logo, level, credits
 
         <TableCell className="font-medium">
           {responsible}
-        </TableCell>
-        <TableCell className="font-medium">
-          {credits} Crédito(s)
         </TableCell>
         <TableCell>
           <Badge variant="outline">{level}</Badge>

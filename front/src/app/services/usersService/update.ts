@@ -2,14 +2,22 @@ import { httpClient } from "../httpClient";
 
 export interface UpdateUserParams {
   id: string;
-  name: string;
-  company: string;
+  corporate_name: string;
+  fantasy_name: string;
+  cnpj: string;
   responsible: string;
-  email: string;
   level: string;
-  whatsapp: string;
   cpf: string;
-  logo?: File | null | string;
+  zipcode: string;
+  address: string;
+  city: string;
+  neighborhood: string;
+  state: string;
+  number: string;
+  phone: string;
+  cellphone: string;
+  site: string;
+  email: string;
   password?: string | null;
 }
 

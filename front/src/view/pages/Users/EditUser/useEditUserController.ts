@@ -1,4 +1,3 @@
-import { ACCEPTED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/app/config/constants";
 import { useAuth } from "@/app/hooks/useAuth";
 import { usersService } from "@/app/services/usersService";
 import { UpdateUserParams } from "@/app/services/usersService/update";
@@ -12,17 +11,21 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string()
-    .min(1, 'Nome é obrigatório'),
-  company: z.string()
-    .min(1, 'Empresa é obrigatório'),
+  corporate_name: z.string()
+    .min(1, 'Razão Social é obrigatório'),
+  fantasy_name: z.string()
+    .min(1, 'Nome Fantasia é obrigatório'),
+  cnpj: z.string()
+    .min(1, 'CNPJ é obrigatório'),
   responsible: z.string()
     .min(1, 'Responsável é obrigatório'),
   email: z.string()
     .min(1, 'E-mail é obrigatório')
     .email('Informe um e-mail válido'),
-  whatsapp: z.string()
-    .min(1, 'Whatsapp é obrigatório'),
+  phone: z.string()
+    .min(1, 'Telefone é obrigatório'),
+  cellphone: z.string()
+    .min(1, 'Celular é obrigatório'),
   address: z.string()
     .min(1, 'Endereço é de preenchimento obrigatório.'),
   zipcode: z.string()
@@ -37,32 +40,20 @@ const schema = z.object({
     .min(1, 'Bairro é de preenchimento obrigatório.'),
   cpf: z.string()
     .min(1, 'CPF é de preenchimento obrigatório.'),
-  credits: z.string(),
-    // .refine((cpf) => isValidCPF(cpf), { message: "CPF inválido" }),
+  site: z.string()
+    .min(1, 'Site é de preenchimento obrigatório.'),
   password: z.string()
     .min(3, "A senha deve conter pelo menos 3 dígitos")
     .optional()
     .nullable()
     .or(z.literal(null)),
-  logo: z.instanceof(FileList)
-    .transform(list => list.length > 0 ? list.item(0) : null)
-    .refine((file) => {
-      return file === null || file.size <= MAX_FILE_SIZE;
-    }, `O tamanho máximo da imagem é 3MB.`)
-    .refine(
-      (file) => file === null || ACCEPTED_IMAGE_MIME_TYPES.includes(file.type),
-      "Somente .jpg, .jpeg, .png and .webp são formatos suportados."
-    )
-    .optional()
-    .or(z.literal('')),
   level: z.string()
-    .min(1, 'Nível é obrigatório')
+    .min(1, 'Nível é obrigatório'),
 });
 
 type FormData = z.infer<typeof schema>
 
 export function useEditUserController() {
-  const [logoTemp, setLogoTemp] = useState<string | undefined>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
@@ -98,14 +89,16 @@ export function useEditUserController() {
   // Definindo valores padrão após a obtenção dos dados do usuário
   useEffect(() => {
     if (userEditData?.data) {
-      setValue("name", userEditData?.data?.name);
-      setValue("company", userEditData?.data?.company);
+      setValue("corporate_name", userEditData?.data?.corporate_name);
+      setValue("fantasy_name", userEditData?.data?.fantasy_name);
       setValue("email", userEditData?.data?.email);
+      setValue("site", userEditData?.data?.site);
       setValue("level", userEditData?.data?.level);
       setValue("responsible", userEditData?.data?.responsible);
-      setValue("whatsapp", userEditData?.data?.whatsapp);
+      setValue("phone", userEditData?.data?.phone);
+      setValue("cellphone", userEditData?.data?.cellphone);
       setValue("cpf", userEditData?.data?.cpf);
-      setValue("credits", String(userEditData?.data?.credits));
+      setValue("cnpj", userEditData?.data?.cnpj);
       setValue("address", userEditData?.data?.address);
       setValue("zipcode", userEditData?.data?.zipcode);
       setValue("city", userEditData?.data?.city);
@@ -113,7 +106,6 @@ export function useEditUserController() {
       setValue("neighborhood", userEditData?.data?.neighborhood);
       setValue("number", userEditData?.data?.number);
       setValue("password", null);
-      setLogoTemp(userEditData?.data.logo);
     }
   }, [userEditData, setValue]);
 
@@ -149,12 +141,6 @@ export function useEditUserController() {
 
     fetchAddress(zipcode);
   }, [zipcode, setValue]);
-
-  function changeLogo(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      setLogoTemp(URL.createObjectURL(e.target.files[0]));
-    }
-  }
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: async (data: UpdateUserParams) => {
@@ -197,8 +183,6 @@ export function useEditUserController() {
     control,
     isPending,
     isLoading,
-    linkLogo: logoTemp,
-    changeLogo,
     id,
     zipcodeValid,
     user

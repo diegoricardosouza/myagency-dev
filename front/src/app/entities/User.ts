@@ -1,19 +1,19 @@
 export interface User {
   id: string;
-  name: string;
-  company: string;
+  corporate_name: string;
+  fantasy_name: string;
+  cnpj: string;
   responsible: string;
-  email: string;
   level: string;
-  whatsapp: string;
-  day: number;
   cpf: string;
-  logo: string;
-  credits: string | number;
-  address: string;
   zipcode: string;
+  address: string;
   city: string;
-  state: string;
   neighborhood: string;
+  state: string;
   number: string;
+  phone: string;
+  cellphone: string;
+  site: string;
+  email: string;
 }

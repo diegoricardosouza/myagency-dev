@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Storage;
 class UserService
 {
     public function __construct(
-        protected User $user,
-    ) {
-    }
+        protected User $user
+    ) { }
 
     public function getAll($authUserId, $perPage = 50)
     {
@@ -48,7 +47,6 @@ class UserService
         if(!empty($data['logo']) && !empty($user->logo)) {
             if (!empty($data['logo']) && Storage::exists($user->logo)) {
                 Storage::delete($user->logo);
-                // $data['logo'] = $data['logo']->storeAs('users', $data['logo']->hashName());
             }
 
             $data['logo'] = $data['logo']->storeAs('users', $data['logo']->hashName());
@@ -70,7 +68,7 @@ class UserService
     public function delete($id)
     {
         $user = $this->user->findOrFail($id);
-        $newUserId = "9bde441b-6781-4a2c-ad02-7757400bef5a";
+        $newUserId = "9e2206b2-b643-40c0-a822-5ea04e3ab75e";
 
         if ($user->logo && Storage::exists($user->logo)) {
             Storage::delete($user->logo);

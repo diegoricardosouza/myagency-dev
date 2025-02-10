@@ -16,22 +16,22 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'company' => $this->company,
+            'corporate_name' => $this->corporate_name,
+            'fantasy_name' => $this->fantasy_name,
+            'cnpj' => $this->cnpj,
             'responsible' => $this->responsible,
-            'email' => $this->email,
             'level' => $this->level,
-            'whatsapp' => $this->whatsapp,
-            'day' => $this->day,
             'cpf' => $this->cpf,
-            'logo' => $this->logo ? url("storage/{$this->logo}") : null,
-            'credits' => $this->credits,
-            'address' => $this->address,
             'zipcode' => $this->zipcode,
+            'address' => $this->address,
             'city' => $this->city,
-            'state' => $this->state,
             'neighborhood' => $this->neighborhood,
+            'state' => $this->state,
             'number' => $this->number,
+            'phone' => $this->phone,
+            'cellphone' => $this->cellphone,
+            'site' => $this->site,
+            'email' => $this->email,
         ];
     }
 }

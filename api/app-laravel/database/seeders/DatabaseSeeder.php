@@ -17,14 +17,15 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         \App\Models\User::create([
-            'name' => 'Diego',
-            'company' => 'Inovasite',
+            'corporate_name' => 'Diego',
+            'fantasy_name' => 'Inovasite',
+            'cnpj' => '80.491.536/0001-96',
+            'cpf' => '963.978.220-36',
             'responsible' => 'Diego',
             'email' => 'desenvolvimento@inovasite.com',
             'level' => 'ADMIN',
-            'cpf' => '96397822036',
+            'password' => Hash::make('123456'),
             'email_verified_at' => now(),
-            'password' => Hash::make('inovasite123456'),
             'remember_token' => Str::random(10),
         ]);
     }

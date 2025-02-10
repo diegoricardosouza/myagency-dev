@@ -8,22 +8,22 @@ import { usersService } from "../services/usersService";
 interface UserMe {
   data: {
     id: string;
-    name: string;
-    company: string;
+    corporate_name: string;
+    fantasy_name: string;
+    cnpj: string;
     responsible: string;
-    email: string;
     level: string;
-    whatsapp: string;
-    day: number;
     cpf: string;
-    logo: string;
-    credits: string | number;
+    zipcode: number;
     address: string;
-    zipcode: string;
     city: string;
+    neighborhood: string | number;
     state: string;
-    neighborhood: string;
     number: string;
+    phone: string;
+    cellphone: string;
+    site: string;
+    email: string;
   }
 }
 

@@ -13,24 +13,24 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->nullable();
-            $table->string('company')->nullable();
-            $table->string('responsible')->nullable();
-            $table->string('email')->unique();
             $table->enum('level', ['ADMIN', 'EDITOR', 'CLIENTE']);
-            $table->string('whatsapp')->nullable();
-            $table->integer('day')->nullable();
+            $table->string('corporate_name')->nullable();
+            $table->string('fantasy_name')->nullable();
+            $table->string('cnpj')->unique();
+            $table->string('responsible')->nullable();
             $table->string('cpf')->unique();
-            $table->string('logo')->nullable();
-            $table->integer('credits')->default(2);
-            $table->string('address')->nullable();
             $table->string('zipcode')->nullable();
+            $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->string('state')->nullable();
             $table->string('neighborhood')->nullable();
+            $table->string('state')->nullable();
             $table->string('number')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('cellphone')->nullable();
+            $table->string('site')->nullable();
+            $table->string('email')->unique();
             $table->string('password')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

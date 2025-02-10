@@ -31,7 +31,12 @@ class StoreUpdateUserRequest extends FormRequest
                 'min:3',
                 'max:255',
             ],
-            'company' => [
+            'corporate_name' => [
+                'required',
+                'min:3',
+                'max:255',
+            ],
+            'fantasy_name' => [
                 'required',
                 'min:3',
                 'max:255',
@@ -53,8 +58,6 @@ class StoreUpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->segment(4))
             ],
-            'day' => 'int',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address' => 'required',
             'zipcode' => 'required',
             'city' => 'required',

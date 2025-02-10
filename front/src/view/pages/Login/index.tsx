@@ -4,7 +4,6 @@ import { Label } from "@/view/components/ui/label";
 
 import { Logo } from "@/view/components/Logo";
 import { Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useLoginController } from "./useLoginController";
 
 export function Login() {
@@ -52,13 +51,6 @@ export function Login() {
           Login
         </Button>
       </form>
-
-      <div className="text-center text-sm text-muted-foreground mt-4">
-        Não tem uma conta?{" "}
-        <Link to="/register" className="underline">
-          Criar Conta
-        </Link>
-      </div>
     </div>
   )
 }

@@ -1,21 +1,23 @@
 import { httpClient } from "../httpClient";
 
 export interface UserParams {
-  name: string;
-  company: string;
+  corporate_name: string;
+  fantasy_name: string;
+  cnpj: string;
   responsible: string;
-  email: string;
   level: string;
-  whatsapp: string;
   cpf: string;
-  logo: File;
-  password: string;
-  address: string;
   zipcode: string;
+  address: string;
   city: string;
-  state: string;
   neighborhood: string;
-  credits: string | number;
+  state: string;
+  number: string;
+  phone: string;
+  cellphone: string;
+  site: string;
+  email: string;
+  password: string;
 }
 
 export async function create(params: UserParams) {

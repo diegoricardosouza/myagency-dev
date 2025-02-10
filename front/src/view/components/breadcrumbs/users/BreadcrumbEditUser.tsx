@@ -1,12 +1,13 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/view/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface BreadcrumbEditUserProps {
-  id?: string;
   profileId?: string;
 }
 
-export function BreadcrumbEditUser({ id, profileId }: BreadcrumbEditUserProps) {
+export function BreadcrumbEditUser({ profileId }: BreadcrumbEditUserProps) {
+  const { id } = useParams();
+
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -27,7 +28,7 @@ export function BreadcrumbEditUser({ id, profileId }: BreadcrumbEditUserProps) {
           </>
         )}
         <BreadcrumbItem>
-          <BreadcrumbPage>{id === profileId ? 'Meu Perfil' : 'Editar Usuário'}</BreadcrumbPage>
+          <BreadcrumbPage>{profileId && id === profileId ? 'Meu Perfil' : 'Editar Usuário'}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

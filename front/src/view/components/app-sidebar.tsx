@@ -8,11 +8,10 @@ import {
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
+  Users
 } from "lucide-react"
 import * as React from "react"
 
-import { useAuth } from "@/app/hooks/useAuth"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
@@ -27,11 +26,6 @@ import {
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -51,23 +45,19 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Usuários",
+      url: "/usuarios",
+      icon: Users,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Listar Todos",
+          url: "/usuarios",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+          title: "Adicionar Novo",
+          url: "/usuarios/novo",
+        }
       ],
     },
     {
@@ -156,8 +146,6 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { signout, user } = useAuth();
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -167,8 +155,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user!.data} signout={signout} />
+      <SidebarFooter className="border-t">
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

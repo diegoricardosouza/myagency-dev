@@ -1,5 +1,4 @@
 import { AuthLayout } from "@/view/layouts/AuthLayout";
-import { DashboardLayout } from "@/view/layouts/DashboardLayout";
 import { DashboardV2 } from "@/view/pages/DashboardV2";
 import { Help } from "@/view/pages/Help";
 import { Jobs } from "@/view/pages/Jobs";
@@ -8,6 +7,7 @@ import { NewFormats } from "@/view/pages/Jobs/Formats/NewFormats";
 import { ViewJob } from "@/view/pages/Jobs/components/ViewJob";
 import { NotFound } from "@/view/pages/NotFound";
 
+import { DashboardLayoutV2 } from "@/view/layouts/DashboardLayoutV2";
 import { Iframe } from "@/view/pages/Iframe";
 import Orders from "@/view/pages/Orders";
 import { ShowOrder } from "@/view/pages/Orders/ShowOrder";
@@ -43,7 +43,7 @@ export function Router() {
         </Route>
 
         <Route element={<AuthGuard isPrivate />}>
-          <Route element={<DashboardLayout />}>
+          <Route element={<DashboardLayoutV2 />}>
             <Route path="/" element={<DashboardV2 />} />
             <Route element={<VerifyLevel level="ADMIN" />}>
               <Route path="/usuarios" element={<User />} />

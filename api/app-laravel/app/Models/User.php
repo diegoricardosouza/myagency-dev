@@ -20,23 +20,23 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'company',
-        'responsible',
-        'email',
+        'corporate_name',
         'level',
-        'whatsapp',
-        'day',
-        'logo',
+        'fantasy_name',
+        'cnpj',
+        'responsible',
         'cpf',
-        'credits',
-        'password',
-        'address',
         'zipcode',
+        'address',
         'city',
-        'state',
         'neighborhood',
-        'number'
+        'state',
+        'number',
+        'phone',
+        'cellphone',
+        'site',
+        'email',
+        'password'
     ];
 
     /**
@@ -67,10 +67,5 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
     }
 }
