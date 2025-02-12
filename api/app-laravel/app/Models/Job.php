@@ -53,4 +53,9 @@ class Job extends Model
     {
         return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

@@ -16,7 +16,7 @@ class JobResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'referencia' => 'ART'.$this->created_at->format('Y'). $this->ref,
+            'referencia' => 'DEV'.$this->created_at->format('Y'). $this->ref,
             'site' => $this->site,
             'page' => $this->page,
             'format' => $this->format,
@@ -30,9 +30,7 @@ class JobResource extends JsonResource
             'user' => new UserResource($this->user),
             'files' => FileResource::collection($this->files),
             'comments' => CommentResource::collection($this->comments),
-
-            // 'logo' => url("storage/{$this->logo}"),
-            // 'plan' => new PlanResource($this->plan)
+            'project' => new ProjectResource($this->project)
         ];
     }
 }
