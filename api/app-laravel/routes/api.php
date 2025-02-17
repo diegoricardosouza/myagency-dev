@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\ChecklistController;
 use App\Http\Controllers\Api\v1\CommentController;
 use App\Http\Controllers\Api\v1\FileCommentController;
 use App\Http\Controllers\Api\v1\FileController;
@@ -28,6 +29,7 @@ Route::prefix('v1')->group(function() {
         Route::apiResource('/files-comments', FileCommentController::class);
         Route::apiResource('/projects', ProjectController::class);
         Route::post('/projects/{id}', [ProjectController::class, 'update']);
+        Route::apiResource('/checklists', ChecklistController::class);
     });
 
     // Route::post('/users/{id}', [UserController::class, 'update']);
