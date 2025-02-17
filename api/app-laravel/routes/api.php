@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function() {
         Route::apiResource('/plans', PlanController::class);
         Route::apiResource('/users', UserController::class);
         Route::post("/users/{id}", [UserController::class, 'update']);
+        Route::get("/users-all", [UserController::class, 'showAll']);
         Route::apiResource('/jobs', JobController::class);
         Route::get("/jobs-all", [JobController::class, 'showAll']);
         Route::get("/jobs-count", [JobController::class, 'count']);

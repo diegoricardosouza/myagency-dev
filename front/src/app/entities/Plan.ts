@@ -1,6 +1,9 @@
 export interface Plan {
   id: string;
   name: string;
-  quantity: string;
-  price: number;
+  updates: string;
+  digital_midia: string;
+  printed: string;
+  presentations: string;
+  videos: string;
 }

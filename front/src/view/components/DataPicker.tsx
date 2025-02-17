@@ -11,9 +11,10 @@ interface DatePickerProps {
   onChange?(date: Date): void;
   label?: string;
   className?: string;
+  classNameText?: string;
 }
 
-export function DataPicker({ value, onChange, label, className }: DatePickerProps) {
+export function DataPicker({ value, onChange, label, className, classNameText }: DatePickerProps) {
   const [selectedDate, setSelectedDate] = useState(value ?? new Date())
 
   function handleChangeDate(date: Date) {
@@ -24,7 +25,12 @@ export function DataPicker({ value, onChange, label, className }: DatePickerProp
   return (
     <>
       <span
-        className="block text-sm text-muted-foreground mb-1 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className={
+          cn(
+            'block text-sm text-muted-foreground mb-1 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+            classNameText
+          )
+        }
       >
         {label}
       </span>
@@ -33,14 +39,14 @@ export function DataPicker({ value, onChange, label, className }: DatePickerProp
           <Button
             variant={"outline"}
             className={cn(
-              "w-[240px] pl-3 text-left font-normal",
+              "w-full min-w-[240px] pl-3 text-left font-normal",
               !value && "text-muted-foreground"
             )}
           >
             {value ? (
               format(value, "dd/MM/yyyy")
             ) : (
-              <span>Data de Ínicio</span>
+              <span>{label}</span>
             )}
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>

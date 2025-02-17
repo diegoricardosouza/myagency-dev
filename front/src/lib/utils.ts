@@ -78,6 +78,10 @@ export function isImageUrl(url: string) {
   return false; // Não é uma imagem
 }
 
+export function formatedPrice(price: string) {
+  return Number(`${price.slice(0, -2)}.${price.slice(-2)}`);
+}
+
 // export function isValidCPF(cpf: string) {
 //   // Validar se é String
 //   if (typeof cpf !== 'string') return false

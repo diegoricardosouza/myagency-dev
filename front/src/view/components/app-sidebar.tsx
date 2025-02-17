@@ -1,19 +1,12 @@
 import {
-  AudioWaveform,
   BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
+  PanelsTopLeft,
   Settings2,
   Users
 } from "lucide-react"
 import * as React from "react"
 
 import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
 import {
@@ -26,29 +19,28 @@ import {
 
 // This is sample data.
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
+    {
+      title: "Projetos",
+      url: "/projetos",
+      icon: PanelsTopLeft,
+      isActive: true,
+      items: [
+        {
+          title: "Listar Todos",
+          url: "/projetos",
+        },
+        {
+          title: "Adicionar Novo",
+          url: "/projetos/novo",
+        }
+      ],
+    },
     {
       title: "Usuários",
       url: "/usuarios",
       icon: Users,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Listar Todos",
@@ -58,25 +50,6 @@ const data = {
           title: "Adicionar Novo",
           url: "/usuarios/novo",
         }
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
       ],
     },
     {
@@ -125,24 +98,7 @@ const data = {
         },
       ],
     },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
+  ]
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -153,7 +109,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter className="border-t">
         <NavUser />

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('user_id');
+            $table->string('project_name')->nullable();
             $table->string('type')->nullable();
             $table->string('name')->nullable();
             $table->string('phone')->nullable();
@@ -32,7 +34,10 @@ return new class extends Migration
             $table->string('outsource')->nullable();
             $table->timestamp('closing_date')->nullable();
             $table->integer('calendar_days')->nullable();
+            $table->boolean('finished')->default(false);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

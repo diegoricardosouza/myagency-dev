@@ -1,6 +1,7 @@
 import { useAuth } from "@/app/hooks/useAuth";
 import { authService } from "@/app/services/authService";
 import { SigninParams } from "@/app/services/authService/signin";
+import { SigninParamsMyagency } from "@/app/services/authService/signinMyagency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -32,13 +33,25 @@ export function useLoginController() {
     }
   });
 
-  const { signin } = useAuth();
+  const { mutateAsync: mutateAsyncMyagency } = useMutation({
+    mutationFn: async (data: SigninParamsMyagency) => {
+      return authService.signinMyagency(data);
+    }
+  });
+
+  const { signin, signinMyagency } = useAuth();
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
+
+      const { token: tokenMyagency } = await mutateAsyncMyagency({
+        email: import.meta.env.VITE_PRIVATE_USERMYAGENCY,
+        password: import.meta.env.VITE_PRIVATE_PASSMYAGENCY,
+      });
       const { token } = await mutateAsync(data);
 
       signin(token);
+      signinMyagency(tokenMyagency);
     } catch {
       toast.error("Credenciais inválidas");
     }

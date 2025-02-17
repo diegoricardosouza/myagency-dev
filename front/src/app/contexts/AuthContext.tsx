@@ -14,10 +14,10 @@ interface UserMe {
     responsible: string;
     level: string;
     cpf: string;
-    zipcode: number;
+    zipcode: string;
     address: string;
     city: string;
-    neighborhood: string | number;
+    neighborhood: string;
     state: string;
     number: string;
     phone: string;
@@ -31,6 +31,7 @@ interface AuthContextValue {
   signedIn: boolean;
   user: UserMe | undefined;
   signin(token: string): void;
+  signinMyagency(token: string): void;
   signout(): void;
 }
 
@@ -57,9 +58,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSignedIn(true);
   }, []);
 
+  const signinMyagency = useCallback((token: string) => {
+    localStorage.setItem(localStoragekeys.TOKENMYAGENCY, token);
+  }, []);
+
   const signout = useCallback(() => {
     localStorage.removeItem(localStoragekeys.TOKEN);
+    localStorage.removeItem(localStoragekeys.TOKENMYAGENCY);
     queryClient.invalidateQueries({ queryKey: ['users','me'] });
+    queryClient.invalidateQueries({ queryKey: ['usersMyagency', 'myagency'] });
 
     setSignedIn(false);
   }, [queryClient]);
@@ -77,6 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signedIn: isSuccess && signedIn,
         user: data,
         signin,
+        signinMyagency,
         signout
       }}
     >

@@ -19,6 +19,14 @@ class UserService
                     ->paginate($perPage);
     }
 
+    public function getAllNoPagination($authUserId)
+    {
+        return $this->user
+                    ->where('id', '!=', $authUserId)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+    }
+
     public function createNew($data)
     {
         $data['password'] = bcrypt($data['password']);

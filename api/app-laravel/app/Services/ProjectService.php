@@ -14,11 +14,11 @@ class ProjectService
     ) {
     }
 
-    public function getAll()
+    public function getAll($perPage = 50)
     {
         return $this->repository
                     ->orderBy('created_at', 'desc')
-                    ->get();
+                    ->paginate($perPage);
     }
 
     public function new($data, $pages)
@@ -26,6 +26,8 @@ class ProjectService
         if (!empty($data['proof'])) {
             $data['proof'] = $data['proof']->storeAs('projects', $data['proof']->hashName());
         }
+
+        // dd($data);
 
         $project = $this->repository->create($data);
         if(!empty($pages)) {

@@ -1,3 +1,4 @@
 export const localStoragekeys = {
-  TOKEN: 'myagency:token'
+  TOKEN: 'myagency-dev:token',
+  TOKENMYAGENCY: 'myagency:token'
 }

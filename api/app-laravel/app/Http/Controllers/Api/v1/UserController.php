@@ -41,6 +41,14 @@ class UserController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     */
+    public function showAll()
+    {
+        return UserResource::collection($this->repository->getAllNoPagination($this->userLogged->id));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

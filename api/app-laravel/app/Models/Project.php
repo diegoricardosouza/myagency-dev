@@ -30,10 +30,22 @@ class Project extends Model
         'outsource',
         'closing_date',
         'calendar_days',
+        'user_id',
+        'project_name',
     ];
 
     public function pages()
     {
         return $this->hasMany(PageProject::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function checklists()
+    {
+        return $this->hasMany(Checklist::class);
     }
 }
