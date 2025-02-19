@@ -11,10 +11,11 @@ class ChecklistService
     ) {
     }
 
-    public function getAll()
+    public function getAll($project = null)
     {
         return $this->repository
                     ->orderBy('created_at', 'desc')
+                    ->where('project_id', '=', $project)
                     ->get();
     }
 

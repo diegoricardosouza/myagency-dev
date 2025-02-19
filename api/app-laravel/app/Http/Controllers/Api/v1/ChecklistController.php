@@ -18,9 +18,10 @@ class ChecklistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ChecklistResource::collection($this->repository->getAll());
+        $project = $request->get('project');
+        return ChecklistResource::collection($this->repository->getAll($project));
     }
 
     /**
