@@ -8,6 +8,7 @@ import { ViewJob } from "@/view/pages/Jobs/components/ViewJob";
 import { NotFound } from "@/view/pages/NotFound";
 
 import { DashboardLayoutV2 } from "@/view/layouts/DashboardLayoutV2";
+import Checklists from "@/view/pages/Checklists";
 import Plans from "@/view/pages/Plans";
 import { EditPlan } from "@/view/pages/Plans/EditPlan";
 import { NewPlan } from "@/view/pages/Plans/NewPlan";
@@ -59,6 +60,7 @@ export function Router() {
             <Route path="/projetos" element={<Projects />} />
             <Route path="/projetos/novo" element={<NewProject />} />
             <Route path="/projetos/edit/:id" element={<EditProject />} />
+            <Route path="/configuracoes/checklists" element={<Checklists />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

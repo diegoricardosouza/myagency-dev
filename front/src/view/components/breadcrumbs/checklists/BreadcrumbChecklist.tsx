@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/view/components/ui/breadcrumb"
 import { Link } from "react-router-dom"
 
-export function BreadcrumbPlan() {
+export function BreadcrumbChecklist() {
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -12,7 +12,11 @@ export function BreadcrumbPlan() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Pedidos</BreadcrumbPage>
+          Configurações
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Todos os Checklists</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

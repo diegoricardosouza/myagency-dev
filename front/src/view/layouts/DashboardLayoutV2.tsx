@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { AppSidebar } from "../components/app-sidebar";
+import { BreadcrumbContainerChecklists } from "../components/breadcrumbs/BreadcrumbContainerChecklists";
 import { BreadcrumbContainerProject } from "../components/breadcrumbs/BreadcrumbContainerProject";
 import { BreadcrumbContainerUser } from "../components/breadcrumbs/BreadcrumbContainerUser";
 import { BreadcrumbDashV2 } from "../components/breadcrumbs/dashboard/BreadcrumbDashV2";
@@ -25,6 +26,7 @@ export function DashboardLayoutV2() {
 
             <BreadcrumbContainerUser />
             <BreadcrumbContainerProject />
+            <BreadcrumbContainerChecklists />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 bg-sidebar">

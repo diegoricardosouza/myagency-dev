@@ -1,5 +1,4 @@
 import {
-  BookOpen,
   PanelsTopLeft,
   Settings2,
   Users
@@ -24,7 +23,7 @@ const data = {
       title: "Projetos",
       url: "/projetos",
       icon: PanelsTopLeft,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Listar Todos",
@@ -53,49 +52,15 @@ const data = {
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
+      title: "Configurações",
+      url: "/configuracoes",
       icon: Settings2,
+      isActive: false,
       items: [
         {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+          title: "Checklists",
+          url: "/configuracoes/checklists",
+        }
       ],
     },
   ]

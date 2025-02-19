@@ -44,7 +44,7 @@ export function formatedDate(date: string) {
   return dateFormated;
 }
 
-export function getImageCommentAdmin(comments: Comments[], userId: string, level: string){
+export function getImageCommentAdmin(comments: Comments[], userId: string, level: string) {
   if (level === 'CLIENTE') {
     const commentFiltered = comments?.filter(c => c.user.id !== userId)
 
