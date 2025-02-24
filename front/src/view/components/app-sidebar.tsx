@@ -1,4 +1,5 @@
 import {
+  LayoutDashboard,
   PanelsTopLeft,
   Settings2,
   Users
@@ -19,6 +20,12 @@ import {
 // This is sample data.
 const data = {
   navMain: [
+    {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+      isActive: true
+    },
     {
       title: "Projetos",
       url: "/projetos",
