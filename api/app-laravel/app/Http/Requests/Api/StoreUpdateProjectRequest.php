@@ -43,7 +43,8 @@ class StoreUpdateProjectRequest extends FormRequest
             'closing_date' => 'required',
             'calendar_days' => 'required|int',
             'pages' => 'required|array',
-            'pages.*' => 'required|string'
+            'pages.*' => 'required|string',
+            'checklists' => 'required|array',
         ];
 
         return $rules;

@@ -36,8 +36,8 @@ class ProjectController extends Controller
      */
     public function store(StoreUpdateProjectRequest $request)
     {
-        $data = $request->except('pages');
-        $project = $this->repository->new($data, $request->pages);
+        $data = $request->except(['pages', 'checklists']);
+        $project = $this->repository->new($data, $request->pages, $request->checklists);
 
         return new ProjectResource($project);
     }
@@ -71,7 +71,7 @@ class ProjectController extends Controller
      */
     public function update(StoreUpdateProjectRequest $request, string $id)
     {
-        $project = $this->repository->update($request->except('pages'), $request->pages, $id);
+        $project = $this->repository->update($request->except(['pages', 'checklists']), $request->pages, $request->checklists, $id);
 
         // $plan = $this->repository->findOrFail($id);
         // // return $plan->update($data);

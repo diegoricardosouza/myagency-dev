@@ -37,6 +37,7 @@ class ProjectResource extends JsonResource
             'closing_date' => $this->closing_date,
             'calendar_days' => $this->calendar_days,
             'pages' => $this->pages,
+            'checklists' => $this->checklists,
             'user' => new UserResource($this->user),
         ];
     }
