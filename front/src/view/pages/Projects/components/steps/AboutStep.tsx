@@ -9,11 +9,11 @@ import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperNextButton } from "../Stepper";
 
 
-interface Step1Props {
+interface AboutStepProps {
   users?: User[]
 }
 
-export function Step1({ users }: Step1Props) {
+export function AboutStep({ users }: AboutStepProps) {
   const { nextStep } = useStepper();
   const form = useFormContext<FormData>()
 

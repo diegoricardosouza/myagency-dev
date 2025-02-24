@@ -9,12 +9,12 @@ import { Controller, FieldArrayWithId, useFormContext } from "react-hook-form";
 import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperNextButton, StepperPreviousButton } from "../Stepper";
 
-interface Step2Props {
+interface PageStepProps {
   fields: FieldArrayWithId<FormData>[];
   handleRemovePage: (index: number) => void;
 }
 
-export function Step2({ fields, handleRemovePage }: Step2Props) {
+export function PageStep({ fields, handleRemovePage }: PageStepProps) {
   const { nextStep } = useStepper();
   const form = useFormContext<FormData>()
 

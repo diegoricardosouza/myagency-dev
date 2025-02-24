@@ -8,11 +8,11 @@ import { Controller, useFormContext } from "react-hook-form";
 import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperPreviousButton } from "../Stepper";
 
-interface Step4Props {
+interface PlanStepProps {
   plans?: Plan[]
 }
 
-export function Step4({ plans }: Step4Props) {
+export function PlanStep({ plans }: PlanStepProps) {
   const form = useFormContext<FormData>()
   const dateNow = new Date();
   const startDate = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());

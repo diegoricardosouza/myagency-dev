@@ -7,7 +7,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperNextButton, StepperPreviousButton } from "../Stepper";
 
-export function Step3() {
+export function FinanceStep() {
   const { nextStep } = useStepper();
   const form = useFormContext<FormData>()
 
