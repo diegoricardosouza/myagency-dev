@@ -29,7 +29,7 @@ class ProjectResource extends JsonResource
             'installment' => $this->installment,
             'other' => $this->other,
             'entry_payment' => $this->entry_payment,
-            'proof' => $this->proof,
+            'proof' => url("storage/$this->proof"),
             'plan_id' => $this->plan_id,
             'plan_name' => $this->plan_name,
             'signed_contract' => $this->signed_contract,

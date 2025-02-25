@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreUpdateProjectRequest;
 use App\Http\Resources\Api\ProjectResource;
 use App\Services\ProjectService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProjectController extends Controller
@@ -71,6 +70,8 @@ class ProjectController extends Controller
      */
     public function update(StoreUpdateProjectRequest $request, string $id)
     {
+        // dd($request->except(['pages', 'checklists']));
+
         $project = $this->repository->update($request->except(['pages', 'checklists']), $request->pages, $request->checklists, $id);
 
         // $plan = $this->repository->findOrFail($id);

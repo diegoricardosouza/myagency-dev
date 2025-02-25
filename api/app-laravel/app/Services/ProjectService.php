@@ -62,48 +62,48 @@ class ProjectService
 
     public function update($data, $pages, $checklists, $id)
     {
-        return DB::transaction(function () use ($data, $pages, $checklists, $id) {
-            $project = $this->repository->findOrFail($id);
+        $project = $this->repository->findOrFail($id);
 
-            // Atualizar a prova se houver upload
-            if (!empty($data['proof'])) {
-                if (!empty($project->proof) && Storage::exists($project->proof)) {
-                    Storage::delete($project->proof);
-                }
-                $data['proof'] = $data['proof']->storeAs('projects', $data['proof']->hashName());
+        // Atualizar a prova se houver upload
+        if (!empty($data['proof'])) {
+            if (!empty($data['proof']) && Storage::exists($project->proof)) {
+                Storage::delete($project->proof);
             }
+            $data['proof'] = $data['proof']->storeAs('projects', $data['proof']->hashName());
+        }
 
-            $project->update($data);
+        $project->update($data);
 
-            // Atualizar páginas
-            $existingPages = $project->pages->pluck('name')->toArray();
-            $pagesToDelete = array_diff($existingPages, $pages);
-            $pagesToAdd = array_diff($pages, $existingPages);
+        // dd($project);
 
-            if ($pagesToDelete) {
-                $project->pages()->whereIn('name', $pagesToDelete)->delete();
-            }
-            foreach ($pagesToAdd as $pageName) {
-                $project->pages()->create(['name' => $pageName]);
-            }
+        // Atualizar páginas
+        $existingPages = $project->pages->pluck('name')->toArray();
+        $pagesToDelete = array_diff($existingPages, $pages);
+        $pagesToAdd = array_diff($pages, $existingPages);
 
-            // Atualizar checklists
-            // Extraímos os nomes dos checklists enviados (array de arrays)
-            $newChecklistNames = array_column($checklists, 'name');
-            $existingChecks = $project->checklists->pluck('name')->toArray();
+        if ($pagesToDelete) {
+            $project->pages()->whereIn('name', $pagesToDelete)->delete();
+        }
+        foreach ($pagesToAdd as $pageName) {
+            $project->pages()->create(['name' => $pageName]);
+        }
 
-            $checksToDelete = array_diff($existingChecks, $newChecklistNames);
-            $checksToAdd = array_diff($newChecklistNames, $existingChecks);
+        // Atualizar checklists
+        // Extraímos os nomes dos checklists enviados (array de arrays)
+        $newChecklistNames = array_column($checklists, 'name');
+        $existingChecks = $project->checklists->pluck('name')->toArray();
 
-            if ($checksToDelete) {
-                $project->checklists()->whereIn('name', $checksToDelete)->delete();
-            }
-            foreach ($checksToAdd as $checkName) {
-                $project->checklists()->create(['name' => $checkName, 'active' => false]);
-            }
+        $checksToDelete = array_diff($existingChecks, $newChecklistNames);
+        $checksToAdd = array_diff($newChecklistNames, $existingChecks);
 
-            return $project;
-        });
+        if ($checksToDelete) {
+            $project->checklists()->whereIn('name', $checksToDelete)->delete();
+        }
+        foreach ($checksToAdd as $checkName) {
+            $project->checklists()->create(['name' => $checkName, 'active' => false]);
+        }
+
+        return $project;
     }
 
     public function delete($id)
