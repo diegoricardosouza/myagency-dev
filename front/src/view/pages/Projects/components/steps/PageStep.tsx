@@ -68,8 +68,8 @@ export function PageStep({ fields, handleRemovePage }: PageStepProps) {
                   </div>
                 </div>
 
-                <Button onClick={() => handleRemovePage(index)} className="bg-red-600 hover:bg-red-400">
-                  <Trash2 className="text-white w-5 h-5" />
+                <Button onClick={() => handleRemovePage(index)} className="bg-transparent hover:bg-gray-50">
+                  <Trash2 className="text-red-600 w-5 h-5" />
                 </Button>
               </div>
             ))}

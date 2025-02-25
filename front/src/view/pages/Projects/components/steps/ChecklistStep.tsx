@@ -33,7 +33,7 @@ export function ChecklistStep({ fieldsChecklists, removeChecklist, addChecklist 
       <div className="flex justify-between items-center">
         <StepperHeader
           title="Checklists"
-          description="Checklists padrões do projeto"
+          description="Checklists do seu projeto"
         />
 
         <Button
@@ -63,8 +63,8 @@ export function ChecklistStep({ fieldsChecklists, removeChecklist, addChecklist 
                   </div>
                 </div>
 
-                <Button onClick={() => removeChecklist(index)} className="bg-red-600 hover:bg-red-400">
-                  <Trash2 className="text-white w-5 h-5" />
+                <Button onClick={() => removeChecklist(index)} className="bg-transparent hover:bg-gray-50">
+                  <Trash2 className="text-red-600 w-5 h-5 " />
                 </Button>
               </div>
             ))}

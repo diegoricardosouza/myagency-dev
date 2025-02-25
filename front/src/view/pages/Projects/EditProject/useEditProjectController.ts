@@ -1,54 +1,67 @@
-import { useAuth } from "@/app/hooks/useAuth";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { MAX_FILE_SIZE } from "@/app/config/constants";
+import { checklistsService } from "@/app/services/checklistsService";
+import { plansMyagencyService } from "@/app/services/plansMyagencyService";
+import { projectsService } from "@/app/services/projectsService";
+import { UpdateProjectParams } from "@/app/services/projectsService/update";
 import { usersService } from "@/app/services/usersService";
-import { UpdateUserParams } from "@/app/services/usersService/update";
+import { formatedDate, formatedPrice } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
-  corporate_name: z.string()
-    .min(1, 'Razão Social é obrigatório'),
-  fantasy_name: z.string()
+  user_id: z.string()
+    .min(1, 'Cliente é obrigatório'),
+  type: z.string()
+    .min(1, 'Tipo do Projeto é obrigatório'),
+  project_name: z.string()
+    .min(1, 'Nome do Projeto é obrigatório'),
+  name: z.string()
     .min(1, 'Nome Fantasia é obrigatório'),
-  cnpj: z.string()
-    .min(1, 'CNPJ é obrigatório'),
-  responsible: z.string()
-    .min(1, 'Responsável é obrigatório'),
+  phone: z.string()
+    .min(1, 'Whatsapp é obrigatório'),
   email: z.string()
     .min(1, 'E-mail é obrigatório')
     .email('Informe um e-mail válido'),
-  phone: z.string()
-    .min(1, 'Telefone é obrigatório'),
-  cellphone: z.string()
-    .min(1, 'Celular é obrigatório'),
-  address: z.string()
-    .min(1, 'Endereço é de preenchimento obrigatório.'),
-  zipcode: z.string()
-    .min(1, 'CEP é de preenchimento obrigatório.'),
-  city: z.string()
-    .min(1, 'Cidade é de preenchimento obrigatório.'),
-  state: z.string()
-    .min(1, 'Estado é de preenchimento obrigatório.'),
-  number: z.string()
-    .min(1, 'Número é de preenchimento obrigatório.'),
-  neighborhood: z.string()
-    .min(1, 'Bairro é de preenchimento obrigatório.'),
-  cpf: z.string()
-    .min(1, 'CPF é de preenchimento obrigatório.'),
-  site: z.string()
-    .min(1, 'Site é de preenchimento obrigatório.'),
-  password: z.string()
-    .min(3, "A senha deve conter pelo menos 3 dígitos")
+  number_pages: z.string()
+    .min(1, 'O número de páginas é obrigatório'),
+  technical_information: z.null().optional(),
+  observations: z.string().optional(),
+  value_project: z.string()
+    .min(1, 'Valor do Projeto é de preenchimento obrigatório.'),
+  payment_method: z.string()
+    .min(1, 'Forma de Pagamento é de preenchimento obrigatório.'),
+  installment: z.string().optional(),
+  other: z.string().optional(),
+  entry_payment: z.string().optional(),
+  proof: z.instanceof(FileList)
     .optional()
-    .nullable()
-    .or(z.literal(null)),
-  level: z.string()
-    .min(1, 'Nível é obrigatório'),
+    .transform((list) => list ? list.item(0) || undefined : undefined)
+    .refine((file) => !file || file.size <= MAX_FILE_SIZE, "O tamanho máximo é 3MB."),
+  plan_id: z.string()
+    .min(1, 'Plano é obrigatório.'),
+  plan_name: z.string().optional(),
+  signed_contract: z.string()
+    .min(1, 'Contrato Assinado é de preenchimento obrigatório.'),
+  outsource: z.string().optional(),
+  closing_date: z.date(),
+  calendar_days: z.string()
+    .min(1, 'Dias Corridos é de preenchimento obrigatório'),
+  pages: z.array(
+    z.object({
+      name: z.string().min(1, 'Cada página deve ser preenchida')
+    })
+  ),
+  checklists: z.array(
+    z.object({
+      name: z.string().min(1, 'Cada item deve ser preenchido')
+    })
+  )
 });
 
 type FormData = z.infer<typeof schema>
@@ -57,134 +70,201 @@ export function useEditProjectController() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
-  const { user } = useAuth();
-  const [zipcodeValid, setZipcodeValid] = useState('');
+  const [initialPagesLoaded, setInitialPagesLoaded] = useState(false);
+  const [linkProof, setLinkProof] = useState('');
+  const [nameProof, setNameProof] = useState('');
 
   const { data: userEditData, isLoading } = useQuery({
-    queryKey: ['editUser', id],
+    queryKey: ['editProjeto', id],
     staleTime: 0,
     queryFn: async () => {
       try {
-        const response = await usersService.getById(id!);
+        const response = await projectsService.getById(id!);
         return response;
       } catch (error) {
-        toast.error('Usuário não encontrado');
-        navigate("/usuarios");
+        toast.error('Projeto não encontrado');
+        navigate("/projetos");
       }
     }
   });
 
-  const {
-    register,
-    handleSubmit: hookFormSubmit,
-    control,
-    setValue,
-    watch,
-    formState: { errors }
-  } = useForm<FormData>({
+  const { data: dataPlans } = useQuery({
+    queryKey: ['plans'],
+    queryFn: () => plansMyagencyService.getAll(),
+  });
+
+  const { data: dataUser, isFetching: isFetchingUser } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => usersService.getAllNoPagination(),
+  });
+
+  const { data: dataChecklist } = useQuery({
+    queryKey: ['checklists'],
+    staleTime: 0,
+    queryFn: async () => {
+      const response = await checklistsService.getAll(id);
+
+      return response;
+    },
+  });
+
+  const form = useForm<FormData>({
     resolver: zodResolver(schema)
   });
-  const zipcode = watch("zipcode");
+
+  const {
+    fields: fieldsChecklist,
+    append: appendChecklist,
+    remove: removeChecklist,
+    replace
+  } = useFieldArray({
+    control: form.control,
+    name: "checklists"
+  });
+
+  const {
+    fields,
+    append,
+    remove
+  } = useFieldArray({
+    control: form.control,
+    name: "pages"
+  });
+
+  useEffect(() => {
+    if (dataChecklist?.data && dataChecklist.data.length > 0 && fieldsChecklist.length === 0) {
+      const defaultChecklists = dataChecklist.data.map((item: any) => ({
+        name: item.name
+      }));
+      replace(defaultChecklists);
+    }
+  }, [dataChecklist, fieldsChecklist.length, replace]);
+
+  // Observa o valor do campo number_pages
+  const numberPages = form.watch("number_pages");
+
+  useEffect(() => {
+    if (userEditData?.data && !initialPagesLoaded) {
+      if (userEditData.data.pages && userEditData.data.pages.length > 0) {
+        userEditData.data.pages.forEach((page: any) => {
+          append({ name: page.name });
+        });
+      }
+      setInitialPagesLoaded(true);
+    }
+  }, [userEditData, initialPagesLoaded, append]);
+
+  // Quando o valor de number_pages mudar, ajusta a quantidade de inputs
+  useEffect(() => {
+    // Só executa se os dados iniciais já foram carregados
+    if (initialPagesLoaded) {
+      const count = Number(numberPages) || 0;
+      if (count > fields.length) {
+        // Adiciona inputs vazios até atingir o número desejado
+        for (let i = fields.length; i < count; i++) {
+          append({ name: '' });
+        }
+      } else if (count < fields.length) {
+        // Remove inputs excedentes
+        for (let i = fields.length; i > count; i--) {
+          remove(i - 1);
+        }
+      }
+    }
+  }, [numberPages, fields.length, append, remove, initialPagesLoaded]);
 
   // Definindo valores padrão após a obtenção dos dados do usuário
   useEffect(() => {
     if (userEditData?.data) {
-      setValue("corporate_name", userEditData?.data?.corporate_name);
-      setValue("fantasy_name", userEditData?.data?.fantasy_name);
-      setValue("email", userEditData?.data?.email);
-      setValue("site", userEditData?.data?.site);
-      setValue("level", userEditData?.data?.level);
-      setValue("responsible", userEditData?.data?.responsible);
-      setValue("phone", userEditData?.data?.phone);
-      setValue("cellphone", userEditData?.data?.cellphone);
-      setValue("cpf", userEditData?.data?.cpf);
-      setValue("cnpj", userEditData?.data?.cnpj);
-      setValue("address", userEditData?.data?.address);
-      setValue("zipcode", userEditData?.data?.zipcode);
-      setValue("city", userEditData?.data?.city);
-      setValue("state", userEditData?.data?.state);
-      setValue("neighborhood", userEditData?.data?.neighborhood);
-      setValue("number", userEditData?.data?.number);
-      setValue("password", null);
+      form.setValue("user_id", userEditData?.data?.user.id);
+      form.setValue("type", userEditData?.data?.type);
+      form.setValue("project_name", userEditData?.data?.project_name);
+      form.setValue("name", userEditData?.data?.name);
+      form.setValue("phone", userEditData?.data?.phone);
+      form.setValue("email", userEditData?.data?.email);
+      form.setValue("number_pages", String(userEditData?.data?.number_pages));
+      form.setValue("observations", userEditData?.data?.observations);
+      form.setValue("value_project", String(userEditData?.data?.value_project));
+      form.setValue("payment_method", userEditData?.data?.payment_method);
+      form.setValue("installment", String(userEditData?.data?.installment));
+      form.setValue("other", userEditData?.data?.other);
+      form.setValue("entry_payment", String(userEditData?.data?.entry_payment));
+      form.setValue("plan_id", userEditData?.data?.plan_id);
+      form.setValue("signed_contract", userEditData?.data?.signed_contract);
+      form.setValue("outsource", userEditData?.data?.outsource);
+      form.setValue("closing_date", new Date(userEditData?.data?.closing_date));
+      form.setValue("calendar_days", String(userEditData?.data?.calendar_days));
+
+      setLinkProof(userEditData?.data.proof);
+      setNameProof(userEditData?.data.proof.replace(`${import.meta.env.VITE_API_URL_BASE}/storage/projects/`, ''));
     }
-  }, [userEditData, setValue]);
-
-  // Chamada para ViaCEP
-  useEffect(() => {
-    if (zipcode && zipcode.length < 8) {
-      setValue("address", "");
-      setValue("city", "");
-      setValue("state", "");
-      setValue("neighborhood", "");
-      setValue("number", "");
-    }
-    const fetchAddress = async (cep: string) => {
-      setZipcodeValid("");
-
-      if (cep?.length === 8) { // Formato completo do CEP
-        try {
-          const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-          if (!data.erro) {
-            setValue("neighborhood", data.bairro);
-            setValue("city", data.localidade);
-            setValue("state", data.uf);
-            setValue("address", data?.logradouro);
-          } else {
-            console.error("CEP inválido.");
-            setZipcodeValid("CEP inválido.");
-          }
-        } catch (error) {
-          console.error("Erro ao buscar o endereço:", error);
-        }
-      }
-    };
-
-    fetchAddress(zipcode);
-  }, [zipcode, setValue]);
+  }, [form, userEditData]);
 
   const { isPending, mutateAsync } = useMutation({
-    mutationFn: async (data: UpdateUserParams) => {
-      let dataFilter;
-      if (user?.data.level === 'CLIENTE') {
-        dataFilter = {
-          ...data,
-          email: user!.data.email,
-          cpf: user!.data.cpf
-        }
-      } else {
-        dataFilter = data
-      }
-
-      return usersService.update(dataFilter);
+    mutationFn: async (data: UpdateProjectParams) => {
+    return projectsService.update(data);
     }
   });
 
-  const handleSubmit = hookFormSubmit(async (data) => {
+  function handleAddChecklist() {
+    appendChecklist({ name: '' });
+  }
+
+  function handleRemovePage(index: number) {
+    remove(index);
+    // Atualiza o campo number_pages para refletir a nova quantidade
+    form.setValue("number_pages", String(fields.length - 1));
+  }
+
+  function handleRemoveChecklist(index: number) {
+    removeChecklist(index);
+  }
+
+  const handleFormSubmit = form.handleSubmit(async (data) => {
     try {
       if(id) {
+        const planName = dataPlans?.data.filter(plan => plan.id === data.plan_id);
+
         await mutateAsync({
           ...data,
           id,
+          value_project: formatedPrice(data.value_project),
+          entry_payment: data.entry_payment ? formatedPrice(data.entry_payment) : undefined,
+          installment: Number(data.installment),
+          pages: data.pages.map((p) => p.name),
+          closing_date: formatedDate(data.closing_date.toISOString()),
+          calendar_days: Number(data.calendar_days),
+          number_pages: Number(data.number_pages),
+          plan_name: planName?.[0]?.name || '',
+          checklists: data.checklists.map((c) => ({
+            name: c.name,
+            active: false
+          }))
         });
       }
 
-      queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
-      // queryClient.invalidateQueries({ queryKey: ['editUser'] });
-      toast.success('Usuário atualizado com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success('Projeto atualizado com sucesso!');
     } catch (error) {
-      toast.error('Erro ao cadastrar o usuário');
+      toast.error('Erro ao cadastrar o projeto');
     }
   });
 
   return {
-    errors,
-    register,
-    handleSubmit,
-    control,
+    form,
+    handleFormSubmit,
     isPending,
     isLoading,
     id,
-    zipcodeValid,
-    user
+    users: dataUser,
+    isFetchingUser,
+    plans: dataPlans,
+    handleAddChecklist,
+    handleRemovePage,
+    handleRemoveChecklist,
+    fields,
+    fieldsChecklist,
+    linkProof,
+    nameProof
   }
 }

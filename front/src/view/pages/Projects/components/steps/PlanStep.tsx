@@ -9,10 +9,11 @@ import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperPreviousButton } from "../Stepper";
 
 interface PlanStepProps {
-  plans?: Plan[]
+  plans?: Plan[];
+  labelButton?: string;
 }
 
-export function PlanStep({ plans }: PlanStepProps) {
+export function PlanStep({ plans, labelButton = 'Cadastrar' }: PlanStepProps) {
   const form = useFormContext<FormData>()
   const dateNow = new Date();
   const startDate = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
@@ -135,7 +136,7 @@ export function PlanStep({ plans }: PlanStepProps) {
       <StepperFooter>
         <StepperPreviousButton />
         <Button type="submit" size="sm">
-          Cadastrar
+          {labelButton}
         </Button>
       </StepperFooter>
     </div>

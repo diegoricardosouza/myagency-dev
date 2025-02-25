@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MAX_FILE_SIZE } from "@/app/config/constants";
+import { checklistsService } from "@/app/services/checklistsService";
 import { plansMyagencyService } from "@/app/services/plansMyagencyService";
 import { projectsService } from "@/app/services/projectsService";
 import { ProjectsParams } from "@/app/services/projectsService/create";
@@ -24,7 +26,8 @@ const schema = z.object({
   phone: z.string()
     .min(1, 'Whatsapp é obrigatório'),
   email: z.string()
-    .min(1, 'E-mail é obrigatório'),
+    .min(1, 'E-mail é obrigatório')
+    .email('Informe um e-mail válido'),
   number_pages: z.string()
     .min(1, 'O número de páginas é obrigatório'),
   technical_information: z.string().optional(),
@@ -53,12 +56,15 @@ const schema = z.object({
     z.object({
       name: z.string().min(1, 'Cada página deve ser preenchida')
     })
+  ),
+  checklists: z.array(
+    z.object({
+      name: z.string().min(1, 'Cada item deve ser preenchido')
+    })
   )
 });
 
-export type FormData = z.infer<typeof schema>
-// type FormDataFromSchema = z.infer<typeof schema>;
-// type FormData = Omit<FormDataFromSchema, "pages"> & { pages: string[] };
+export type FormData = z.infer<typeof schema>;
 
 export function useNewProjectController() {
   const navigate = useNavigate();
@@ -70,15 +76,48 @@ export function useNewProjectController() {
       number_pages: '1',
       pages: [
         { name: '' },
-      ]
+      ],
+      checklists: []
     }
   });
 
-  // Gerencia os inputs dinâmicos para "pages"
-  const { fields, append, remove, } = useFieldArray({
+  const {
+    fields: fieldsChecklist,
+    append: appendChecklist,
+    remove: removeChecklist,
+    replace
+  } = useFieldArray({
+    control: form.control,
+    name: "checklists"
+  });
+
+  const {
+    fields,
+    append,
+    remove
+  } = useFieldArray({
     control: form.control,
     name: "pages"
   });
+
+  const { data: dataChecklist } = useQuery({
+    queryKey: ['checklists'],
+    staleTime: 0,
+    queryFn: async () => {
+      const response = await checklistsService.getAll(null);
+
+      return response;
+    },
+  });
+
+  useEffect(() => {
+    if (dataChecklist?.data && dataChecklist.data.length > 0 && fieldsChecklist.length === 0) {
+      const defaultChecklists = dataChecklist.data.map((item: any) => ({
+        name: item.name
+      }));
+      replace(defaultChecklists);
+    }
+  }, [dataChecklist, fieldsChecklist.length, replace]);
 
   // Observa o valor do campo number_pages
   const numberPages = form.watch("number_pages");
@@ -118,30 +157,23 @@ export function useNewProjectController() {
     }
   });
 
+  function handleAddChecklist() {
+    appendChecklist({ name: '' });
+  }
+
   function handleRemovePage(index: number) {
     remove(index);
     // Atualiza o campo number_pages para refletir a nova quantidade
     form.setValue("number_pages", String(fields.length - 1));
   }
 
+  function handleRemoveChecklist(index: number) {
+    removeChecklist(index);
+  }
+
   const handleFormSubmit = form.handleSubmit(async (data) => {
     try {
       const planName = dataPlans?.data.filter(plan => plan.id === data.plan_id);
-
-      // const dataFormated = {
-      //   ...data,
-      //   value_project: formatedPrice(data.value_project),
-      //   entry_payment: data.entry_payment ? formatedPrice(data.entry_payment) : undefined,
-      //   installment: Number(data.installment),
-      //   pages: data.pages.map((p) => p.name),
-      //   closing_date: formatedDate(data.closing_date.toISOString()),
-      //   calendar_days: Number(data.calendar_days),
-      //   number_pages: Number(data.number_pages),
-      //   plan_name: planName?.[0]?.name || ''
-      // }
-
-      // console.log(formatedDate(data.closing_date.toISOString()));
-
 
       await mutateAsync({
         ...data,
@@ -152,7 +184,11 @@ export function useNewProjectController() {
         closing_date: formatedDate(data.closing_date.toISOString()),
         calendar_days: Number(data.calendar_days),
         number_pages: Number(data.number_pages),
-        plan_name: planName?.[0]?.name || ''
+        plan_name: planName?.[0]?.name || '',
+        checklists: data.checklists.map((c) => ({
+          name: c.name,
+          active: false
+        }))
       });
 
       queryClient.invalidateQueries({ queryKey: ['projects'] });
@@ -168,11 +204,15 @@ export function useNewProjectController() {
     handleFormSubmit,
     isPending,
     plans: dataPlans,
+    checklists: dataChecklist,
     users: dataUser,
     isFetching,
     fields,
     handleRemovePage,
     form,
-    isFetchingUser
+    isFetchingUser,
+    handleAddChecklist,
+    handleRemoveChecklist,
+    fieldsChecklist
   }
 }

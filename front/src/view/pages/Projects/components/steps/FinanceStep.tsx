@@ -4,10 +4,16 @@ import { Label } from "@/view/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select";
 import { useStepper } from "@/view/hooks/use-stepper";
 import { Controller, useFormContext } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperNextButton, StepperPreviousButton } from "../Stepper";
 
-export function FinanceStep() {
+interface FinanceStepProps {
+  linkProof?: string;
+  nameProof?: string;
+}
+
+export function FinanceStep({ linkProof, nameProof }: FinanceStepProps) {
   const { nextStep } = useStepper();
   const form = useFormContext<FormData>()
 
@@ -128,6 +134,11 @@ export function FinanceStep() {
 
         <div className="grid gap-2 col-span-2">
           <Label htmlFor="proof">Anexar Comprovante</Label>
+          {linkProof && (
+            <Link to={linkProof} target="_blank" className="text-muted-foreground">
+              <small>{nameProof}</small>
+            </Link>
+          )}
           <Input
             id="proof"
             className="w-full"

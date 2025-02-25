@@ -14,9 +14,6 @@ import { useProjectController } from "./useProjectController"
 export default function Projects() {
   const { projects, handleDeleteUser, isLoadingDelete, pagination, isLoading } = useProjectController(50);
 
-  console.log(projects);
-
-
   const pages = useMemo(() => {
     return generateEllipsisPagination(pagination.currentPage, pagination.totalPages);
   }, [pagination.currentPage, pagination.totalPages]);
