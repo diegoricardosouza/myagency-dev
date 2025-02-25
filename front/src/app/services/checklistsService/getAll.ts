@@ -5,7 +5,7 @@ export interface ChecklistsResponse {
   data: Checklist[]
 }
 
-export async function getAll(project?: string) {
+export async function getAll(project?: string | null) {
   const { data } = await httpClient.get<ChecklistsResponse>('/checklists', {
     params: {
       project

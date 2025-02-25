@@ -7,7 +7,7 @@ export interface Project {
   name: string;
   phone: string;
   email: string;
-  number_pages: number;
+  number_pages: string;
   technical_information: string;
   observations: string;
   value_project: number;
@@ -23,5 +23,6 @@ export interface Project {
   closing_date: string;
   calendar_days: string;
   pages: string[];
+  checklists: string[];
   user: User;
 }
