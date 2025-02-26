@@ -6,6 +6,7 @@ import {
 } from "lucide-react"
 import * as React from "react"
 
+import { useAuth } from "@/app/hooks/useAuth"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
@@ -73,14 +74,33 @@ const data = {
   ]
 }
 
+const dataClient = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+      isActive: true
+    }
+  ]
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuth();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {user?.data.level === 'ADMIN' && (
+          <NavMain items={data.navMain} />
+        )}
+
+        {user?.data.level === 'CLIENTE' && (
+          <NavMain items={dataClient.navMain} />
+        )}
       </SidebarContent>
       <SidebarFooter className="border-t">
         <NavUser />
