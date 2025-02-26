@@ -1,3 +1,4 @@
+import { useAuth } from "@/app/hooks/useAuth";
 import { usePagination } from "@/app/hooks/usePagination";
 import { projectsService } from "@/app/services/projectsService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -5,8 +6,8 @@ import { toast } from "sonner";
 
 export function useProjectController(perPage = 6) {
   const pagination = usePagination(perPage);
-
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { data, isFetching, isLoading } = useQuery({
     queryKey: ['projects', { page: pagination.currentPage, perPage}],
@@ -19,9 +20,6 @@ export function useProjectController(perPage = 6) {
       return response;
     },
   });
-
-
-
 
   const {
     isPending: isLoadingDelete,
@@ -49,6 +47,7 @@ export function useProjectController(perPage = 6) {
     handleDeleteUser,
     isLoadingDelete,
     pagination,
-    isLoading
+    isLoading,
+    user
   };
 }

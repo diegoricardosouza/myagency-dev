@@ -12,7 +12,7 @@ import { ProjectItem } from "./components/ProjectItem"
 import { useProjectController } from "./useProjectController"
 
 export default function Projects() {
-  const { projects, handleDeleteUser, isLoadingDelete, pagination, isLoading } = useProjectController(50);
+  const { projects, handleDeleteUser, isLoadingDelete, pagination, isLoading, user } = useProjectController(50);
 
   const pages = useMemo(() => {
     return generateEllipsisPagination(pagination.currentPage, pagination.totalPages);
@@ -20,16 +20,18 @@ export default function Projects() {
 
   return (
     <div>
-      <div className="flex mb-4">
-        <Button size="sm" className="h-8 gap-1" asChild>
-          <Link to="/projetos/novo">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Novo Projeto
-            </span>
-          </Link>
-        </Button>
-      </div>
+      {user?.data.level === 'ADMIN' && (
+        <div className="flex mb-4">
+          <Button size="sm" className="h-8 gap-1" asChild>
+            <Link to="/projetos/novo">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Novo Projeto
+              </span>
+            </Link>
+          </Button>
+        </div>
+      )}
 
       <Card className="min-h-[700px] relative">
         {isLoadingDelete || isLoading && (

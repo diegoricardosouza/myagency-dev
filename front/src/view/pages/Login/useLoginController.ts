@@ -4,6 +4,7 @@ import { SigninParams } from "@/app/services/authService/signin";
 import { SigninParamsMyagency } from "@/app/services/authService/signinMyagency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,6 +20,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function useLoginController() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit: hookFormSubmit,
@@ -43,7 +46,7 @@ export function useLoginController() {
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
-
+      setIsLoading(true);
       const { token: tokenMyagency } = await mutateAsyncMyagency({
         email: import.meta.env.VITE_PRIVATE_USERMYAGENCY,
         password: import.meta.env.VITE_PRIVATE_PASSMYAGENCY,
@@ -54,8 +57,10 @@ export function useLoginController() {
       signinMyagency(tokenMyagency);
     } catch {
       toast.error("Credenciais inválidas");
+    } finally {
+      setIsLoading(false);
     }
   });
 
-  return { handleSubmit, register, errors, isPending };
+  return { handleSubmit, register, errors, isPending, isLoading };
 }

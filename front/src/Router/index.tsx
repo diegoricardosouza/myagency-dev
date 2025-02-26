@@ -1,5 +1,4 @@
 import { AuthLayout } from "@/view/layouts/AuthLayout";
-import { DashboardV2 } from "@/view/pages/DashboardV2";
 import { Help } from "@/view/pages/Help";
 import { Jobs } from "@/view/pages/Jobs";
 import { FormatsJob } from "@/view/pages/Jobs/Formats";
@@ -9,9 +8,7 @@ import { NotFound } from "@/view/pages/NotFound";
 
 import { DashboardLayoutV2 } from "@/view/layouts/DashboardLayoutV2";
 import Checklists from "@/view/pages/Checklists";
-import Plans from "@/view/pages/Plans";
-import { EditPlan } from "@/view/pages/Plans/EditPlan";
-import { NewPlan } from "@/view/pages/Plans/NewPlan";
+import { DashboardV2 } from "@/view/pages/DashboardV2";
 import { Profile } from "@/view/pages/Profile";
 import Projects from "@/view/pages/Projects";
 import { EditProject } from "@/view/pages/Projects/EditProject";
@@ -46,9 +43,10 @@ export function Router() {
               <Route path="/usuarios" element={<User />} />
               <Route path="/usuarios/novo" element={<NewUser />} />
               <Route path="/usuarios/edit/:id" element={<EditUser />} />
-              <Route path="/planos" element={<Plans />} />
-              <Route path="/planos/novo" element={<NewPlan />} />
-              <Route path="/planos/edit/:id" element={<EditPlan />} />
+              <Route path="/projetos/novo" element={<NewProject />} />
+              <Route path="/projetos/edit/:id" element={<EditProject />} />
+              <Route path="/projetos/detalhes/:id" element={<EditProject />} />
+              <Route path="/configuracoes/checklists" element={<Checklists />} />
             </Route>
 
             <Route path="/solicitacoes" element={<Jobs />} />
@@ -58,9 +56,6 @@ export function Router() {
             <Route path="/perfil" element={<Profile />} />
             <Route path="/ajuda" element={<Help />} />
             <Route path="/projetos" element={<Projects />} />
-            <Route path="/projetos/novo" element={<NewProject />} />
-            <Route path="/projetos/edit/:id" element={<EditProject />} />
-            <Route path="/configuracoes/checklists" element={<Checklists />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
