@@ -24,6 +24,14 @@ class ProjectService
                     ->paginate($perPage);
     }
 
+    public function getAllNoPagination($finished = false)
+    {
+        return $this->repository
+            ->where('finished', $finished)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
     public function new($data, $pages, $checklists = null)
     {
         if (!empty($data['proof'])) {

@@ -7,6 +7,7 @@ use App\Http\Requests\Api\StoreUpdateProjectRequest;
 use App\Http\Resources\Api\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -20,6 +21,12 @@ class ProjectController extends Controller
     public function index()
     {
         return ProjectResource::collection($this->repository->getAll());
+    }
+
+    public function showAll(Request $request)
+    {
+        $finished = $request->get('finished');
+        return ProjectResource::collection($this->repository->getAllNoPagination($finished));
     }
 
     /**

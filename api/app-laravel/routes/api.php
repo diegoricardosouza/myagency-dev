@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function() {
         Route::apiResource('/files-comments', FileCommentController::class);
         Route::apiResource('/projects', ProjectController::class);
         Route::post('/projects/{id}', [ProjectController::class, 'update']);
+        Route::get("/projects-all", [ProjectController::class, 'showAll']);
         Route::apiResource('/checklists', ChecklistController::class);
     });
 
