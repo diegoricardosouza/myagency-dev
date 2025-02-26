@@ -5847,6 +5847,7 @@ __metadata:
     next-themes: "npm:^0.3.0"
     postcss: "npm:^8.4.38"
     react: "npm:^18.2.0"
+    react-countdown: "npm:^2.3.6"
     react-day-picker: "npm:^8.10.0"
     react-dom: "npm:^18.2.0"
     react-dropzone: "npm:^14.2.3"
@@ -7593,6 +7594,18 @@ __metadata:
   peerDependencies:
     react: ">=16.8.6"
   checksum: 10c0/1ed39006eb8f3883f14438c1604ad4b2e41578d0b9c5f33477062e01196cfe01ed9c1db9494602444a37f28c57a66dd444ba8800023a0d9303b7d1c05b2452d1
+  languageName: node
+  linkType: hard
+
+"react-countdown@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "react-countdown@npm:2.3.6"
+  dependencies:
+    prop-types: "npm:^15.7.2"
+  peerDependencies:
+    react: ">= 15"
+    react-dom: ">= 15"
+  checksum: 10c0/defb75cb9802c499eb0d5f6c8c6e4269de1005f9c05d5162bccf45063782fd2f5f87acd95d11f70e623fa75085a546b9d0fb0df27c5287ed6a86334342d903cf
   languageName: node
   linkType: hard
 
