@@ -22,11 +22,11 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
     <Card className="flex flex-col h-full cursor-pointer transition-shadow hover:shadow-md" onClick={onClick}>
       <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{project.project_name}</CardTitle>
+        <div className="flex justify-between items-start gap-[10px]">
+          <CardTitle className="text-lg flex-1 leading-[20px]">{project.project_name}</CardTitle>
           <ProjectTypeBadge type={project.type as ProjectType} />
         </div>
-        <CardDescription className="!mt-0">{project.user.corporate_name}</CardDescription>
+        <CardDescription >{project.user.corporate_name}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="space-y-2">

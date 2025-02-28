@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { localStoragekeys } from "../config/localStorageKeys";
 import { usersService } from "../services/usersService";
 
-interface UserMe {
+export interface UserMe {
   data: {
     id: string;
     corporate_name: string;

@@ -155,5 +155,17 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Geist Sans";
+    font-weight: 400;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
