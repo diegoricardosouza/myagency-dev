@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('plan_name')->nullable();
             $table->string('signed_contract')->nullable();
             $table->string('outsource')->nullable();
+            $table->string('temporary_link')->nullable();
             $table->timestamp('closing_date')->nullable();
             $table->integer('calendar_days')->nullable();
             $table->boolean('finished')->default(false);

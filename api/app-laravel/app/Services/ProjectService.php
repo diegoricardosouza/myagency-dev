@@ -24,10 +24,16 @@ class ProjectService
                     ->paginate($perPage);
     }
 
-    public function getAllNoPagination($finished = false)
+    public function getAllNoPagination($finished)
     {
+        if ($finished !== null) {
+            $finished = filter_var($finished, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        }
+
         return $this->repository
-            ->where('finished', $finished)
+            ->when(!is_null($finished), function ($query) use ($finished) {
+                return $query->where('finished', $finished);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
     }

@@ -24,6 +24,7 @@ class StoreUpdateChecklistRequest extends FormRequest
         return [
             'name' => 'required|min:1|max:255',
             'active' => 'required|boolean',
+            'project_id' => 'nullable|string',
         ];
     }
 }
