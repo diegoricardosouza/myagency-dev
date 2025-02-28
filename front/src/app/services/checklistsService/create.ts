@@ -3,6 +3,7 @@ import { httpClient } from "../httpClient";
 export interface ChecklistsParams {
   name: string;
   active: boolean;
+  project_id?: string;
 }
 
 export async function create(params: ChecklistsParams) {
