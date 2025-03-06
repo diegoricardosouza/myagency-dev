@@ -32,6 +32,9 @@ class Project extends Model
         'calendar_days',
         'user_id',
         'project_name',
+        'temporary_link',
+        'finished',
+        'finished_date',
     ];
 
     public function pages()
