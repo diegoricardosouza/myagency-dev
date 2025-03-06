@@ -23,12 +23,12 @@ class StoreUpdateJobRequest extends FormRequest
     public function rules(): array
     {
         $rules =[
-            'type' => 'required',
+            'type' => 'nullable',
             'status' => [
                 Rule::in(['pending', 'approving', 'changing', 'approved'])
             ],
             'files' => 'array',
-            'files.*' => 'mimes:jpeg,png,jpg,gif,pdf,svg,doc,docx,csv,xlsx,txt,zip,rar|max:20000',
+            'files.*' => 'mimes:jpeg,png,jpg,gif,pdf,svg,doc,docx,csv,xlsx,txt,zip,rar,webp,avif|max:20000',
         ];
 
         if ($this->method() === 'PATCH') {

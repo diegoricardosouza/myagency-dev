@@ -42,6 +42,7 @@ class ProjectResource extends JsonResource
             'pages' => $this->pages,
             'checklists' => $this->checklists,
             'user' => new UserResource($this->user),
+            'jobs' => $this->jobs
         ];
     }
 }

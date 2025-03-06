@@ -107,7 +107,7 @@ class JobService
             ]);
         }
 
-        $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), 'Artes Avulsas');
+        $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), 'Desenvolvimento');
 
         // $this->verifyQtdJobs($id, $jobCreated);
 
@@ -241,8 +241,8 @@ class JobService
         }
 
         Mail::to($emails)->send(new CreateJobMail([
-            'url' => env('URL_FRONT')."/solicitacoes/detalhes/".$job->id,
-            'ref' => 'ART'.Carbon::parse($job->created_at)->format('Y').$job->ref,
+            'url' => env('URL_FRONT')."/projetos/detalhes/".$job->id,
+            'ref' => 'DEV'.Carbon::parse($job->created_at)->format('Y').$job->ref,
             'data' => Carbon::parse($job->created_at)->format('d/m/Y'),
             'hora' => Carbon::parse($job->created_at)->format('H:i:s'),
             'formatos' => $job->format,
@@ -254,7 +254,7 @@ class JobService
             'email' => $job->user->email,
             'whatsapp' => $job->user->whatsapp,
             'files' => implode("\n", $urlFile),
-        ], $job->user->company." - ". $plan ." - ". $job->phrase." (" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
+        ], $job->user->company." - ". $plan ." - ". $job->phrase." (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
     }
 
     // public function sendMailAtt($job, $emails, $plan)

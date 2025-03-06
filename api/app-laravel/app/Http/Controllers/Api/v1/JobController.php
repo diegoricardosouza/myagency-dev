@@ -59,12 +59,6 @@ class JobController extends Controller
     public function store(StoreUpdateJobRequest $request)
     {
         // return $request->all();
-        if ($this->userLogged->credits <= 0) {
-            return response()->json([
-                'error' => 'No permission to create'
-            ], Response::HTTP_FORBIDDEN);
-        }
-
         $data = $request->all();
         $data['user_id'] = !empty($data['user_id']) ? $data['user_id'] : $this->userLogged->id;
         $job = $this->repository->createNew($data, $this->userLogged->id);

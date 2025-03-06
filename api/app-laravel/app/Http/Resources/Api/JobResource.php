@@ -30,7 +30,8 @@ class JobResource extends JsonResource
             'user' => new UserResource($this->user),
             'files' => FileResource::collection($this->files),
             'comments' => CommentResource::collection($this->comments),
-            'project' => new ProjectResource($this->project)
+            'project' => new ProjectResource($this->project),
+            'updated_at' => $this->updated_at
         ];
     }
 }

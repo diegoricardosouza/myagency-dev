@@ -26,7 +26,8 @@ class Job extends Model
         'type',
         'status',
         'user_id',
-        'ref'
+        'ref',
+        'project_id'
     ];
 
     protected static function booted()
