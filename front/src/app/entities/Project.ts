@@ -22,6 +22,9 @@ export interface Project {
   outsource: string;
   closing_date: string;
   calendar_days: string;
+  temporary_link?: string;
+  finished?: boolean;
+  finished_date?: string;
   pages: string[];
   checklists: string[];
   user: User;

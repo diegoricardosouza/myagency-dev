@@ -1,5 +1,6 @@
 import { Comments } from "@/app/entities/Comments";
 import { clsx, type ClassValue } from "clsx";
+import { differenceInDays } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -190,3 +191,8 @@ export function getCardBrand(cardNumber: string): string | null {
   return null;
 }
 
+export function calculateDelay(expirationDate: Date) {
+  const today = new Date()
+  const delay = differenceInDays(today, expirationDate)
+  return delay > 0 ? delay : 0
+}
