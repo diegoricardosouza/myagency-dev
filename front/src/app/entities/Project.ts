@@ -1,3 +1,5 @@
+import { Checklist } from "./Checklist";
+import { Jobs } from "./Jobs";
 import { User } from "./User";
 
 export interface Project {
@@ -25,7 +27,8 @@ export interface Project {
   temporary_link?: string;
   finished?: boolean;
   finished_date?: string;
-  pages: string[];
-  checklists: string[];
+  pages: Jobs[];
+  jobs: Jobs[];
+  checklists: Checklist[];
   user: User;
 }

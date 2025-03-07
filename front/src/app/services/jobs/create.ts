@@ -8,8 +8,9 @@ export interface JobParams {
   phrase?: string | null | undefined;
   content: string;
   obs?: string | null | undefined;
-  type: string;
+  type?: string | null | undefined;
   files?: File[] | null | undefined;
+  project_id?: string | null | undefined;
 }
 
 export async function create(params: JobParams) {
