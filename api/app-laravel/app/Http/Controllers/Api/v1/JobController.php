@@ -37,12 +37,13 @@ class JobController extends Controller
 
     public function showAll(Request $request)
     {
+        $projectId = $request->get('project_id');
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
         $type = $request->get('type');
         $excludeType = $request->get('excludeType');
 
-        return JobResource::collection($this->repository->getAllNoPagination($this->userLogged, $startDate, $endDate, $type, $excludeType));
+        return JobResource::collection($this->repository->getAllNoPagination($projectId, $startDate, $endDate, $type, $excludeType));
     }
 
     /**
@@ -60,8 +61,8 @@ class JobController extends Controller
     {
         // return $request->all();
         $data = $request->all();
-        $data['user_id'] = !empty($data['user_id']) ? $data['user_id'] : $this->userLogged->id;
-        $job = $this->repository->createNew($data, $this->userLogged->id);
+        // $data['user_id'] = !empty($data['user_id']) ? $data['user_id'] : $this->userLogged->id;
+        $job = $this->repository->createNew($data);
         return new JobResource($job);
     }
 

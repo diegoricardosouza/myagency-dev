@@ -17,6 +17,8 @@ class File extends Model
      */
     protected $fillable = [
         'name',
+        'size',
+        'type',
         'job_id',
     ];
 

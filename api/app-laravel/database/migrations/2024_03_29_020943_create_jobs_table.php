@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id');
+            $table->uuid('user_id')->nullable();
             $table->uuid('project_id');
             $table->unsignedBigInteger('ref')->nullable()->unique();
             $table->string('site')->nullable();

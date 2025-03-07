@@ -55,7 +55,7 @@ class JobService
         return $query->paginate($perPage);
     }
 
-    public function getAllNoPagination($user = null, $startDate = null, $endDate = null, $type = null, $excludeType = null)
+    public function getAllNoPagination($projectId = null, $startDate = null, $endDate = null, $type = null, $excludeType = null)
     {
         // Formatação de datas
         $startDate = $startDate ? $startDate . "T00:00:00.000000Z" : null;
@@ -65,8 +65,12 @@ class JobService
         $query = $this->job->with(['files', 'comments'])->orderBy('created_at', 'desc');
 
         // Condições para CLIENTE
-        if ($user && $user->level == 'CLIENTE') {
-            $query->where('user_id', $user->id);
+        // if ($user && $user->level == 'CLIENTE') {
+        //     $query->where('user_id', $user->id);
+        // }
+
+        if ($projectId) {
+            $query->where('project_id', $projectId);
         }
 
         // Condições de data
@@ -87,12 +91,15 @@ class JobService
         return $query->get();
     }
 
-    public function createNew($data, $id = null)
+    public function createNew($data)
     {
+        // dd($data['files'][0]->getMimeType());
         $jobCreated = $this->job->create($data);
 
         if(!empty($data['files'])){
             foreach ($data['files'] as $file) {
+                $dataFile['size'] = $file->getSize();
+                $dataFile['type'] = $file->getMimeType();
                 $dataFile['job_id'] = $jobCreated->id;
                 $dataFile['name'] = $file->storeAs('jobs', $file->hashName());
                 $fileCreated = File::create($dataFile);
@@ -100,67 +107,29 @@ class JobService
         }
 
         $jobAfterCreation = $this->job->with(['user', 'files'])->where('id', $jobCreated->id)->first();
-
-        if(Auth::user()->credits > 0) {
-            $jobAfterCreation->user()->update([
-                'credits' => (Auth::user()->credits - 1)
-            ]);
-        }
-
         $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), 'Desenvolvimento');
-
-        // $this->verifyQtdJobs($id, $jobCreated);
 
         return $jobCreated;
     }
 
-    // public function verifyQtdJobs($userId, $job)
-    // {
-    //     $user = $this->user->with(['plan'])->where('id', $userId)->first();
-
-    //     // $month = date('m');
-    //     // $year = date('Y');
-    //     // $dataCorte = $year."-". $month."-". $user->day;
-    //     // $dataAtualObj = date('Y-m-d', strtotime("+1 month", strtotime($dataCorte)));
-    //     // $dateStart = $year."-". $month."-". $user->day . "T00:00:00.000000Z";
-    //     // $dateEnd = $dataAtualObj . "T23:59:59.000000Z";
-
-    //     if($job->type == "Atualizações") {
-    //         $this->countJobs($job, 'Atualizações', $user->plan->updates, $user->id, $user->plan->name);
-    //     }
-
-    //     if($job->type == "Mídia Digital") {
-    //         $this->countJobs($job, 'Mídia Digital', $user->plan->digital_midia, $user->id, $user->plan->name);
-    //     }
-
-    //     if($job->type == "Impresso") {
-    //         $this->countJobs($job, 'Impresso', $user->plan->printed, $user->id, $user->plan->name);
-    //     }
-
-    //     if($job->type == "Apresentações") {
-    //         $this->countJobs($job, 'Apresentações', $user->plan->presentations, $user->id, $user->plan->name);
-    //     }
-    // }
-
-    // private function countJobs($job, $type, $qtdPlan, $userId, $planName)
-    // {
-    //     if ($qtdPlan != -1) {
-    //         // Obter o número de solicitações de atualizações para o próximo mês
-    //         $user = $this->user->with(['plan'])->where('id', $userId)->first();
-
-    //         $numAtualizacoes = $this->calculateNumberJobs($user->day, $userId, $type);
-
-    //         // Verificar se excede a quantidade permitida
-    //         if ($numAtualizacoes > $qtdPlan) {
-    //             // Enviar e-mail de aviso $job, $emails, $type
-    //             $this->sendExceededJob($job, env('EMAIL_FINANCEIRO'), $type, $planName);
-    //         }
-    //     }
-    // }
-
     public function update($data, $id)
     {
         $job = $this->job->findOrFail($id);
+        // foreach ($job->files as $file) {
+        //     if ($file->name && Storage::exists($file->name)) {
+        //         Storage::delete($file->name);
+        //     }
+        // }
+        if (!empty($data['files'])) {
+            foreach ($data['files'] as $file) {
+                $dataFile['size'] = $file->getSize();
+                $dataFile['type'] = $file->getMimeType();
+                $dataFile['job_id'] = $job->id;
+                $dataFile['name'] = $file->storeAs('jobs', $file->hashName());
+                $fileCreated = File::create($dataFile);
+            }
+        }
+
         $job->update($data);
 
         return $job;
@@ -200,13 +169,6 @@ class JobService
 
         $comments->files()->delete();
     }
-
-    // public function countNumberJobs($userId, $type)
-    // {
-    //     $user = $this->user->with(['plan'])->where('id', $userId)->first();
-
-    //     return $this->calculateNumberJobs($user->day, $userId, $type);
-    // }
 
     public function calculateNumberJobs($userDayCut, $userId, $type)
     {
@@ -250,11 +212,8 @@ class JobService
             'frase_destaque' => $job->phrase,
             'informacoes' => $job->content,
             'observacoes' => $job->obs,
-            'responsavel' => $job->user->responsible,
-            'email' => $job->user->email,
-            'whatsapp' => $job->user->whatsapp,
             'files' => implode("\n", $urlFile),
-        ], $job->user->company." - ". $plan ." - ". $job->phrase." (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
+        ], $plan ." - ". $job->phrase." (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
     }
 
     // public function sendMailAtt($job, $emails, $plan)

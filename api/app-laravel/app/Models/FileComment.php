@@ -17,6 +17,8 @@ class FileComment extends Model
      */
     protected $fillable = [
         'url',
+        'size',
+        'type',
         'comment_id',
     ];
 

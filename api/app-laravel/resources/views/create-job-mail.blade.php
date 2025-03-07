@@ -35,13 +35,6 @@
     </p>
 
     <p>
-        <b>DADOS DO CLIENTE</b><br>
-        Responsável: {{ $data['responsavel'] }}<br>
-        Email: {{ $data['email'] }}<br>
-        WhatsApp: {{ $data['whatsapp'] }}
-    </p>
-
-    <p>
         <b>ANEXOS</b><br>
         {{ $data['files'] }}
     </p>
