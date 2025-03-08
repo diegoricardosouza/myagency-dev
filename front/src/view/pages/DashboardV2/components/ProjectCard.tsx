@@ -37,7 +37,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Countdown:</span>
+            <span className="text-sm text-muted-foreground">Expira em:</span>
             <CountdownProject
               startDate={project.closing_date}
               numberDays={project.calendar_days}

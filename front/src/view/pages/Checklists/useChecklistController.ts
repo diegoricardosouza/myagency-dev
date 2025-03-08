@@ -3,7 +3,7 @@ import { ChecklistsParams } from "@/app/services/checklistsService/create";
 import { UpdateChecklistsParams } from "@/app/services/checklistsService/update";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -21,15 +21,16 @@ export function useChecklistController() {
   const queryClient = useQueryClient();
   const [onCloseModal, setOnCloseModal] = useState(false);
   const [onCloseEditModal, setOnCloseEditModal] = useState(false);
-  const [id, setId] = useState('');
+  // const [id, setId] = useState('');
+  const idChecklist = useRef<string>('');
 
   const { data: checklistData, isLoading: isLoadingEdit, refetch } = useQuery({
-    queryKey: ['editChecklist', id],
-    enabled: !!id,
+    queryKey: ['editChecklist', idChecklist.current],
+    enabled: !!idChecklist.current,
     staleTime: 0,
     queryFn: async () => {
       try {
-        const response = await checklistsService.getById(id!);
+        const response = await checklistsService.getById(idChecklist.current);
         return response;
       } catch (error) {
         toast.error('Item não encontrado');
@@ -65,10 +66,10 @@ export function useChecklistController() {
     if (checklistData) {
       setValue('name', checklistData.data.name)
     }
-    if (id && onCloseEditModal) {
+    if (idChecklist.current && onCloseEditModal) {
       refetch();
     }
-  }, [checklistData, id, onCloseEditModal, refetch, setValue]);
+  }, [checklistData, onCloseEditModal, refetch, setValue]);
 
   const {
     isPending: isLoadingDelete,
@@ -112,7 +113,8 @@ export function useChecklistController() {
   }
 
   function openEditAccountModal(id: string) {
-    setId(id);
+    // setId(id);
+    idChecklist.current = id;
     setOnCloseEditModal(true);
   }
 
@@ -141,7 +143,7 @@ export function useChecklistController() {
     try {
       await mutateAsyncUpdate({
         ...data,
-        id,
+        id: idChecklist.current,
         active: false
       });
 

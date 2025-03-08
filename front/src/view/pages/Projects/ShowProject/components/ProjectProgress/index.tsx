@@ -36,11 +36,11 @@ export function ProjectProgress({ closeDate, numberDays, pages }: ProjectProgres
         <div className="mb-2">
           <div>
             <p className="text-sm text-muted-foreground">Progresso do Projeto</p>
-            <p className="text-lg font-medium">{percentage}% Concluído</p>
+            <p className="text-lg font-medium">{percentage > 0 ? percentage : 0}% Concluído</p>
           </div>
         </div>
 
-        <Progress value={percentage} className="h-2" />
+        <Progress value={percentage > 0 ? percentage : 0} className="h-2" />
 
         <div className="flex items-center gap-4 mt-4">
           <div className="flex items-center">
