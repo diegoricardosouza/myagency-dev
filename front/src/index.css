@@ -151,6 +151,7 @@
 @layer base {
   * {
     @apply border-border;
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
@@ -159,13 +160,20 @@
   }
 }
 
+.scroll-selected-files::-webkit-scrollbar {
+  width: 7px;
+}
 
+.scroll-selected-files::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+.scroll-selected-files::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+.scroll-selected-files::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

@@ -196,3 +196,54 @@ export function calculateDelay(expirationDate: Date) {
   const delay = differenceInDays(today, expirationDate)
   return delay > 0 ? delay : 0
 }
+
+export function formatBytes(bytes: number, decimals: number = 2): string {
+  if (bytes === 0) return '0 Bytes';
+
+  const k: number = 1024;
+  const dm: number = decimals < 0 ? 0 : decimals;
+  const sizes: string[] = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const i: number = Math.floor(Math.log(bytes) / Math.log(k));
+
+  const formattedValue = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+  return `${formattedValue} ${sizes[i]}`;
+}
+
+export function getCardColorClass(status: string | undefined) {
+  switch (status) {
+    case "approved":
+      return "border-green-500 bg-green-50"
+    case "approving":
+      return "border-blue-500 bg-blue-50"
+    case "changing":
+      return "border-yellow-500 bg-yellow-50"
+    default:
+      return "border-gray-300"
+  }
+}
+
+export function getTextBadgeColorClass(status: string | undefined) {
+  switch (status) {
+    case "approved":
+      return "text-green-600"
+    case "approving":
+      return "text-blue-600"
+    case "changing":
+      return "text-yellow-600"
+    default:
+      return "text-gray-600"
+  }
+}
+
+export function getStatusText(status: string | undefined) {
+  switch (status) {
+    case "approved":
+      return "Aprovado"
+    case "approving":
+      return "Em Progresso"
+    case "changing":
+      return "Em Revisão"
+    default:
+      return "Pendente"
+  }
+}
