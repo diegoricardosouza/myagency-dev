@@ -23,8 +23,8 @@ class ProjectSeeder extends Seeder
         $user = User::create([
             'corporate_name' => $faker->company,
             'fantasy_name' => 'Inovasite',
-            'cnpj' => '78.065.983/0001-31',
-            'cpf' => '649.575.030-79',
+            'cnpj' => '08.312.190/0001-94',
+            'cpf' => '040.328.600-09',
             'responsible' => $faker->name(),
             'zipcode' => $faker->postcode(),
             'address' => $faker->streetAddress(),
@@ -46,7 +46,7 @@ class ProjectSeeder extends Seeder
         $plansId = ['9dedc613-bd7c-4f28-b9af-4af3464f5b5c', '9cec0007-351b-4bb6-a2aa-0f32e1a3a6da'];
         $plansName = ['Start', 'Agências - Ouro'];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             // Seleciona um índice aleatório que irá pegar o par de plano
             $randomIndex = array_rand($plansId);
             $selectedPlanId = $plansId[$randomIndex];
