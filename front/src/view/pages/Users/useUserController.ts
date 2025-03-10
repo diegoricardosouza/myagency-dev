@@ -1,20 +1,18 @@
-import { usePagination } from "@/app/hooks/usePagination";
+import { useAuth } from "@/app/hooks/useAuth";
 import { usersService } from "@/app/services/usersService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function useUserController(perPage = 6) {
-  const pagination = usePagination(perPage);
+export function useUserController() {
+  const { user } = useAuth();
 
   const queryClient = useQueryClient();
 
   const { data, isFetching, isLoading } = useQuery({
-    queryKey: ['users', { page: pagination.currentPage, perPage}],
+    queryKey: ['users'],
     staleTime: 0,
     queryFn: async () => {
-      const response = await usersService.getAll(pagination.currentPage, perPage);
-
-      pagination.setTotalItems(response.meta.total);
+      const response = await usersService.getAllNoPagination();
 
       return response;
     },
@@ -45,7 +43,7 @@ export function useUserController(perPage = 6) {
     isFetching,
     handleDeleteUser,
     isLoadingDelete,
-    pagination,
-    isLoading
+    isLoading,
+    user
   };
 }
