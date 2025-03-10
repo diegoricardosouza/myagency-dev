@@ -47,6 +47,26 @@ class StoreUpdateProjectRequest extends FormRequest
             'checklists' => 'required|array',
         ];
 
+        if ($this->method() === 'PATCH' || $this->method() === 'POST') {
+            $rules = [
+                'type' => 'nullable',
+                'project_name' => 'nullable',
+                'name' => 'nullable',
+                'phone' => 'nullable',
+                'email' => 'nullable',
+                'number_pages' => 'nullable|int',
+                'value_project' => 'nullable|numeric',
+                'payment_method' => 'nullable',
+                'plan_id' => 'nullable',
+                'signed_contract' => 'nullable',
+                'closing_date' => 'nullable',
+                'calendar_days' => 'nullable|int',
+                'pages' => 'nullable|array',
+                'pages.*' => 'nullable|string',
+                'checklists' => 'nullable|array',
+            ];
+        }
+
         return $rules;
     }
 }

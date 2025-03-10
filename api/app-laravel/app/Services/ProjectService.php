@@ -91,30 +91,34 @@ class ProjectService
         // dd($project);
 
         // Atualizar páginas
-        $existingPages = $project->pages->pluck('name')->toArray();
-        $pagesToDelete = array_diff($existingPages, $pages);
-        $pagesToAdd = array_diff($pages, $existingPages);
+        if($pages) {
+            $existingPages = $project->pages->pluck('name')->toArray();
+            $pagesToDelete = array_diff($existingPages, $pages);
+            $pagesToAdd = array_diff($pages, $existingPages);
 
-        if ($pagesToDelete) {
-            $project->pages()->whereIn('name', $pagesToDelete)->delete();
-        }
-        foreach ($pagesToAdd as $pageName) {
-            $project->pages()->create(['name' => $pageName]);
+            if ($pagesToDelete) {
+                $project->pages()->whereIn('name', $pagesToDelete)->delete();
+            }
+            foreach ($pagesToAdd as $pageName) {
+                $project->pages()->create(['name' => $pageName]);
+            }
         }
 
         // Atualizar checklists
         // Extraímos os nomes dos checklists enviados (array de arrays)
-        $newChecklistNames = array_column($checklists, 'name');
-        $existingChecks = $project->checklists->pluck('name')->toArray();
+        if($checklists) {
+            $newChecklistNames = array_column($checklists, 'name');
+            $existingChecks = $project->checklists->pluck('name')->toArray();
 
-        $checksToDelete = array_diff($existingChecks, $newChecklistNames);
-        $checksToAdd = array_diff($newChecklistNames, $existingChecks);
+            $checksToDelete = array_diff($existingChecks, $newChecklistNames);
+            $checksToAdd = array_diff($newChecklistNames, $existingChecks);
 
-        if ($checksToDelete) {
-            $project->checklists()->whereIn('name', $checksToDelete)->delete();
-        }
-        foreach ($checksToAdd as $checkName) {
-            $project->checklists()->create(['name' => $checkName, 'active' => false]);
+            if ($checksToDelete) {
+                $project->checklists()->whereIn('name', $checksToDelete)->delete();
+            }
+            foreach ($checksToAdd as $checkName) {
+                $project->checklists()->create(['name' => $checkName, 'active' => false]);
+            }
         }
 
         return $project;
