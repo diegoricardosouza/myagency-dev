@@ -1,9 +1,5 @@
 import { AuthLayout } from "@/view/layouts/AuthLayout";
 import { Help } from "@/view/pages/Help";
-import { Jobs } from "@/view/pages/Jobs";
-import { FormatsJob } from "@/view/pages/Jobs/Formats";
-import { NewFormats } from "@/view/pages/Jobs/Formats/NewFormats";
-import { ViewJob } from "@/view/pages/Jobs/components/ViewJob";
 import { NotFound } from "@/view/pages/NotFound";
 
 import { DashboardLayoutV2 } from "@/view/layouts/DashboardLayoutV2";
@@ -50,10 +46,6 @@ export function Router() {
               <Route path="/configuracoes/checklists" element={<Checklists />} />
             </Route>
 
-            <Route path="/solicitacoes" element={<Jobs />} />
-            <Route path="/solicitacoes/novo" element={<FormatsJob />} />
-            <Route path="/solicitacoes/:formats" element={<NewFormats />} />
-            <Route path="/solicitacoes/detalhes/:id" element={<ViewJob />} />
             <Route path="/perfil" element={<Profile />} />
             <Route path="/ajuda" element={<Help />} />
             <Route path="/projetos" element={<Projects />} />
