@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Checklist;
 use App\Models\PageProject;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,16 +27,27 @@ class ProjectService
 
     public function getAllNoPagination($finished)
     {
+        $query = $this->repository->orderBy('created_at', 'desc');
+
         if ($finished !== null) {
             $finished = filter_var($finished, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            $query->when(!is_null($finished), function ($query) use ($finished) {
+                return $query->where('finished', $finished);
+            });
         }
 
-        return $this->repository
-            ->when(!is_null($finished), function ($query) use ($finished) {
-                return $query->where('finished', $finished);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if(Auth::user()->level != 'ADMIN') {
+            $query->where('user_id', Auth::user()->id);
+        }
+
+        return $query->get();
+
+        // return $this->repository
+        //     ->when(!is_null($finished), function ($query) use ($finished) {
+        //         return $query->where('finished', $finished);
+        //     })
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
     }
 
     public function new($data, $pages, $checklists = null)

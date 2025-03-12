@@ -16,13 +16,7 @@ class JobController extends Controller
 
     public function __construct(
         protected JobService $repository,
-    ) {
-        $this->middleware(function ($request, $next) {
-            $this->userLogged = Auth::user();
-
-            return $next($request);
-        });
-    }
+    ) {}
 
     /**
      * Display a listing of the resource.
