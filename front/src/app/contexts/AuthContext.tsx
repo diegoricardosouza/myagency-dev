@@ -32,6 +32,7 @@ interface AuthContextValue {
   user: UserMe | undefined;
   signin(token: string): void;
   signinMyagency(token: string): void;
+  signinArts(token: string): void;
   signout(): void;
 }
 
@@ -62,11 +63,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(localStoragekeys.TOKENMYAGENCY, token);
   }, []);
 
+  const signinArts = useCallback((token: string) => {
+    localStorage.setItem(localStoragekeys.TOKENARTS, token);
+  }, []);
+
   const signout = useCallback(() => {
     localStorage.removeItem(localStoragekeys.TOKEN);
     localStorage.removeItem(localStoragekeys.TOKENMYAGENCY);
+    localStorage.removeItem(localStoragekeys.TOKENARTS);
     queryClient.invalidateQueries({ queryKey: ['users','me'] });
     queryClient.invalidateQueries({ queryKey: ['usersMyagency', 'myagency'] });
+    queryClient.invalidateQueries({ queryKey: ['usersArts', 'arts'] });
 
     setSignedIn(false);
   }, [queryClient]);
@@ -85,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user: data,
         signin,
         signinMyagency,
+        signinArts,
         signout
       }}
     >
