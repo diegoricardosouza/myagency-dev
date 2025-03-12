@@ -36,15 +36,16 @@ export function Router() {
         <Route element={<AuthGuard isPrivate />}>
           <Route element={<DashboardLayoutV2 />}>
             <Route path="/" element={<DashboardV2 />} />
+            <Route path="/concluidos" element={<DashboardV2 finished />} />
             <Route element={<VerifyLevel level="ADMIN" />}>
               <Route path="/usuarios" element={<User />} />
               <Route path="/usuarios/novo" element={<NewUser />} />
               <Route path="/usuarios/edit/:id" element={<EditUser />} />
               <Route path="/projetos/novo" element={<NewProject />} />
               <Route path="/projetos/edit/:id" element={<EditProject />} />
-              <Route path="/projetos/detalhes/:id" element={<ShowProject />} />
               <Route path="/configuracoes/checklists" element={<Checklists />} />
             </Route>
+            <Route path="/projetos/detalhes/:id" element={<ShowProject />} />
 
             <Route path="/perfil" element={<Profile />} />
             <Route path="/ajuda" element={<Help />} />

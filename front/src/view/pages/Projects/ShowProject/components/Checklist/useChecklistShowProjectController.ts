@@ -1,4 +1,5 @@
 import { Checklist } from "@/app/entities/Checklist";
+import { useAuth } from "@/app/hooks/useAuth";
 import { checklistsService } from "@/app/services/checklistsService";
 import { ChecklistsParams } from "@/app/services/checklistsService/create";
 import { UpdateChecklistsParams } from "@/app/services/checklistsService/update";
@@ -18,11 +19,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function useChecklistShowProjectController() {
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [localChecklist, setLocalChecklist] = useState<Checklist[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isCloseEditModal, setIsCloseEditModal] = useState(false);
-  const { id } = useParams();
-  const queryClient = useQueryClient();
   const idChecklist = useRef<string>('');
 
   const { data: checklistEditData, isLoading: isLoadingEdit, refetch } = useQuery({
@@ -223,6 +225,7 @@ export function useChecklistShowProjectController() {
     isCloseEditModal,
     isLoadingEdit,
     handleSubmitUpdate,
-    isPendingUpdate
+    isPendingUpdate,
+    user
   }
 }

@@ -1,6 +1,7 @@
 import { LEVELS, LevelProps, STATES } from "@/app/config/constants";
 import { InputCepCardMask } from "@/view/components/InputCepCardMask";
 import { InputMask } from "@/view/components/InputMask";
+import { Spinner } from "@/view/components/Spinner";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { Input } from "@/view/components/ui/input";
@@ -12,7 +13,17 @@ import { Link } from "react-router-dom";
 import { useNewUserController } from "./useNewUserController";
 
 export function NewUser() {
-  const { handleSubmit, errors, register, control, isPending, zipcodeValid } = useNewUserController();
+  const {
+    handleSubmit,
+    errors,
+    register,
+    control,
+    zipcodeValid,
+    plans,
+    showPlanField,
+    isPendingPlan,
+    isLoading
+  } = useNewUserController();
 
   return (
     <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -328,13 +339,120 @@ export function NewUser() {
                       )}
                     />
                   </div>
+
+                  <div className="grid gap-3">
+                    <Label htmlFor="arts">Cadastrar no Artes</Label>
+                    <Controller
+                      control={control}
+                      name="arts"
+                      defaultValue="Não"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <SelectTrigger
+                            id="arts"
+                            aria-label="Selecione..."
+                          >
+                            <SelectValue placeholder="Selecione..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Sim">Sim</SelectItem>
+                            <SelectItem value="Não">Não</SelectItem>
+                          </SelectContent>
+
+                          {errors?.arts?.message && (
+                            <div className="flex gap-2 items-center text-red-700">
+                              <span className="text-xs">{errors?.arts?.message}</span>
+                            </div>
+                          )}
+                        </Select>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid gap-3">
+                    <Label htmlFor="myagency">Cadastrar no Minha Agência</Label>
+                    <Controller
+                      control={control}
+                      name="myagency"
+                      defaultValue="Não"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <SelectTrigger
+                            id="myagency"
+                            aria-label="Selecione..."
+                          >
+                            <SelectValue placeholder="Selecione..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Sim">Sim</SelectItem>
+                            <SelectItem value="Não">Não</SelectItem>
+                          </SelectContent>
+
+                          {errors?.myagency?.message && (
+                            <div className="flex gap-2 items-center text-red-700">
+                              <span className="text-xs">{errors?.myagency?.message}</span>
+                            </div>
+                          )}
+                        </Select>
+                      )}
+                    />
+                  </div>
+
+                  {showPlanField && (
+                    <div className="grid gap-2 relative min-h-[62px]">
+                      {isPendingPlan ? (
+                        <div className="w-full h-full flex justify-center items-center absolute top-0 left-0">
+                          <Spinner className="w-6 h-6 fill-primary mr-0" />
+                        </div>
+                      ) : (
+                        <>
+                          <Label htmlFor="plan">Plano</Label>
+                          <Controller
+                            control={control}
+                            name="plan"
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                              <Select
+                                onValueChange={onChange}
+                                value={value}
+                              >
+                                <SelectTrigger
+                                  id="plan"
+                                  aria-label="Selecione..."
+                                >
+                                  <SelectValue placeholder="Selecione..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {plans?.map((plan) => (
+                                    <SelectItem key={plan.id} value={plan.id}>{plan.name}</SelectItem>
+                                  ))}
+                                </SelectContent>
+
+                                {errors?.plan?.message && (
+                                  <div className="flex gap-2 items-center text-red-700">
+                                    <span className="text-xs">{errors?.plan?.message}</span>
+                                  </div>
+                                )}
+                              </Select>
+                            )}
+                          />
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
             <div className="flex items-center justify-center gap-2 md:ml-auto md:flex">
-              <Button type="submit" size="sm" disabled={isPending}>
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type="submit" size="sm" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Cadastrar
               </Button>
             </div>

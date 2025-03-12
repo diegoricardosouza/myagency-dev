@@ -8,7 +8,7 @@ import { ProjectType } from "./components/ProjectTypeBadge";
 
 export type ProjectStatus = "no prazo" | "atrasado"
 
-export function useDashboardControllerV2() {
+export function useDashboardControllerV2(finished = false) {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState<ProjectType | "todos">("todos")
@@ -17,10 +17,10 @@ export function useDashboardControllerV2() {
   const navigate = useNavigate();
 
   const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects', ],
+    queryKey: ['projects', finished],
     staleTime: 0,
     queryFn: async () => {
-      const response = await projectsService.getAllNoPagination(false);
+      const response = await projectsService.getAllNoPagination(finished);
 
       return response;
     },

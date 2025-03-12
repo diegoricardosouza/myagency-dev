@@ -48,7 +48,7 @@ export function useColumnsUser(): ColumnDef<User>[] {
       ),
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 pl-4">
             <div className="grid gap-1">
               <p className="text-sm font-medium leading-none">
                 {row.original.corporate_name}
@@ -71,7 +71,7 @@ export function useColumnsUser(): ColumnDef<User>[] {
       ),
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 pl-4">
             <div className="grid gap-1">
               <p className="text-sm font-medium leading-none">
                 {row.original.email}
@@ -91,7 +91,14 @@ export function useColumnsUser(): ColumnDef<User>[] {
           Cliente
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="pl-4">
+            {row.original.responsible}
+          </div>
+        );
+      }
     },
     {
       accessorKey: "level",
@@ -100,13 +107,13 @@ export function useColumnsUser(): ColumnDef<User>[] {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tipo
+          Nível
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => {
         return (
-          <div>
+          <div className="pl-4">
             <Badge variant="outline">{row.original.level}</Badge>
           </div>
         );
@@ -119,7 +126,7 @@ export function useColumnsUser(): ColumnDef<User>[] {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0">
           <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
             <Link to={`/usuarios/edit/${row.original.id}`}>
               <Edit className="w-4 h-4" />
@@ -128,7 +135,16 @@ export function useColumnsUser(): ColumnDef<User>[] {
           </Button>
           <AlertDialog>
             <AlertDialogTrigger>
-              <Trash2 className="w-4 h-4" />
+              <Button
+                className="bg-transparent text-[#020817] cursor-pointer h-8 w-8"
+                variant="ghost"
+                asChild
+                size="icon"
+              >
+                <a>
+                  <Trash2 className="w-4 h-4" />
+                </a>
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

@@ -1,3 +1,4 @@
+import { UserMe } from "@/app/contexts/AuthContext";
 import { Jobs } from "@/app/entities/Jobs";
 import { getCardColorClass, getStatusText, getTextBadgeColorClass } from "@/lib/utils";
 import { Spinner } from "@/view/components/Spinner";
@@ -14,6 +15,7 @@ interface PageCardProps {
   page: Jobs;
   disabled?: boolean;
   isLoadingDelete?: boolean;
+  user: UserMe;
   deleteItem(id: string): void;
   approvedPage(id: string): void;
   desapprovedPage(id: string): void;
@@ -33,7 +35,8 @@ export function PageCard({
   inProgressPage,
   reviewPage,
   openModalDetails,
-  openModalEditPage
+  openModalEditPage,
+  user
 }: PageCardProps) {
 
   return (
@@ -80,120 +83,124 @@ export function PageCard({
           </Tooltip>
         </TooltipProvider>
 
-        {page.status !== "approved" && (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild disabled={disabled}>
-                <Button variant="outline" size="icon" className="w-8 h-8" onClick={openModalEditPage}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Editar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+        {user.data.level === 'ADMIN' && (
+          <>
+            {page.status !== "approved" && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild disabled={disabled}>
+                    <Button variant="outline" size="icon" className="w-8 h-8" onClick={openModalEditPage}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Editar</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
 
-        <TooltipProvider delayDuration={0}>
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger disabled={disabled} className="disabled:pointer-events-none disabled:opacity-50">
-              {isLoadingDelete ? (
-                <div className="w-8 h-8 flex items-center rounded-md justify-center bg-red-500 text-white hover:bg-red-800">
-                  <Spinner className="w-4 h-4 mr-0 fill-white" />
-                </div>
-              ) : (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+            <TooltipProvider delayDuration={0}>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger disabled={disabled} className="disabled:pointer-events-none disabled:opacity-50">
+                  {isLoadingDelete ? (
                     <div className="w-8 h-8 flex items-center rounded-md justify-center bg-red-500 text-white hover:bg-red-800">
-                      <Trash2 className="w-4 h-4" />
+                      <Spinner className="w-4 h-4 mr-0 fill-white" />
                     </div>
-                  </AlertDialogTrigger>
+                  ) : (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <div className="w-8 h-8 flex items-center rounded-md justify-center bg-red-500 text-white hover:bg-red-800">
+                          <Trash2 className="w-4 h-4" />
+                        </div>
+                      </AlertDialogTrigger>
 
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Deseja realmente excluir?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Essa ação não pode ser desfeita. Isso excluirá permanentemente os dados de nossos servidores.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => deleteItem(page.id)}>Confirmar</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Deseja realmente excluir?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Essa ação não pode ser desfeita. Isso excluirá permanentemente os dados de nossos servidores.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteItem(page.id)}>Confirmar</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
 
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Excluir</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Excluir</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-        {(page.status !== "approving" && page.status !== "approved") && (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild disabled={disabled}>
-                <Button onClick={() => inProgressPage(page.id)} size="icon" className="w-8 h-8">
-                  <Laptop2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
+            {(page.status !== "approving" && page.status !== "approved") && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild disabled={disabled}>
+                    <Button onClick={() => inProgressPage(page.id)} size="icon" className="w-8 h-8">
+                      <Laptop2 className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
 
-                <p>Trabalhando</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+                    <p>Trabalhando</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
 
-        {(page.status !== "approved" && page.status !== "changing") && (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild disabled={disabled}>
-                <Button onClick={() => reviewPage(page.id)} size="icon" className="bg-yellow-500 hover:bg-yellow-600 w-8 h-8">
-                  <PencilRuler className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
+            {(page.status !== "approved" && page.status !== "changing") && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild disabled={disabled}>
+                    <Button onClick={() => reviewPage(page.id)} size="icon" className="bg-yellow-500 hover:bg-yellow-600 w-8 h-8">
+                      <PencilRuler className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
 
-                <p>Em Revisão</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+                    <p>Em Revisão</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
 
-        {page.status !== "approved" && (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild disabled={disabled}>
-                <Button onClick={() => approvedPage(page.id)} size="icon" className="bg-green-500 hover:bg-green-600 w-8 h-8">
-                  <ThumbsUp className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
+            {page.status !== "approved" && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild disabled={disabled}>
+                    <Button onClick={() => approvedPage(page.id)} size="icon" className="bg-green-500 hover:bg-green-600 w-8 h-8">
+                      <ThumbsUp className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
 
-                <p>Aprovar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+                    <p>Aprovar</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
 
-        {page.status === "approved" && (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild disabled={disabled}>
-                <Button onClick={() => desapprovedPage(page.id)} size="icon" className="bg-slate-500 hover:bg-slate-600 w-8 h-8">
-                  <ThumbsDown className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
+            {page.status === "approved" && (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild disabled={disabled}>
+                    <Button onClick={() => desapprovedPage(page.id)} size="icon" className="bg-slate-500 hover:bg-slate-600 w-8 h-8">
+                      <ThumbsDown className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
 
-                <p>Desaprovar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                    <p>Desaprovar</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </>
         )}
       </CardFooter>
     </Card>

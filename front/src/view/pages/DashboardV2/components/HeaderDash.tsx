@@ -20,6 +20,7 @@ interface HeaderDashProps {
   user: UserMe;
   filterType: string;
   filterStatus: string;
+  finished?: boolean;
 }
 
 export function HeaderDash({
@@ -32,7 +33,8 @@ export function HeaderDash({
   user,
   filterType,
   filterStatus,
-  clearFilter
+  clearFilter,
+  finished
 }: HeaderDashProps) {
   return (
     <div className='mb-6'>
@@ -69,19 +71,21 @@ export function HeaderDash({
               <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterType("Sistema")}>Sistema</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-1">
-                <Filter className="h-4 w-4" />
-                Status: {filterStatus === "todos" ? "Todos" : filterStatus}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("todos")}>Todos os status</DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("no prazo")}>No prazo</DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("atrasado")}>Atrasados</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {!finished && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-1">
+                  <Filter className="h-4 w-4" />
+                  Status: {filterStatus === "todos" ? "Todos" : filterStatus}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("todos")}>Todos os status</DropdownMenuItem>
+                <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("no prazo")}>No prazo</DropdownMenuItem>
+                <DropdownMenuItem className='cursor-pointer' onClick={() => setFilterStatus("atrasado")}>Atrasados</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button
             variant="outline"
             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}

@@ -4,7 +4,7 @@ import { Badge } from "@/view/components/ui/badge"
 import { Button } from "@/view/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
-import { ChevronsUpDown, Edit, Layout, Palette, Rocket, Settings, Trash2 } from "lucide-react"
+import { ChevronsUpDown, Edit, Eye, Layout, Palette, Rocket, Settings, Trash2 } from "lucide-react"
 import { useMemo } from "react"
 import { Link } from "react-router-dom"
 import { useProjectController } from "../useProjectController"
@@ -78,6 +78,30 @@ export function useColumnsProject(): ColumnDef<Project>[] {
       },
     },
     {
+      accessorKey: "finished",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex space-x-2 pl-4">
+            {row.original.finished ? 'Concluído' : 'Em Andamento'}
+          </div>
+        );
+      },
+      filterFn: (row, id, value) => {
+        // Converte o valor numérico para string para comparação
+        const rowValue = String(row.getValue(id))
+        return value.includes(rowValue)
+      },
+    },
+    {
       accessorKey: "closing_date",
       header: ({ column }) => (
         <Button
@@ -100,16 +124,39 @@ export function useColumnsProject(): ColumnDef<Project>[] {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0">
+          <Button
+            className="bg-transparent text-[#020817] cursor-pointer h-8 w-8"
+            variant="ghost"
+            asChild
+            size="icon"
+          >
+            <Link to={`/projetos/detalhes/${row.original.id}`}>
+              <Eye className="w-4 h-4" />
+              <span className="sr-only">Detalhes</span>
+              {/* <Trash2 className="w-4 h-4" /> */}
+            </Link>
+          </Button>
+
           <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
             <Link to={`/projetos/edit/${row.original.id}`}>
               <Edit className="w-4 h-4" />
               <span className="sr-only">Editar</span>
             </Link>
           </Button>
+
           <AlertDialog>
             <AlertDialogTrigger>
-              <Trash2 className="w-4 h-4" />
+              <Button
+                className="bg-transparent text-[#020817] cursor-pointer h-8 w-8"
+                variant="ghost"
+                asChild
+                size="icon"
+              >
+                <a>
+                  <Trash2 className="w-4 h-4" />
+                </a>
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

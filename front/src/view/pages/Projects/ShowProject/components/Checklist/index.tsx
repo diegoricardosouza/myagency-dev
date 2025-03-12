@@ -27,17 +27,20 @@ export function Checklist() {
     isCloseEditModal,
     closeEditModal,
     openEditModal,
-    handleSubmitUpdate
+    handleSubmitUpdate,
+    user
   } = useChecklistShowProjectController();
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Checklist do Projeto</h2>
-        <Button variant="outline" onClick={openModal}>
-          <Plus className="h-4 w-4 mr-2" />
-          Adicionar Item
-        </Button>
+        {user?.data.level === 'ADMIN' && (
+          <Button variant="outline" onClick={openModal}>
+            <Plus className="h-4 w-4 mr-2" />
+            Adicionar Item
+          </Button>
+        )}
       </div>
 
       <Card className="relative overflow-hidden min-h-[175px]">
@@ -55,7 +58,7 @@ export function Checklist() {
             <ul className="space-y-1">
               {checklist.map((item) => {
                 return (
-                  <li key={item.id} className="flex items-center gap-3">
+                  <li key={item.id} className="flex items-center gap-3 min-h-10">
                     <div
                       className={cn(
                         'flex h-5 w-5 shrink-0 items-center justify-center rounded-none border border-primary relative',
@@ -68,49 +71,51 @@ export function Checklist() {
                     </div>
                     <span className={item.active ? "line-through text-muted-foreground" : ""}>{item.name}</span>
 
-                    <div className="ml-auto flex gap-0 items-center">
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <Button
-                            className="bg-transparent text-[#020817] cursor-pointer"
-                            variant="ghost"
-                            asChild
-                            size="icon"
-                          >
-                            <a>
-                              <Trash2 className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        </AlertDialogTrigger>
+                    {user?.data.level === 'ADMIN' && (
+                      <div className="ml-auto flex gap-0 items-center">
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button
+                              className="bg-transparent text-[#020817] cursor-pointer"
+                              variant="ghost"
+                              asChild
+                              size="icon"
+                            >
+                              <a>
+                                <Trash2 className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </AlertDialogTrigger>
 
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Deseja realmente excluir?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Essa ação não pode ser desfeita. Isso excluirá permanentemente os dados de nossos servidores.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteItem(item.id)}>Confirmar</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Deseja realmente excluir?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Essa ação não pode ser desfeita. Isso excluirá permanentemente os dados de nossos servidores.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteItem(item.id)}>Confirmar</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
 
-                      <Button
-                        className="bg-transparent text-[#020817] cursor-pointer"
-                        variant="ghost"
-                        asChild
-                        size="icon"
-                        onClick={() => {
-                          openEditModal(item.id)
-                        }}
-                      >
-                        <a>
-                          <Edit className="w-4 h-4" />
-                        </a>
-                      </Button>
-                    </div>
+                        <Button
+                          className="bg-transparent text-[#020817] cursor-pointer"
+                          variant="ghost"
+                          asChild
+                          size="icon"
+                          onClick={() => {
+                            openEditModal(item.id)
+                          }}
+                        >
+                          <a>
+                            <Edit className="w-4 h-4" />
+                          </a>
+                        </Button>
+                      </div>
+                    )}
                   </li>
                 );
               })}

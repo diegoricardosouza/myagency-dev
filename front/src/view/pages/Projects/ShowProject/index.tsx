@@ -14,6 +14,7 @@ import { ModalProjectDetails } from "./components/ModalProjectDetails"
 import { PageCard } from "./components/PageCard"
 import { ProjectDetails } from "./components/ProjectDetails"
 import { ProjectProgress } from "./components/ProjectProgress"
+import { TechnicalInformation } from "./components/TechnicalInformation"
 import { TemporaryLink } from "./components/TemporaryLink"
 import { useShowProjectController } from "./useShowProjectController"
 
@@ -74,27 +75,31 @@ export default function ShowProject() {
           <Tabs defaultValue="pages">
             <TabsList className="mb-4">
               <TabsTrigger value="pages">Páginas</TabsTrigger>
-              <TabsTrigger value="checklist">Checklist</TabsTrigger>
+              {user?.data.level === 'ADMIN' && (
+                <TabsTrigger value="checklist">Checklist</TabsTrigger>
+              )}
             </TabsList>
 
             {/* Aba de Páginas */}
             <TabsContent value="pages">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Páginas do Projeto</h2>
-                <Button type="button" onClick={onOpenModalPage}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Adicionar Página
-                </Button>
                 {user?.data.level === "ADMIN" && (
-                  <ModalAddPage
-                    open={isAddPageOpen}
-                    onOpenChange={onCloseModalPage}
-                    register={register}
-                    control={control}
-                    errors={errors}
-                    handleSubmit={handleSubmitPage}
-                    isLoading={isPendingJob}
-                  />
+                  <>
+                    <Button type="button" onClick={onOpenModalPage}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Adicionar Página
+                    </Button>
+                    <ModalAddPage
+                      open={isAddPageOpen}
+                      onOpenChange={onCloseModalPage}
+                      register={register}
+                      control={control}
+                      errors={errors}
+                      handleSubmit={handleSubmitPage}
+                      isLoading={isPendingJob}
+                    />
+                  </>
                 )}
               </div>
 
@@ -108,6 +113,7 @@ export default function ShowProject() {
                 {jobs?.map((page) => (
                   <PageCard
                     key={page.id}
+                    user={user!}
                     page={page}
                     disabled={isLoadingDeleteJob || isChangeStatusPage}
                     deleteItem={handleDeletePage}
@@ -122,9 +128,11 @@ export default function ShowProject() {
               </div>
             </TabsContent>
 
-            <TabsContent value="checklist">
-              <Checklist />
-            </TabsContent>
+            {user?.data.level === 'ADMIN' && (
+              <TabsContent value="checklist">
+                <Checklist />
+              </TabsContent>
+            )}
           </Tabs>
         </div>
 
@@ -136,9 +144,13 @@ export default function ShowProject() {
           />
 
           <TemporaryLink
-            numberDays={project?.calendar_days}
-            closeDate={project?.closing_date}
             temporaryLink={project?.temporary_link}
+            user={user}
+          />
+
+          <TechnicalInformation
+            user={user}
+            technicalInfo={project?.technical_information}
           />
         </div>
       </div>
@@ -147,7 +159,7 @@ export default function ShowProject() {
         <div className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">
-            Você está visualizando como Gestor.
+            Você está visualizando como {user?.data.level === 'ADMIN' ? 'Gestor' : 'Cliente'}.
           </span>
         </div>
 

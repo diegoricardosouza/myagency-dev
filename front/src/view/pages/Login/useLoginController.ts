@@ -1,6 +1,7 @@
 import { useAuth } from "@/app/hooks/useAuth";
 import { authService } from "@/app/services/authService";
 import { SigninParams } from "@/app/services/authService/signin";
+import { SigninParamsArts } from "@/app/services/authService/signinArts";
 import { SigninParamsMyagency } from "@/app/services/authService/signinMyagency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -42,7 +43,13 @@ export function useLoginController() {
     }
   });
 
-  const { signin, signinMyagency } = useAuth();
+  const { mutateAsync: mutateAsyncArts } = useMutation({
+    mutationFn: async (data: SigninParamsArts) => {
+      return authService.signinArts(data);
+    }
+  });
+
+  const { signin, signinMyagency, signinArts } = useAuth();
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
@@ -51,10 +58,15 @@ export function useLoginController() {
         email: import.meta.env.VITE_PRIVATE_USERMYAGENCY,
         password: import.meta.env.VITE_PRIVATE_PASSMYAGENCY,
       });
+      const { token: tokenArts } = await mutateAsyncArts({
+        email: import.meta.env.VITE_PRIVATE_USERARTS,
+        password: import.meta.env.VITE_PRIVATE_PASSARTS,
+      });
       const { token } = await mutateAsync(data);
 
       signin(token);
       signinMyagency(tokenMyagency);
+      signinArts(tokenArts);
     } catch {
       toast.error("Credenciais inválidas");
     } finally {

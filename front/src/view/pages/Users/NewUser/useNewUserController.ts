@@ -1,7 +1,12 @@
+import { plansMyagencyService } from "@/app/services/plansMyagencyService";
+import { usersArtsService } from "@/app/services/usersArtsService";
+import { UserArtsParams } from "@/app/services/usersArtsService/create";
+import { usersMyagencyService } from "@/app/services/usersMyagencyService";
+import { UserMyAgencyParams } from "@/app/services/usersMyagencyService/create";
 import { usersService } from "@/app/services/usersService";
 import { UserParams } from "@/app/services/usersService/create";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +50,21 @@ const schema = z.object({
     .min(3, 'A senha deve conter pelo menos 3 dígitos'),
   level: z.string()
     .min(1, 'Nível é obrigatório'),
+  myagency: z.string()
+    .min(1, 'Campo é obrigatório'),
+  arts: z.string()
+    .min(1, 'Campo é obrigatório'),
+  plan: z.string().optional()
+}).refine((data) => {
+  // Se myagency for "Sim", então plan deve ser obrigatório
+  if (data.myagency === 'Sim') {
+    return !!data.plan;
+  }
+  // Se myagency for "Não", não é necessário validar plan
+  return true;
+}, {
+  message: 'Plano é obrigatório',
+  path: ['plan'], // Especifica que o erro é no campo 'plan'
 });
 
 type FormData = z.infer<typeof schema>
@@ -53,6 +73,8 @@ export function useNewUserController() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [zipcodeValid, setZipcodeValid] = useState('');
+  const [showPlanField, setShowPlanField] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -61,11 +83,28 @@ export function useNewUserController() {
     reset,
     watch,
     setValue,
+    clearErrors,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
+    defaultValues: {
+      myagency: 'Não',
+      arts: 'Não',
+      plan: ''
+    }
   });
-  const zipcode = watch("zipcode"); // Observa alterações no CEP
+  const myagencyValue = watch("myagency");
+  const artsValue = watch("arts");
+  const zipcode = watch("zipcode");
+
+  useEffect(() => {
+    setShowPlanField(myagencyValue === 'Sim');
+
+    if (myagencyValue === 'Não') {
+      setValue('plan', '');
+      clearErrors('plan');
+    }
+  }, [myagencyValue, setValue, clearErrors]);
 
   // Chamada para ViaCEP
   useEffect(() => {
@@ -100,14 +139,89 @@ export function useNewUserController() {
     fetchAddress(zipcode);
   }, [zipcode, setValue]);
 
+  const { data: dataPlans, isPending: isPendingPlan } = useQuery({
+    queryKey: ['plans'],
+    enabled: myagencyValue === 'Sim',
+    queryFn: () => plansMyagencyService.getAll(),
+  })
+
   const { isPending, mutateAsync } = useMutation({
     mutationFn: async (data: UserParams) => {
       return usersService.create(data);
     }
   });
 
+  const { mutateAsync: mutateAsyncMyAgency } = useMutation({
+    mutationFn: async (data: UserMyAgencyParams) => {
+      return usersMyagencyService.create(data);
+    }
+  });
+
+  const { mutateAsync: mutateAsyncArts } = useMutation({
+    mutationFn: async (data: UserArtsParams) => {
+      return usersArtsService.create(data);
+    }
+  });
+
   const handleSubmit = hookFormSubmit(async (data) => {
+    setIsLoading(true);
+
     try {
+      if (myagencyValue === 'Sim') {
+        try {
+          await mutateAsyncMyAgency({
+            name: data.corporate_name,
+            company: data.corporate_name,
+            responsible: data.responsible,
+            email: data.email,
+            level: data.level,
+            whatsapp: data.cellphone,
+            day: Number(new Date().getDate()),
+            plan_id: data.plan!,
+            password: data.password,
+            logo: null
+          });
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response) {
+            toast.error(`Erro ao cadastrar no Minha Agência:<br> ${error.response.data.message || 'Erro desconhecido'}`);
+          } else {
+            toast.error('Erro ao cadastrar no Minha Agência');
+          }
+          setIsLoading(false);
+          return;
+        }
+      }
+      if (artsValue === 'Sim') {
+        try {
+          await mutateAsyncArts({
+            name: data.corporate_name,
+            company: data.corporate_name,
+            responsible: data.responsible,
+            email: data.email,
+            level: data.level,
+            whatsapp: data.cellphone,
+            cpf: data.cpf,
+            password: data.password,
+            logo: null,
+            address: data.address,
+            zipcode: data.zipcode,
+            city: data.city,
+            state: data.state,
+            neighborhood: data.neighborhood,
+            credits: 0,
+            number: data.number
+          });
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response) {
+            toast.error(`Erro ao cadastrar no Artes:<br> ${error.response.data.message || 'Erro desconhecido'}`);
+          } else {
+            toast.error('Erro ao cadastrar no Artes');
+          }
+          setIsLoading(false);
+          return;
+        }
+      }
+
       await mutateAsync({
         ...data
       });
@@ -116,8 +230,16 @@ export function useNewUserController() {
       toast.success('Usuário cadastrado com sucesso!');
       reset();
       navigate("/usuarios");
+
     } catch (error) {
-      toast.error('Erro ao cadastrar o usuário');
+      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(`Erro ao cadastrar o usuário: ${error.response.data.message || 'Erro desconhecido'}`);
+      } else {
+        toast.error('Erro ao cadastrar o usuário');
+      }
+    } finally {
+      setIsLoading(false);
     }
   });
 
@@ -127,6 +249,10 @@ export function useNewUserController() {
     handleSubmit,
     control,
     isPending,
-    zipcodeValid
+    zipcodeValid,
+    plans: dataPlans?.data,
+    showPlanField,
+    isPendingPlan,
+    isLoading
   }
 }

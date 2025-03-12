@@ -136,9 +136,9 @@
   text-decoration: underline;
 }
 
-/* .ck-balloon-panel {
-  display: none !important;
-} */
+.ck.ck-balloon-panel {
+  z-index: 1050 !important;
+}
 
 .ck-powered-by {
   display: none;
@@ -176,4 +176,12 @@
 /* Handle on hover */
 .scroll-selected-files::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.project-technicalInfo p {
+  margin-bottom: 15px;
+}
+
+.project-technicalInfo p:last-child {
+  margin-bottom: 0;
 }

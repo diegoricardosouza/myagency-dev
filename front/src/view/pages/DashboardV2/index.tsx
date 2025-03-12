@@ -1,8 +1,13 @@
+import { Spinner } from '@/view/components/Spinner';
 import { HeaderDash } from './components/HeaderDash';
 import { ProjectCard } from './components/ProjectCard';
 import { useDashboardControllerV2 } from './useDashboardControllerV2';
 
-export function DashboardV2() {
+interface DashboardV2Props {
+  finished?: boolean;
+}
+
+export function DashboardV2({ finished }: DashboardV2Props) {
   const {
     user,
     filteredAndSortedProjects,
@@ -15,11 +20,17 @@ export function DashboardV2() {
     setSortOrder,
     filterStatus,
     filterType,
-    clearFilter
-  } = useDashboardControllerV2();
+    clearFilter,
+    isLoading
+  } = useDashboardControllerV2(finished);
 
   return (
-    <div>
+    <div className='relative w-full h-full'>
+      {isLoading && (
+        <div className="w-full h-full flex justify-center items-center absolute top-0 left-0 bg-white z-10">
+          <Spinner className="w-6 h-6 fill-primary" />
+        </div>
+      )}
       <HeaderDash
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -31,6 +42,7 @@ export function DashboardV2() {
         filterStatus={filterStatus}
         filterType={filterType}
         clearFilter={clearFilter}
+        finished={finished}
       />
 
       {filteredAndSortedProjects?.length === 0 ? (

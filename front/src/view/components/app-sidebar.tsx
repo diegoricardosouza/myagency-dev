@@ -1,4 +1,5 @@
 import {
+  CircleHelp,
   LayoutDashboard,
   PanelsTopLeft,
   Settings2,
@@ -25,7 +26,17 @@ const data = {
       title: "Dashboard",
       url: "/",
       icon: LayoutDashboard,
-      isActive: true
+      isActive: true,
+      items: [
+        {
+          title: "Projetos em Andamento",
+          url: "/",
+        },
+        {
+          title: "Projetos Concluídos",
+          url: "/concluidos",
+        }
+      ],
     },
     {
       title: "Projetos",
@@ -80,8 +91,30 @@ const dataClient = {
       title: "Dashboard",
       url: "/",
       icon: LayoutDashboard,
-      isActive: true
-    }
+      isActive: true,
+      items: [
+        {
+          title: "Projetos em Andamento",
+          url: "/",
+        },
+        {
+          title: "Projetos Concluídos",
+          url: "/concluidos",
+        }
+      ],
+    },
+    {
+      title: "Quero Ajuda",
+      url: "/ajuda",
+      icon: CircleHelp,
+      isActive: false,
+      items: [
+        {
+          title: "Ajuda",
+          url: "/ajuda",
+        }
+      ],
+    },
   ]
 }
 

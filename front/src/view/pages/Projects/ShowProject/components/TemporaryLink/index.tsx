@@ -1,14 +1,16 @@
+import { UserMe } from "@/app/contexts/AuthContext";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/view/components/ui/dialog";
 import { Input } from "@/view/components/ui/input";
-import { Clock, ExternalLink, Link2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Label } from "@/view/components/ui/label";
+import { Clock, Edit, ExternalLink, Link2, Loader2 } from "lucide-react";
 import Countdown from "react-countdown";
+import { useTemporaryLinkController } from "./useTemporaryLinkController";
 
 interface TemporaryLinkProps {
   temporaryLink?: string;
-  closeDate?: string;
-  numberDays?: string;
+  user: UserMe | undefined;
 }
 
 type RendererProp = {
@@ -19,19 +21,18 @@ type RendererProp = {
   completed: boolean;
 }
 
-export function TemporaryLink({ temporaryLink, closeDate, numberDays }: TemporaryLinkProps) {
-  const [startDateIni, setStartDateIni] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (closeDate) {
-      setStartDateIni(closeDate);
-    }
-  }, [closeDate]);
-
-  const startDate = new Date(startDateIni!);
-  const numDays = Number(numberDays) || 0;
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + numDays);
+export function TemporaryLink({ temporaryLink, user }: TemporaryLinkProps) {
+  const {
+    closeModal,
+    openModal,
+    isPending,
+    handleSubmit,
+    openModalTech,
+    errors,
+    register,
+    startDateIni,
+    endDate
+  } = useTemporaryLinkController()
 
   const renderer = ({ days, hours, minutes, seconds, completed }: RendererProp) => {
     return (
@@ -79,27 +80,77 @@ export function TemporaryLink({ temporaryLink, closeDate, numberDays }: Temporar
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <div className="grid gap-4">
-          <div>
-            <h3 className="text-sm font-medium mb-2 flex items-center">
-              <Link2 className="h-4 w-4 mr-1" />
-              Link Temporário
-            </h3>
-            <div className="flex items-center gap-2">
-              <Input value={temporaryLink || ""} readOnly className="text-xs read-only:bg-white" />
-              <Button size="icon" variant="ghost" onClick={() => window.open(temporaryLink, "_blank")}>
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+    <>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="grid gap-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium flex items-center">
+                  <Link2 className="h-4 w-4 mr-1" />
+                  Link Temporário
+                </h3>
+                {user?.data.level === "ADMIN" && (
+                  <Button size="sm" onClick={openModal} className="flex gap-2">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
 
-          {startDateIni && (
-            <Countdown key={startDateIni} renderer={renderer} date={endDate} />
-          )}
-        </div>
-      </CardContent>
-    </Card>
+              <div className="flex items-center gap-2">
+                <Input value={temporaryLink || ""} readOnly className="text-xs read-only:bg-white" />
+                <Button size="icon" variant="ghost" onClick={() => window.open(temporaryLink, "_blank")}>
+                  <ExternalLink className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {startDateIni && (
+              <Countdown key={startDateIni} renderer={renderer} date={endDate} />
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Dialog open={openModalTech} onOpenChange={closeModal} modal>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editar Informações Técnicas</DialogTitle>
+            <DialogDescription>
+              Edite as informações técnicas do projeto. Esta opção está disponível apenas para gestores.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="description">Link Temporário</Label>
+                <Input
+                  id="title"
+                  placeholder="Link Temporário"
+                  {...register('temporaryLink')}
+                  error={errors?.temporaryLink?.message}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={closeModal}
+                type="button"
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Atualizar
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

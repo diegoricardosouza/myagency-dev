@@ -72,7 +72,7 @@ export function Dashboard() {
                   <ItemJobCard
                     key={job.id}
                     id={job.id}
-                    name={job.user.company}
+                    name={job.user.corporate_name}
                     dataCreated={new Date(job.created)}
                     formats={job.format}
                     reference={job.referencia}
@@ -98,7 +98,7 @@ export function Dashboard() {
                   <ItemJobCard
                     key={job.id}
                     id={job.id}
-                    name={job.user.company}
+                    name={job.user.corporate_name}
                     dataCreated={new Date(job.created)}
                     formats={job.format}
                     reference={job.referencia}
@@ -124,7 +124,7 @@ export function Dashboard() {
                   <ItemJobCard
                     key={job.id}
                     id={job.id}
-                    name={job.user.company}
+                    name={job.user.corporate_name}
                     dataCreated={new Date(job.created)}
                     formats={job.format}
                     reference={job.referencia}
@@ -150,7 +150,7 @@ export function Dashboard() {
                   <ItemJobCard
                     key={job.id}
                     id={job.id}
-                    name={job.user.company}
+                    name={job.user.corporate_name}
                     dataCreated={new Date(job.created)}
                     formats={job.format}
                     reference={job.referencia}
