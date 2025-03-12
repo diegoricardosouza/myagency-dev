@@ -18,12 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/test-email', function () {
-//     $data = [
-//         'data' => "07/05/2024",
-//         'hora' => "11:22:55",
-//         'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . "68778687-fasdfsadf98-sfsfasfdsfkas-798saffa",
-//     ];
+Route::get('/test-email', function () {
+    $data = [
+        'data' => "07/05/2024",
+        'hora' => "11:22:55",
+        'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . "68778687-fasdfsadf98-sfsfasfdsfkas-798saffa",
+    ];
 
-//     return new CreateCommentMailAdmin($data);
-// });
+    return new CreateCommentMailAdmin($data);
+});
