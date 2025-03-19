@@ -1,6 +1,8 @@
 <?php
 
 use App\Mail\CreateCommentMailAdmin;
+use App\Mail\FinancialAnalysisMail;
+use App\Mail\FinishedProjectMail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +22,11 @@ Route::get('/', function () {
 
 Route::get('/test-email', function () {
     $data = [
-        'data' => "07/05/2024",
-        'hora' => "11:22:55",
-        'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . "68778687-fasdfsadf98-sfsfasfdsfkas-798saffa",
+        'email' => "teste@teste.com",
+        'content' => '<p>🖥️ <b>Seus dados de acesso ao Minha Agência:</b><br>
+        Link de Acesso: minhaagencia.inovasite.com<br><br>
+        <a href="https://www.youtube.com/watch?v=JbdH5WJixXM&ab_channel=inovasite">▶️ Assista ao tutorial de como usar o Minha Agência</a></p>'
     ];
 
-    return new CreateCommentMailAdmin($data);
+    return new FinishedProjectMail($data);
 });
