@@ -11,6 +11,7 @@ import { useTemporaryLinkController } from "./useTemporaryLinkController";
 interface TemporaryLinkProps {
   temporaryLink?: string;
   user: UserMe | undefined;
+  finished?: boolean;
 }
 
 type RendererProp = {
@@ -21,7 +22,7 @@ type RendererProp = {
   completed: boolean;
 }
 
-export function TemporaryLink({ temporaryLink, user }: TemporaryLinkProps) {
+export function TemporaryLink({ temporaryLink, user, finished }: TemporaryLinkProps) {
   const {
     closeModal,
     openModal,
@@ -33,11 +34,13 @@ export function TemporaryLink({ temporaryLink, user }: TemporaryLinkProps) {
     startDateIni,
     endDate
   } = useTemporaryLinkController()
+  const projectFinished = !!finished;
+
 
   const renderer = ({ days, hours, minutes, seconds, completed }: RendererProp) => {
     return (
       <>
-        {!completed && (
+        {(!completed && !projectFinished) && (
           <div>
             <h3 className="text-sm font-medium mb-2 flex items-center">
               <Clock className="h-4 w-4 mr-1" />
@@ -64,7 +67,20 @@ export function TemporaryLink({ temporaryLink, user }: TemporaryLinkProps) {
           </div>
         )}
 
-        {completed && (
+        {projectFinished && (
+          <div>
+            <h3 className="text-sm font-medium mb-2 flex items-center">
+              <Clock className="h-4 w-4 mr-1" />
+              Tempo Restante
+            </h3>
+
+            <div className="font-mono text-green-500 text-lg font-semibold">
+              Concluído
+            </div>
+          </div>
+        )}
+
+        {(completed && !projectFinished) && (
           <div>
             <h3 className="text-sm font-medium mb-2 flex items-center">
               <Clock className="h-4 w-4 mr-1" />

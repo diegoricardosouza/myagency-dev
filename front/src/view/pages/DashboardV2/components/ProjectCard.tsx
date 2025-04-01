@@ -19,6 +19,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const delay = calculateDelay(new Date(dateEnd))
   const isExpired = delay > 0
 
+  const finished = !!project.finished
+
   return (
     <Card className="flex flex-col h-full cursor-pointer transition-shadow hover:shadow-md" onClick={onClick}>
       <CardHeader>
@@ -30,31 +32,51 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Expiração:</span>
-            <span className="text-sm">
-              {format(new Date(dateEnd), "dd/MM/yyyy", { locale: ptBR })}
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Expira em:</span>
-            <CountdownProject
-              startDate={project.closing_date}
-              numberDays={project.calendar_days}
-            />
-          </div>
+          {!finished && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Expiração:</span>
+              <span className="text-sm">
+                {format(new Date(dateEnd), "dd/MM/yyyy", { locale: ptBR })}
+              </span>
+            </div>
+          )}
+
+          {finished ? (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Concluído em :</span>
+              <span className="text-sm">{format(project.finished_date!, "dd/MM/yyyy")}</span>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Expira em :</span>
+              <CountdownProject
+                startDate={project.closing_date}
+                numberDays={project.calendar_days}
+              />
+            </div>
+          )}
+
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Status:</span>
-            {isExpired ? (
-              <div className="flex items-center text-red-500 text-sm">
-                <AlertTriangle className="h-4 w-4 mr-1" />
-                {delay} dias de atraso
-              </div>
-            ) : (
+            {finished && (
               <div className="flex items-center text-green-500 text-sm font-normal">
                 <CheckCircle2 className="h-4 w-4 mr-1" />
-                No prazo
+                Finalizado
               </div>
+            )}
+
+            {!finished && (
+              isExpired ? (
+                <div className="flex items-center text-red-500 text-sm">
+                  <AlertTriangle className="h-4 w-4 mr-1" />
+                  {delay} dias de atraso
+                </div>
+              ) : (
+                <div className="flex items-center text-green-500 text-sm font-normal">
+                  <CheckCircle2 className="h-4 w-4 mr-1" />
+                  No prazo
+                </div>
+              )
             )}
           </div>
         </div>

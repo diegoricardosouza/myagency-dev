@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserMe } from "@/app/contexts/AuthContext";
 import { CustomModal } from "@/view/components/CustomModal";
 import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { Label } from "@/view/components/ui/label";
+
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Edit, Loader2, Settings } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { useTechnicalInformationController } from "./useTechnicalInformationController";
@@ -59,6 +61,7 @@ export function TechnicalInformation({ user, technicalInfo }: TechnicalInformati
                     editor={ClassicEditor}
                     data={value}
                     config={{
+                      licenseKey: 'GPL',
                       language: 'pt-br'
                     }}
                     onChange={(_event, editor) => {

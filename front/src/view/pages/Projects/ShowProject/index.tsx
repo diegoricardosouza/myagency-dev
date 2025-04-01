@@ -1,5 +1,6 @@
 
 import {
+  Loader2,
   Plus,
   Shield
 } from "lucide-react"
@@ -35,6 +36,8 @@ export default function ShowProject() {
     openPageEdit,
     removeFile,
     onOpenModalPage,
+    handleSendMailfinance,
+    handleSendMailFinished,
     isLoadingEditPage,
     project,
     isAddPageOpen,
@@ -51,7 +54,9 @@ export default function ShowProject() {
     isDetailsOpen,
     pageDetailOpen,
     pageEditOpen,
-    isDeleteFilePage
+    isDeleteFilePage,
+    isPendingMailFinance,
+    isPendingMailFinished
   } = useShowProjectController();
 
   return (
@@ -146,6 +151,7 @@ export default function ShowProject() {
           <TemporaryLink
             temporaryLink={project?.temporary_link}
             user={user}
+            finished={project?.finished}
           />
 
           <TechnicalInformation
@@ -165,8 +171,22 @@ export default function ShowProject() {
 
         {user?.data.level === "ADMIN" && (
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button disabled={!isChecklistComplete || !areAllPagesApproved} className="bg-green-600 hover:bg-green-700">
+            <Button
+              disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinance}
+              className="bg-yellow-400 hover:bg-yellow-500"
+              onClick={handleSendMailfinance}
+            >
+              {isPendingMailFinance && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Site Concluído, Solicitar Análise Financeira
+            </Button>
+
+            <Button
+              disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinished}
+              className="bg-green-600 hover:bg-green-700"
+              onClick={handleSendMailFinished}
+            >
+              {isPendingMailFinished && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Enviar e-mail conclusão
             </Button>
           </div>
         )}

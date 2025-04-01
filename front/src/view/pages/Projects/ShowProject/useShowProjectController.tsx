@@ -5,9 +5,15 @@ import { filesService } from "@/app/services/filesService";
 import { jobsService } from "@/app/services/jobs";
 import { JobParams } from "@/app/services/jobs/create";
 import { UpdateJobParams } from "@/app/services/jobs/update";
+import { mailService } from "@/app/services/mailService";
+import { EmailFinisehdProjectParams } from "@/app/services/mailService/finishedProject";
+import { EmailVerifyFinanceParams } from "@/app/services/mailService/verifyFinance";
 import { projectsService } from "@/app/services/projectsService";
+import { UpdateProjectParams } from "@/app/services/projectsService/update";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { format } from "date-fns";
 import {
   Clock,
   Edit,
@@ -312,6 +318,70 @@ export function useShowProjectController() {
     }
   }
 
+  const { isPending: isPendingMailFinance, mutateAsync: mutateAsyncMailFinance } = useMutation({
+    mutationFn: async (data: EmailVerifyFinanceParams) => {
+      return mailService.verifyFinance(data);
+    }
+  });
+
+  async function handleSendMailfinance() {
+    try {
+      await mutateAsyncMailFinance({
+        project: project?.project_name ?? '',
+        company: project?.user.corporate_name ?? '',
+        responsible: project?.name ?? '',
+        url: import.meta.env.VITE_PROJECT_URL +'/projetos/detalhes/'+project?.id
+      });
+      toast.success('E-mail enviado ao financeiro com sucesso!');
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(`Erro ao enviar email para o financeiro: ${error.response.data.message || 'Erro desconhecido'}`);
+      } else {
+        toast.error('Erro ao enviar email para o financeiro');
+      }
+    }
+  }
+
+  const { isPending: isPendingMailFinished, mutateAsync: mutateAsyncMailFinished } = useMutation({
+    mutationFn: async (data: EmailFinisehdProjectParams) => {
+      return mailService.finishedProject(data);
+    }
+  });
+
+  const { isPending: isPendingChangeFinished, mutateAsync: mutateAsyncChangeFinished } = useMutation({
+    mutationFn: async (data: UpdateProjectParams) => {
+      return projectsService.update(data);
+    }
+  });
+
+  async function handleSendMailFinished() {
+    try {
+      const dateNow = new Date()
+      const dateFinished = format(new Date(), `yyyy-MM-dd ${dateNow.getHours()}:${dateNow.getMinutes()}:${dateNow.getSeconds()}`)
+
+      await mutateAsyncChangeFinished({
+        id: idProject!,
+        finished: 1,
+        finished_date: dateFinished
+      })
+
+      await mutateAsyncMailFinished({
+        email: project?.user.email ?? '',
+        content: project?.technical_information ?? '',
+      });
+      toast.success('E-mail de conclusão enviado ao cliente com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['editProjeto', idProject] });
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(`Erro ao enviar email de conclusão: ${error.response.data.message || 'Erro desconhecido'}`);
+      } else {
+        toast.error('Erro ao enviar email de conclusão');
+      }
+    }
+  }
+
   return {
     openPageDetails,
     setIsAddPageOpen,
@@ -329,6 +399,8 @@ export function useShowProjectController() {
     closePageEdit,
     removeFile,
     onOpenModalPage,
+    handleSendMailfinance,
+    handleSendMailFinished,
     project,
     isAddPageOpen,
     user,
@@ -346,7 +418,10 @@ export function useShowProjectController() {
     isLoadingEditPage,
     isPendingEditJob,
     pageEditOpen,
-    isDeleteFilePage
+    isDeleteFilePage,
+    isPendingMailFinance,
+    isPendingMailFinished,
+    isPendingChangeFinished
   }
 }
 

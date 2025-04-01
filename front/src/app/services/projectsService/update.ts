@@ -30,6 +30,8 @@ export interface UpdateProjectParams {
   calendar_days?: number;
   pages?: string[];
   checklists?: Check[];
+  finished?: number;
+  finished_date?: string;
 }
 
 export async function update({ id, ...params }: UpdateProjectParams) {
