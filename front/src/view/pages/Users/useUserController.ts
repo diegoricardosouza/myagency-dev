@@ -32,6 +32,9 @@ export function useUserController() {
       await removeUser(id);
 
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['projects', false] });
+      queryClient.invalidateQueries({ queryKey: ['projects', true] });
       toast.success('A usuário foi deletado com sucesso!');
     } catch {
       toast.error('Erro ao deletar o usuário!');
