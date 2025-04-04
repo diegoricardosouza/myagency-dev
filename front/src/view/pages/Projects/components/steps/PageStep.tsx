@@ -86,6 +86,7 @@ export function PageStep({ fields, handleRemovePage }: PageStepProps) {
                   editor={ClassicEditor}
                   data={value}
                   config={{
+                    licenseKey: 'GPL',
                     language: 'pt-br'
                   }}
                   onChange={(_event, editor) => {
