@@ -4,6 +4,7 @@ import { Button } from "@/view/components/ui/button";
 import { Input } from "@/view/components/ui/input";
 import { Label } from "@/view/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select";
+import { Loader2 } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormData } from "../../NewProject/useNewProjectController";
 import { StepperFooter, StepperHeader, StepperPreviousButton } from "../Stepper";
@@ -11,9 +12,10 @@ import { StepperFooter, StepperHeader, StepperPreviousButton } from "../Stepper"
 interface PlanStepProps {
   plans?: Plan[];
   labelButton?: string;
+  isSubmit?: boolean;
 }
 
-export function PlanStep({ plans, labelButton = 'Cadastrar' }: PlanStepProps) {
+export function PlanStep({ plans, labelButton = 'Cadastrar', isSubmit }: PlanStepProps) {
   const form = useFormContext<FormData>()
   const dateNow = new Date();
   const startDate = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
@@ -135,7 +137,8 @@ export function PlanStep({ plans, labelButton = 'Cadastrar' }: PlanStepProps) {
 
       <StepperFooter>
         <StepperPreviousButton />
-        <Button type="submit" size="sm">
+        <Button type="submit" size="sm" disabled={isSubmit}>
+          {isSubmit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {labelButton}
         </Button>
       </StepperFooter>

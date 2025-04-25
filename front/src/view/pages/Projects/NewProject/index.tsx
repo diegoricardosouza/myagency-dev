@@ -11,7 +11,18 @@ import { PlanStep } from "../components/steps/PlanStep";
 import { useNewProjectController } from "./useNewProjectController";
 
 export function NewProject() {
-  const { handleFormSubmit, fields, handleRemovePage, form, users, plans, fieldsChecklist, handleRemoveChecklist, handleAddChecklist } = useNewProjectController();
+  const {
+    handleFormSubmit,
+    fields,
+    handleRemovePage,
+    form,
+    users,
+    plans,
+    fieldsChecklist,
+    isPending,
+    handleRemoveChecklist,
+    handleAddChecklist
+  } = useNewProjectController();
 
   return (
     <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -57,7 +68,7 @@ export function NewProject() {
                 },
                 {
                   label: "Plano e Prazos",
-                  content: <PlanStep plans={plans?.data} />
+                  content: <PlanStep plans={plans?.data} isSubmit={isPending} />
                 }
               ]}
             />
