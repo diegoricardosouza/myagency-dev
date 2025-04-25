@@ -19,20 +19,20 @@
         Ref: {{ $data['ref'] }}<br>
         Data: {{ $data['data'] }}<br>
         Hora: {{ $data['hora'] }}<br>
-        Formatos: {{ $data['formatos'] }}<br>
-        Outros Formatos: {{ $data['outros_formatos'] }}
+        {{-- Formatos: {{ $data['formatos'] }}<br>
+        Outros Formatos: {{ $data['outros_formatos'] }} --}}
     </p>
 
     <p>
-        <b>CONTEÚDOS DA ARTE</b><br>
-        Frase Destaque: {{ $data['frase_destaque'] }}<br>
+        <b>CONTEÚDO</b><br>
+        {{-- Frase Destaque: {{ $data['frase_destaque'] }}<br> --}}
         {!! $data['informacoes'] !!}
     </p>
 
-    <p>
+    {{-- <p>
         <b>OBSERVAÇÕES</b><br>
         {!! $data['observacoes'] !!}
-    </p>
+    </p> --}}
 
     <p>
         <b>ANEXOS</b><br>

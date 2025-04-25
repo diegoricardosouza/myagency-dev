@@ -106,8 +106,8 @@ class JobService
             }
         }
 
-        $jobAfterCreation = $this->job->with(['user', 'files'])->where('id', $jobCreated->id)->first();
-        $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), 'Desenvolvimento');
+        $jobAfterCreation = $this->job->with(['user', 'files', 'project'])->where('id', $jobCreated->id)->first();
+        $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), $jobAfterCreation->project->project_name);
 
         return $jobCreated;
     }
@@ -213,7 +213,7 @@ class JobService
             'informacoes' => $job->content,
             'observacoes' => $job->obs,
             'files' => implode("\n", $urlFile),
-        ], $plan ." - ". $job->phrase." (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
+        ], $plan ." - ". $job->page." - (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
     }
 
     // public function sendMailAtt($job, $emails, $plan)

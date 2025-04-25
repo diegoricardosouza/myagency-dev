@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Mail\CreateProjectMail;
 use App\Models\Checklist;
 use App\Models\PageProject;
 use App\Models\Project;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectService
 {
@@ -78,6 +81,13 @@ class ProjectService
             }
         }
 
+        //TODO: ENVIAR EMAIL PARA O FINANCEIRO E COMERCIAL -  financeiro@inovasite.com e marcelo@inovasite.com
+        $projectAfterCreation = $this->repository->with(['pages', 'user'])->where('id', $project->id)->first();
+        foreach (['financeiro@inovasite.com', 'marcelo@inovasite.com'] as $recipient) {
+            // Mail::to($recipient)->send(new OrderShipped($order));
+            $this->sendMailCreateProject($projectAfterCreation, $recipient);
+        }
+
         return $project;
     }
 
@@ -145,5 +155,35 @@ class ProjectService
         }
 
         $projects->delete();
+    }
+
+    public function sendMailCreateProject($project, $emails)
+    {
+        $urlFile = [];
+        foreach ($project->pages as $page) {
+            $urlFile[] = $page->name;
+        }
+
+        Mail::to($emails)->send(new CreateProjectMail([
+            'cliente' => $project->user->corporate_name,
+            'nomeprojeto' => $project->project_name,
+            'tipoprojeto' => $project->type,
+            'nomeresponsavel' => $project->name,
+            'whatsresponsavel' => $project->phone,
+            'emailresponsavel' => $project->email,
+            'paginas' => implode("\n", $urlFile),
+            'observacao' => $project->observations,
+            'valorprojeto' => 'R$ ' . number_format($project->value_project, 2, ",", "."),
+            'formapagamento' => $project->payment_method,
+            'parcelamento' => $project->installment,
+            'outra' => $project->other,
+            'entrada' => 'R$ ' . number_format($project->entry_payment, 2, ",", "."),
+            'comprovante' => $project->proof ? url("storage/$project->proof") : '',
+            'plano' => $project->plan_name,
+            'contratoassinado' => $project->signed_contract,
+            'tercerizar' => $project->outsource,
+            'datafechamento' => Carbon::parse($project->closing_date)->format('d/m/Y'),
+            'diascorridos' => $project->calendar_days
+        ], "Projeto Criado - " . $project->project_name));
     }
 }
