@@ -18,6 +18,7 @@ class Project extends Model
         'number_pages',
         'technical_information',
         'observations',
+        'layouts',
         'value_project',
         'payment_method',
         'installment',

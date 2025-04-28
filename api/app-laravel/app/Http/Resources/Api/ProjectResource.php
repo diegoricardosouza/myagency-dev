@@ -24,6 +24,7 @@ class ProjectResource extends JsonResource
             'number_pages' => $this->number_pages,
             'technical_information' => $this->technical_information,
             'observations' => $this->observations,
+            'layouts' => $this->layouts,
             'value_project' => $this->value_project,
             'payment_method' => $this->payment_method,
             'installment' => $this->installment,

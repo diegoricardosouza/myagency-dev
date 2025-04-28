@@ -30,6 +30,7 @@ class StoreUpdateProjectRequest extends FormRequest
             'number_pages' => 'required|int',
             'technical_information' => 'nullable',
             'observations' => 'nullable',
+            'layouts' => 'nullable',
             'value_project' => 'required|numeric',
             'payment_method' => 'required',
             'installment' => 'nullable|int',

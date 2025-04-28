@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('number_pages')->nullable();
             $table->text('technical_information')->nullable();
             $table->text('observations')->nullable();
+            $table->text('layouts')->nullable();
             $table->decimal('value_project', 10, 2)->nullable();
             $table->string('payment_method')->nullable();
             $table->integer('installment')->nullable();
