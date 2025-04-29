@@ -101,11 +101,11 @@ class CommentService
             'data' => Carbon::parse($comment->created_at)->format('d/m/Y'),
             'hora' => Carbon::parse($comment->created_at)->format('H:i:s'),
             'conteudo' => $comment->content,
-            'responsavel' => $job->user->responsible,
-            'email' => $job->user->email,
-            'whatsapp' => $job->user->whatsapp,
+            'responsavel' => $job->project->user->responsible,
+            'email' => $job->project->user->email,
+            'whatsapp' => $job->project->user->cellphone,
             'files' => implode("\n", $urlFile),
-        ], "[AJUSTE]" . $job->user->company . " - " . $plan . " - " . $job->phrase . " (" . Carbon::parse($job->created_at)->format('Y') . $job->ref . ")"));
+        ], "[AJUSTE] " . $job->project->project_name . " - " . $job->page . " - ". $job->project->user->corporate_name . " - " . $plan . " - (DEV" . Carbon::parse($job->created_at)->format('Y') . $job->ref . ")"));
     }
 
     public function sendMailAdmin($email, $comment, $projectId, $jobId)
