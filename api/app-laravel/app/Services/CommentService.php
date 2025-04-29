@@ -7,6 +7,7 @@ use App\Mail\CreateCommentMailAdmin;
 use App\Models\Comment;
 use App\Models\FileComment;
 use App\Models\Job;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
@@ -20,6 +21,7 @@ class CommentService
         protected Comment $comment,
         protected User $user,
         protected Job $job,
+        protected Project $project,
     ) {
     }
 
@@ -46,7 +48,7 @@ class CommentService
         }
 
         $commentAfterCreation = $this->comment->with(['files', 'job'])->where('id', $commentCreated->id)->first();
-        $job = $this->job->with(['user', 'files'])->where('id', $commentAfterCreation->job->id)->first();
+        $job = $this->job->with(['user', 'files', 'project'])->where('id', $commentAfterCreation->job->id)->first();
         // $user = $this->user->with('plan')->where('id', $job->user->id)->first();
 
         if(Auth::user()->level == 'CLIENTE') {
@@ -63,8 +65,9 @@ class CommentService
         // $this->sendMail(env('EMAIL_SOLICITACOES_SINGLE'), $commentAfterCreation);
 
         if(Auth::user()->level != 'CLIENTE') {
-            $user = $this->user->where('id', $commentAfterCreation->job->user_id)->first();
-            $this->sendMailAdmin($user->email, $commentAfterCreation, $commentAfterCreation->job->id);
+            $user = $this->user->where('id', $job->project->user_id)->first();
+            // $user = $this->user->where('id', $commentAfterCreation->job->user_id)->first();
+            $this->sendMailAdmin($user->email, $commentAfterCreation, $job->project->id, $commentAfterCreation->job->id);
         }
 
         return $commentCreated;
@@ -93,7 +96,8 @@ class CommentService
         }
 
         Mail::to($email)->send(new CreateCommentMail([
-            'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . $job->id,
+            'url' => env('URL_FRONT') . "/projetos/detalhes/" . $job->project->id . "/page/" . $job->id,
+            // 'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . $job->id,
             'data' => Carbon::parse($comment->created_at)->format('d/m/Y'),
             'hora' => Carbon::parse($comment->created_at)->format('H:i:s'),
             'conteudo' => $comment->content,
@@ -104,7 +108,7 @@ class CommentService
         ], "[AJUSTE]" . $job->user->company . " - " . $plan . " - " . $job->phrase . " (" . Carbon::parse($job->created_at)->format('Y') . $job->ref . ")"));
     }
 
-    public function sendMailAdmin($email, $comment, $jobId)
+    public function sendMailAdmin($email, $comment, $projectId, $jobId)
     {
         $urlFile = [];
         foreach ($comment->files as $file) {
@@ -114,7 +118,7 @@ class CommentService
         Mail::to($email)->send(new CreateCommentMailAdmin([
             'data' => Carbon::parse($comment->created_at)->format('d/m/Y'),
             'hora' => Carbon::parse($comment->created_at)->format('H:i:s'),
-            'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . $jobId,
+            'url' => env('URL_FRONT') . "/projetos/detalhes/" . $projectId . "/page/". $jobId,
         ]));
     }
 }

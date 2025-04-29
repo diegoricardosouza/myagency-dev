@@ -19,6 +19,7 @@ class CommentResource extends JsonResource
             'content' => $this->content,
             'user' => new UserResource($this->user),
             'files' => FileCommentResource::collection($this->files),
+            'updated' => $this->updated_at
         ];
     }
 }
