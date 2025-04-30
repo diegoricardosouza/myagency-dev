@@ -1,0 +1,133 @@
+import { Comments } from "@/app/entities/Comments";
+import { Avatar, AvatarFallback, AvatarImage } from "@/view/components/ui/avatar";
+import { Badge } from "@/view/components/ui/badge";
+import { Button } from "@/view/components/ui/button";
+import { format } from "date-fns";
+import { Download } from "lucide-react";
+import { toast } from "sonner";
+
+interface CommentsListProps {
+  userId: string;
+  comment: Comments;
+  logo?: string
+}
+
+export function CommentsList({ userId, comment, logo }: CommentsListProps) {
+  // Função para lidar com o download do arquivo
+  const handleDownload = (url: string, fileName: string) => {
+    try {
+      // Em vez de usar fetch (que está sujeito a restrições de CORS),
+      // vamos abrir a URL diretamente em uma nova aba ou redirecionar o usuário
+
+      // Opção 1: Abrir o arquivo em uma nova aba
+      // window.open(url, '_blank');
+
+      // Opção 2: Criar um link e simular um clique para download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName; // Browsers modernos respeitarão isso se possível
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+
+      // Adicionar o link ao documento, clicar nele e depois removê-lo
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Nota: Esta abordagem pode abrir o arquivo no navegador em vez de baixá-lo
+      // dependendo do tipo de arquivo e da configuração do navegador
+
+    } catch (error) {
+      console.error("Erro ao tentar baixar o arquivo:", error);
+      toast.error("Não foi possível baixar o arquivo. Por favor, tente novamente.");
+    }
+  };
+
+  return (
+    <div
+      className={`transition-colors ${comment.user.id === userId ? "bg-blue-50 hover:bg-blue-100" : "hover:bg-gray-50"
+        }`}
+    >
+      <div className="p-6">
+        <div className="flex gap-4">
+          <Avatar
+            className={`w-10 h-10 border-2 ${comment.user.id === userId ? "border-blue-300 shadow-sm" : "border-gray-100  shadow-sm"
+              }`}
+          >
+            <AvatarImage src={logo ? logo : '/placeholder-user.jpg'} alt={comment.user.corporate_name} />
+            <AvatarFallback
+              className={`${comment.user.id === userId
+                ? "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"
+                : "bg-gradient-to-br from-gray-500 to-gray-600 text-white"
+                }`}
+            >
+              {comment.user.corporate_name.substring(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex-1">
+            <div className="block md:flex justify-between items-center mb-2 min-h-9">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-800">{comment.user.corporate_name}</span>
+                {comment.user.id === userId && (
+                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-0 text-xs">
+                    Você
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-normal text-gray-500">
+                  Última atualização: {comment.updated ? format(comment.updated, 'dd/MM/yyyy H:mm') : ''}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-gray-700 mb-4">
+              <div
+                className="text-gray-700"
+                dangerouslySetInnerHTML={{ __html: comment.content as string }}
+              />
+            </div>
+
+            {(comment.files && comment.files?.length > 0) && (
+              <div className="mb-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">Arquivos:</p>
+                <div className="grid gap-4 sm:grid-cols-4">
+                  {comment.files.map((file, index) => (
+                    <div
+                      key={index}
+                      className={`border overflow-hidden bg-white shadow-sm group hover:shadow-md transition-shadow rounded-lg ${comment.user.id === userId ? "border-blue-200" : "border-gray-200"
+                        }`}
+                    >
+                      <div className="relative h-[130px] w-full">
+                        <img
+                          src={file.url || "/placeholder.svg"}
+                          alt={file.name}
+                          className="w-full h-[130px] object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/90 hover:bg-white border-0 text-gray-800"
+                            onClick={() => handleDownload(file.url!, file.name.replace('comments/', ''))}
+                          >
+                            <Download className="h-4 w-4 mr-1" />
+                            Baixar
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="p-3 border-t border-gray-100">
+                        <p className="text-sm font-medium text-gray-700 truncate">{file.name.replace('comments/', '')}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
