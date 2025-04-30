@@ -13,32 +13,29 @@ interface CommentsListProps {
 }
 
 export function CommentsList({ userId, comment, logo }: CommentsListProps) {
+  // helper para trocar /storage/ por /files/
+  const toFilesUrl = (url: string) => url.replace(/\/storage\//, "/files/");
+
   // Função para lidar com o download do arquivo
-  const handleDownload = (url: string, fileName: string) => {
+  const handleDownload = async (url: string, fileName: string) => {
     try {
-      // Em vez de usar fetch (que está sujeito a restrições de CORS),
-      // vamos abrir a URL diretamente em uma nova aba ou redirecionar o usuário
+      const response = await fetch(toFilesUrl(url));
 
-      // Opção 1: Abrir o arquivo em uma nova aba
-      // window.open(url, '_blank');
+      if (!response.ok) {
+        throw new Error(`Erro ao baixar o arquivo: ${response.statusText}`);
+      }
 
-      // Opção 2: Criar um link e simular um clique para download
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName; // Browsers modernos respeitarão isso se possível
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-
-      // Adicionar o link ao documento, clicar nele e depois removê-lo
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      // Nota: Esta abordagem pode abrir o arquivo no navegador em vez de baixá-lo
-      // dependendo do tipo de arquivo e da configuração do navegador
-
+      window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      console.error("Erro ao tentar baixar o arquivo:", error);
+      console.error("Erro ao baixar o arquivo:", error);
       toast.error("Não foi possível baixar o arquivo. Por favor, tente novamente.");
     }
   };

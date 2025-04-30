@@ -8,7 +8,7 @@ import { Button } from "@/view/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/view/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/view/components/ui/tooltip";
 import { format } from "date-fns";
-import { Edit, FileText, Paperclip, RotateCcw, ScanEye, Trash2 } from "lucide-react";
+import { Edit, FileText, MessageSquare, Paperclip, RotateCcw, ScanEye, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getStatusIcon } from "../../useShowProjectController";
 
@@ -56,12 +56,20 @@ export function PageCard({
             Última atualização:<br />
             {format(page.updated_at ? new Date(page.updated_at) : new Date(), "dd/MM/yyyy")}
           </span>
-          {(page.files!.length > 0) && (
-            <span className="flex items-center text-xs">
-              <Paperclip className="h-3 w-3 mr-1" />
-              {page.files?.length} {page.files?.length === 1 ? "arquivo" : "arquivos"}
-            </span>
-          )}
+          <div>
+            {(page.files!.length > 0) && (
+              <span className="flex items-center text-xs">
+                <Paperclip className="h-3 w-3 mr-1" />
+                {page.files?.length} {page.files?.length === 1 ? "arquivo" : "arquivos"}
+              </span>
+            )}
+            {(page.comments!.length > 0) && (
+              <span className="flex items-center text-xs">
+                <MessageSquare className="h-3 w-3 mr-1" />
+                {page.comments?.length} {page.comments?.length === 1 ? "comentário" : "comentários"}
+              </span>
+            )}
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
