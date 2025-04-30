@@ -15,6 +15,7 @@ export interface UpdateProjectParams {
   number_pages?: string | number;
   technical_information?: null | string;
   observations?: string;
+  layouts?: string;
   value_project?: number;
   payment_method?: string;
   installment?: number;

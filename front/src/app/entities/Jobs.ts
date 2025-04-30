@@ -1,5 +1,6 @@
 import { ProjectFile } from "@/view/pages/Projects/ShowProject/useShowProjectController";
 import { Comments } from "./Comments";
+import { Project } from "./Project";
 import { User } from "./User";
 
 export interface Files {
@@ -29,4 +30,5 @@ export interface Jobs {
   comments?: Comments[];
   updated_at?: string;
   project_id?: string;
+  project?: Project;
 }

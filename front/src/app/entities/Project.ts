@@ -12,6 +12,7 @@ export interface Project {
   number_pages: string;
   technical_information: string;
   observations: string;
+  layouts: string;
   value_project: number;
   payment_method: string;
   installment: number;
