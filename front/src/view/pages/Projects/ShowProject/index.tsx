@@ -9,6 +9,7 @@ import { Spinner } from "@/view/components/Spinner"
 import { Button } from "@/view/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/view/components/ui/tabs"
 import { Checklist } from "./components/Checklist"
+import { Layouts } from "./components/Layouts"
 import { ModalAddPage } from "./components/ModalAddPage"
 import { ModalEditPage } from "./components/ModalEditPage"
 import { ModalProjectDetails } from "./components/ModalProjectDetails"
@@ -152,6 +153,11 @@ export default function ShowProject() {
             temporaryLink={project?.temporary_link}
             user={user}
             finished={project?.finished}
+          />
+
+          <Layouts
+            user={user}
+            layouts={project?.layouts}
           />
 
           <TechnicalInformation

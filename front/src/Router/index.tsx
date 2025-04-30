@@ -9,6 +9,7 @@ import { Profile } from "@/view/pages/Profile";
 import Projects from "@/view/pages/Projects";
 import { EditProject } from "@/view/pages/Projects/EditProject";
 import { NewProject } from "@/view/pages/Projects/NewProject";
+import { ShowPage } from "@/view/pages/Projects/ShowPage";
 import ShowProject from "@/view/pages/Projects/ShowProject";
 import { Register } from "@/view/pages/Register";
 import User from "@/view/pages/Users";
@@ -46,6 +47,7 @@ export function Router() {
               <Route path="/configuracoes/checklists" element={<Checklists />} />
             </Route>
             <Route path="/projetos/detalhes/:id" element={<ShowProject />} />
+            <Route path="/projetos/detalhes/:id/page/:idPage" element={<ShowPage />} />
 
             <Route path="/perfil" element={<Profile />} />
             <Route path="/ajuda" element={<Help />} />

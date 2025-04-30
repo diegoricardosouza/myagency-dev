@@ -113,12 +113,15 @@ export function TemporaryLink({ temporaryLink, user, finished }: TemporaryLinkPr
                 )}
               </div>
 
-              <div className="flex items-center gap-2">
-                <Input value={temporaryLink || ""} readOnly className="text-xs read-only:bg-white" />
-                <Button size="icon" variant="ghost" onClick={() => window.open(temporaryLink, "_blank")}>
-                  <ExternalLink className="h-4 w-4" />
-                </Button>
-              </div>
+              {temporaryLink && (
+                <div className="flex items-center gap-2">
+                  <Input value={temporaryLink || ""} readOnly className="text-xs read-only:bg-white" />
+                  <Button size="icon" variant="ghost" onClick={() => window.open(temporaryLink, "_blank")}>
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+
             </div>
 
             {startDateIni && (

@@ -49,7 +49,7 @@ export function ProjectDetails({ temporaryLink, description, pages, typeProject 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-medium mb-2">Descrição</h3>
-                <p className="text-muted-foreground">{description}</p>
+                <div className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: description ? description : '' }} />
               </div>
               <div>
                 <h3 className="text-lg font-medium mb-2">Informações Adicionais</h3>

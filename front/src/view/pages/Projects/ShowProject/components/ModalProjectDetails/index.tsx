@@ -119,7 +119,7 @@ export function ModalProjectDetails({
 
         <AlertDialogFooter>
           <AlertDialogCancel>Fechar</AlertDialogCancel>
-          {(userLevel === 'ADMIN' && page?.status !== "approved") && (
+          {(userLevel === 'CLIENTE' && page?.status !== "approved") && (
             <AlertDialogAction className="bg-green-500 hover:bg-green-600"
               onClick={() => page && approvedPage(page.id)}
             >

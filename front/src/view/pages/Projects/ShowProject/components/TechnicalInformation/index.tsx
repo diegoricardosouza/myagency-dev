@@ -34,16 +34,21 @@ export function TechnicalInformation({ user, technicalInfo }: TechnicalInformati
               </Button>
             )}
           </div>
-          <div
-            className="bg-muted p-3 rounded-md text-sm project-technicalInfo"
-            dangerouslySetInnerHTML={{ __html: technicalInfo || "" }}
-          />
+
+          {technicalInfo && (
+            <div
+              className="bg-muted p-3 rounded-md text-sm project-technicalInfo"
+              dangerouslySetInnerHTML={{ __html: technicalInfo || "" }}
+            />
+          )}
         </CardContent>
       </Card>
 
       <CustomModal
         closeModal={closeModal}
         openModalTech={openModalTech}
+        title="Editar Informações Técnicas"
+        description="Edite as informações técnicas do projeto. Esta opção está disponível apenas para gestores."
       >
         <form
           onSubmit={handleSubmit}

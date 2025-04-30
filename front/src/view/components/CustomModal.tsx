@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
@@ -6,10 +5,12 @@ import { Button } from "./ui/button";
 interface CustomModalProps {
   closeModal: () => void;
   openModalTech: boolean;
-  children: React.ReactNode
+  children: React.ReactNode;
+  title?: string;
+  description?: string;
 }
 
-export function CustomModal({ openModalTech, closeModal, children }: CustomModalProps) {
+export function CustomModal({ openModalTech, closeModal, children, title, description }: CustomModalProps) {
   useEffect(() => {
     if (openModalTech) {
       // Quando o modal abre, remove a barra de rolagem
@@ -26,27 +27,28 @@ export function CustomModal({ openModalTech, closeModal, children }: CustomModal
     };
   }, [openModalTech]);
 
+  if (!openModalTech) {
+    return null; // Não renderiza nada se o modal estiver fechado
+  }
+
   return (
     <div>
+      {/* Overlay */}
       <div
-        className={cn(
-          "fixed z-50 opacity-0 top-0 left-0 transition-all duration-200 pointer-events-none w-full h-screen",
-          openModalTech && "bg-black/80 opacity-100 pointer-events-auto"
-        )}
+        className="fixed z-50 bg-black/80 opacity-100 pointer-events-auto top-0 left-0 w-full h-screen transition-all duration-200"
+        onClick={closeModal}
       />
 
+      {/* Modal */}
       <div
-        className={cn(
-          "fixed hidden top-[35%] left-[50%] lg:top-[50%] z-[90] w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 rounded-lg max-w-2xl transition-all",
-          openModalTech && "absolute block"
-        )}
+        className="fixed z-[90] w-full max-w-2xl top-[35%] left-[50%] lg:top-[50%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg rounded-lg transition-all duration-200"
       >
         <div className="mb-4">
           <h3 className="text-lg font-semibold leading-none tracking-tight">
-            Editar Informações Técnicas
+            {title}
           </h3>
           <p className="text-sm text-muted-foreground mt-[6px]">
-            Edite as informações técnicas do projeto. Esta opção está disponível apenas para gestores.
+            {description}
           </p>
         </div>
         <Button
@@ -62,5 +64,5 @@ export function CustomModal({ openModalTech, closeModal, children }: CustomModal
         {children}
       </div>
     </div>
-  )
+  );
 }

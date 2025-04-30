@@ -240,10 +240,10 @@ export function getStatusText(status: string | undefined) {
     case "approved":
       return "Aprovado"
     case "approving":
-      return "Em Progresso"
+      return "Aguardando Aprovação"
     case "changing":
-      return "Em Revisão"
+      return "Ajustes"
     default:
-      return "Pendente"
+      return "Aguardando"
   }
 }

@@ -5,9 +5,10 @@ import { SelectedFiles } from "../SelectedFiles";
 
 interface UploadFileProps {
   onChange: (files: File[]) => void;
+  sendComment?: boolean;
 }
 
-export function UploadFiles({ onChange }: UploadFileProps) {
+export function UploadFiles({ onChange, sendComment }: UploadFileProps) {
   const [selectedFiles, setSelectedFiles] = useState<ProjectFile[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const openFileSelector = () => {
@@ -18,7 +19,10 @@ export function UploadFiles({ onChange }: UploadFileProps) {
 
   useEffect(() => {
     onChange(selectedFiles)
-  }, [onChange, selectedFiles])
+    if (sendComment) {
+      setSelectedFiles([]);
+    }
+  }, [onChange, selectedFiles, sendComment])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,6 +53,7 @@ export function UploadFiles({ onChange }: UploadFileProps) {
         <SelectedFiles
           removeSelectedFile={removeSelectedFile}
           selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
         />
       )}
     </>

@@ -8,7 +8,8 @@ import { Button } from "@/view/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/view/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/view/components/ui/tooltip";
 import { format } from "date-fns";
-import { Edit, FileText, Laptop2, Paperclip, PencilRuler, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import { Edit, FileText, Paperclip, RotateCcw, ScanEye, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { getStatusIcon } from "../../useShowProjectController";
 
 interface PageCardProps {
@@ -30,10 +31,7 @@ export function PageCard({
   disabled,
   isLoadingDelete,
   deleteItem,
-  approvedPage,
   desapprovedPage,
-  inProgressPage,
-  reviewPage,
   openModalDetails,
   openModalEditPage,
   user
@@ -70,6 +68,21 @@ export function PageCard({
         <p className="text-sm text-muted-foreground line-clamp-3">{page.content}</p>
       </CardContent>
       <CardFooter className="flex gap-2 pt-0">
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild disabled={disabled}>
+              <Button variant="secondary" size="icon" className="w-8 h-8 border" asChild>
+                <Link to={`/projetos/detalhes/${page.project?.id}/page/${page.id}`}>
+                  <ScanEye className="h-4 w-4" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Visualizar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild disabled={disabled}>
@@ -137,7 +150,7 @@ export function PageCard({
               </Tooltip>
             </TooltipProvider>
 
-            {(page.status !== "approving" && page.status !== "approved") && (
+            {/* {(page.status !== "approving" && page.status !== "approved") && (
               <TooltipProvider delayDuration={0}>
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild disabled={disabled}>
@@ -151,9 +164,9 @@ export function PageCard({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            )}
+            )} */}
 
-            {(page.status !== "approved" && page.status !== "changing") && (
+            {/* {(page.status !== "approved" && page.status !== "changing") && (
               <TooltipProvider delayDuration={0}>
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild disabled={disabled}>
@@ -167,9 +180,9 @@ export function PageCard({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            )}
+            )} */}
 
-            {page.status !== "approved" && (
+            {/* {page.status !== "approved" && (
               <TooltipProvider delayDuration={0}>
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild disabled={disabled}>
@@ -183,19 +196,19 @@ export function PageCard({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            )}
+            )} */}
 
             {page.status === "approved" && (
               <TooltipProvider delayDuration={0}>
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild disabled={disabled}>
                     <Button onClick={() => desapprovedPage(page.id)} size="icon" className="bg-slate-500 hover:bg-slate-600 w-8 h-8">
-                      <ThumbsDown className="h-4 w-4" />
+                      <RotateCcw className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
 
-                    <p>Desaprovar</p>
+                    <p>Reabrir</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
