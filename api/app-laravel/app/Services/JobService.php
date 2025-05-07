@@ -106,8 +106,8 @@ class JobService
             }
         }
 
-        $jobAfterCreation = $this->job->with(['user', 'files', 'project'])->where('id', $jobCreated->id)->first();
-        $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), $jobAfterCreation->project->project_name);
+        // $jobAfterCreation = $this->job->with(['user', 'files', 'project'])->where('id', $jobCreated->id)->first();
+        // $this->sendMail($jobAfterCreation, env('EMAIL_SOLICITACOES'), $jobAfterCreation->project->project_name);
 
         return $jobCreated;
     }
@@ -115,11 +115,6 @@ class JobService
     public function update($data, $id)
     {
         $job = $this->job->findOrFail($id);
-        // foreach ($job->files as $file) {
-        //     if ($file->name && Storage::exists($file->name)) {
-        //         Storage::delete($file->name);
-        //     }
-        // }
         if (!empty($data['files'])) {
             foreach ($data['files'] as $file) {
                 $dataFile['size'] = $file->getSize();
@@ -215,54 +210,4 @@ class JobService
             'files' => implode("\n", $urlFile),
         ], $plan ." - ". $job->page." - (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
     }
-
-    // public function sendMailAtt($job, $emails, $plan)
-    // {
-    //     $urlFile = [];
-    //     foreach($job->files as $file){
-    //         $urlFile[] = url("storage/{$file->name}");
-    //     }
-
-    //     Mail::to($emails)->send(new createJobMailAtt([
-    //         'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . $job->id,
-    //         'ref' => Carbon::parse($job->created_at)->format('Y').$job->ref,
-    //         'data' => Carbon::parse($job->created_at)->format('d/m/Y'),
-    //         'hora' => Carbon::parse($job->created_at)->format('H:i:s'),
-    //         'site' => $job->site,
-    //         'page' => $job->page,
-    //         'frase_destaque' => $job->phrase,
-    //         'informacoes' => $job->content,
-    //         'observacoes' => $job->obs,
-    //         'responsavel' => $job->user->responsible,
-    //         'email' => $job->user->email,
-    //         'whatsapp' => $job->user->whatsapp,
-    //         'files' => implode("\n", $urlFile),
-    //     ], $job->user->company . " - " . $plan . " - " . $job->phrase . " (" . Carbon::parse($job->created_at)->format('Y') . $job->ref . ")"));
-    // }
-
-    // private function sendExceededJob($job, $emails, $type, $plan)
-    // {
-    //     $urlFile = [];
-    //     foreach ($job->files as $file) {
-    //         $urlFile[] = url("storage/{$file->name}");
-    //     }
-
-    //     Mail::to($emails)->send(new NoticeJobsExceeded([
-    //         'url' => env('URL_FRONT') . "/solicitacoes/detalhes/" . $job->id,
-    //         'ref' => Carbon::parse($job->created_at)->format('Y') . $job->ref,
-    //         'data' => Carbon::parse($job->created_at)->format('d/m/Y'),
-    //         'hora' => Carbon::parse($job->created_at)->format('H:i:s'),
-    //         'formatos' => $job->format,
-    //         'outros_formatos' => $job->other_formats,
-    //         'frase_destaque' => $job->phrase,
-    //         'informacoes' => $job->content,
-    //         'observacoes' => $job->obs,
-    //         'responsavel' => $job->user->responsible,
-    //         'company' => $job->user->company,
-    //         'type' => $type,
-    //         'email' => $job->user->email,
-    //         'whatsapp' => $job->user->whatsapp,
-    //         'files' => implode("\n", $urlFile),
-    //     ], '[SOLICITAÇÃO EXTRA]' . $job->user->company . " - " . $plan . " - (" . Carbon::parse($job->created_at)->format('Y') . $job->ref . ")"));
-    // }
 }

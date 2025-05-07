@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\CreateProjectMail;
 use App\Models\Checklist;
+use App\Models\Job;
 use App\Models\PageProject;
 use App\Models\Project;
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ class ProjectService
     public function __construct(
         protected Project $repository,
         protected PageProject $repositoryPages,
+        protected Job $jobs,
         protected Checklist $repositoryChecklist
     ) {
     }
@@ -64,8 +66,8 @@ class ProjectService
         $project = $this->repository->create($data);
         if(!empty($pages)) {
             foreach ($pages as $pageName) {
-                $this->repositoryPages->create([
-                    'name' => $pageName,
+                $this->jobs->create([
+                    'page' => $pageName,
                     'project_id' => $project->id
                 ]);
             }
@@ -114,15 +116,15 @@ class ProjectService
 
         // Atualizar páginas
         if($pages) {
-            $existingPages = $project->pages->pluck('name')->toArray();
+            $existingPages = $project->jobs->pluck('page')->toArray();
             $pagesToDelete = array_diff($existingPages, $pages);
             $pagesToAdd = array_diff($pages, $existingPages);
 
             if ($pagesToDelete) {
-                $project->pages()->whereIn('name', $pagesToDelete)->delete();
+                $project->jobs()->whereIn('page', $pagesToDelete)->delete();
             }
             foreach ($pagesToAdd as $pageName) {
-                $project->pages()->create(['name' => $pageName]);
+                $project->jobs()->create(['page' => $pageName]);
             }
         }
 
@@ -160,8 +162,8 @@ class ProjectService
     public function sendMailCreateProject($project, $emails)
     {
         $urlFile = [];
-        foreach ($project->pages as $page) {
-            $urlFile[] = $page->name;
+        foreach ($project->jobs as $page) {
+            $urlFile[] = $page->page;
         }
 
         Mail::to($emails)->send(new CreateProjectMail([

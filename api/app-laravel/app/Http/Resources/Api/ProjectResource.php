@@ -39,6 +39,7 @@ class ProjectResource extends JsonResource
             'calendar_days' => $this->calendar_days,
             'temporary_link' => $this->temporary_link,
             'finished' => $this->finished,
+            'status' => $this->status,
             'finished_date' => $this->finished_date,
             'pages' => $this->pages,
             'checklists' => $this->checklists,

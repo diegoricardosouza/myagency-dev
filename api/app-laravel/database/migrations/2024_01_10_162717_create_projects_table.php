@@ -37,6 +37,7 @@ return new class extends Migration
             $table->timestamp('closing_date')->nullable();
             $table->integer('calendar_days')->nullable();
             $table->boolean('finished')->default(false);
+            $table->string('status')->default('comercial');
             $table->timestamp('finished_date')->nullable();
             $table->timestamps();
 

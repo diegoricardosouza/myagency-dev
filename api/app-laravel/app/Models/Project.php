@@ -35,6 +35,7 @@ class Project extends Model
         'project_name',
         'temporary_link',
         'finished',
+        'status',
         'finished_date',
     ];
 
