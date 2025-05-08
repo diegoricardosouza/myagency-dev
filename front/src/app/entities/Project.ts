@@ -27,6 +27,7 @@ export interface Project {
   calendar_days: string;
   temporary_link?: string;
   finished?: boolean;
+  status: string;
   finished_date?: string | number | Date;
   pages: Jobs[];
   jobs: Jobs[];

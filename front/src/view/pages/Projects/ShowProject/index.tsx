@@ -5,7 +5,9 @@ import {
   Shield
 } from "lucide-react"
 
+import { getStatusProject } from "@/lib/utils"
 import { Spinner } from "@/view/components/Spinner"
+import { Badge } from "@/view/components/ui/badge"
 import { Button } from "@/view/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/view/components/ui/tabs"
 import { Checklist } from "./components/Checklist"
@@ -16,6 +18,7 @@ import { ModalProjectDetails } from "./components/ModalProjectDetails"
 import { PageCard } from "./components/PageCard"
 import { ProjectDetails } from "./components/ProjectDetails"
 import { ProjectProgress } from "./components/ProjectProgress"
+import { Status } from "./components/Status"
 import { TechnicalInformation } from "./components/TechnicalInformation"
 import { TemporaryLink } from "./components/TemporaryLink"
 import { useShowProjectController } from "./useShowProjectController"
@@ -66,6 +69,11 @@ export default function ShowProject() {
         <div>
           <h1 className="text-2xl font-bold">{project?.project_name}</h1>
           <p className="text-muted-foreground">Cliente: {project?.user.corporate_name}</p>
+          <div className="text-muted-foreground">Status:
+            <Badge className="ml-2">
+              {getStatusProject(project?.status)}
+            </Badge>
+          </div>
         </div>
       </header>
 
@@ -149,6 +157,10 @@ export default function ShowProject() {
             pages={jobs}
           />
 
+          <Status
+            status={project?.status}
+          />
+
           <TemporaryLink
             temporaryLink={project?.temporary_link}
             user={user}
@@ -177,17 +189,19 @@ export default function ShowProject() {
 
         {user?.data.level === "ADMIN" && (
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinance}
-              className="bg-yellow-400 hover:bg-yellow-500"
-              onClick={handleSendMailfinance}
-            >
-              {isPendingMailFinance && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Site Concluído, Solicitar Análise Financeira
-            </Button>
+            {(project?.status !== 'financial-ok' && project?.status !== 'completed') && (
+              <Button
+                disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinance || (project?.status !== 'financial-analysis' && project?.status !== 'financial-pending')}
+                className="bg-yellow-400 hover:bg-yellow-500"
+                onClick={handleSendMailfinance}
+              >
+                {isPendingMailFinance && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Site Concluído, Solicitar Análise Financeira
+              </Button>
+            )}
 
             <Button
-              disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinished}
+              disabled={!isChecklistComplete || !areAllPagesApproved || isPendingMailFinished || project?.status !== 'completed'}
               className="bg-green-600 hover:bg-green-700"
               onClick={handleSendMailFinished}
             >

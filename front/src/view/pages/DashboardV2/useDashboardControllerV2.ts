@@ -8,7 +8,7 @@ import { ProjectType } from "./components/ProjectTypeBadge";
 
 export type ProjectStatus = "no prazo" | "atrasado"
 
-export function useDashboardControllerV2(finished = false) {
+export function useDashboardControllerV2(finished: boolean | null = false) {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("")
   const [filterType, setFilterType] = useState<ProjectType | "todos">("todos")
@@ -16,16 +16,17 @@ export function useDashboardControllerV2(finished = false) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const navigate = useNavigate();
 
+  const finishedValidation = user?.data.level === 'ADMIN' ? null : finished
+
   const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects', finished],
+    queryKey: ['projects', finishedValidation],
     staleTime: 0,
     queryFn: async () => {
-      const response = await projectsService.getAllNoPagination(finished);
+      const response = await projectsService.getAllNoPagination(finishedValidation);
 
       return response;
     },
   });
-
 
   // Filtrar e ordenar projetos
   const filteredAndSortedProjects = projects

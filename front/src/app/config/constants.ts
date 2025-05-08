@@ -82,6 +82,53 @@ export const ACCEPTED_IMAGE_MIME_TYPES = [
   "image/gif"
 ];
 
+export const STATUS_PROJECT = [
+  {
+    value: "comercial",
+    label: "Comercial"
+  },
+  {
+    value: "layout-initial",
+    label: "Layout - Iniciar"
+  },
+  {
+    value: "layout-approving",
+    label: "Layout - Enviado para Aprovação"
+  },
+  {
+    value: "layout-approved",
+    label: "Layout - Aprovado"
+  },
+  {
+    value: "development-initial",
+    label: "Desenvolvimento - Iniciar"
+  },
+  {
+    value: "development-home",
+    label: "Desenvolvimento - Home"
+  },
+  {
+    value: "development-internal",
+    label: "Desenvolvimento - Páginas Internas"
+  },
+  {
+    value: "financial-analysis",
+    label: "Financeiro - Análise"
+  },
+  {
+    value: "financial-pending",
+    label: "Financeiro - Pendente"
+  },
+  {
+    value: "financial-ok",
+    label: "Financeiro - Financeiro OK"
+  },
+  {
+    value: "completed",
+    label: "Concluído"
+  },
+]
+
 export const STATES = [
   {
     value: "AC",

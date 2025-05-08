@@ -1,4 +1,5 @@
 import { Project } from "@/app/entities/Project"
+import { getStatusProject } from "@/lib/utils"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog"
 import { Badge } from "@/view/components/ui/badge"
 import { Button } from "@/view/components/ui/button"
@@ -78,7 +79,7 @@ export function useColumnsProject(): ColumnDef<Project>[] {
       },
     },
     {
-      accessorKey: "finished",
+      accessorKey: "status",
       header: ({ column }) => (
         <Button
           variant="ghost"
@@ -91,7 +92,7 @@ export function useColumnsProject(): ColumnDef<Project>[] {
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2 pl-4">
-            {row.original.finished ? 'Concluído' : 'Em Andamento'}
+            {getStatusProject(row.original.status)}
           </div>
         );
       },

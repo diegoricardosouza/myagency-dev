@@ -247,3 +247,32 @@ export function getStatusText(status: string | undefined) {
       return "Aguardando"
   }
 }
+
+export function getStatusProject(status: string | undefined) {
+  switch (status) {
+    case "layout":
+      return "Definição de layout"
+    case "layout-initial":
+      return "Layout - Iniciar"
+    case "layout-approving":
+      return "Layout - Enviado para Aprovação"
+    case "layout-approved":
+      return "Layout - Aprovado"
+    case "development-initial":
+      return "Desenvolvimento - Iniciar"
+    case "development-home":
+      return "Desenvolvimento - Home"
+    case "development-internal":
+      return "Desenvolvimento - Páginas Internas"
+    case "financial-analysis":
+      return "Financeiro - Análise"
+    case "financial-pending":
+      return "Financeiro - Pendente"
+    case "financial-ok":
+      return "Financeiro - Financeiro OK"
+    case "completed":
+      return "Concluído"
+    default:
+      return "Comercial"
+  }
+}

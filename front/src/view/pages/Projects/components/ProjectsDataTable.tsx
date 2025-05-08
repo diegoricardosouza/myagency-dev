@@ -49,7 +49,7 @@ export function ProjectsDataTable({ projects, user, isLoading }: ProjectsDataTab
 
     if (activeFilter.length > 0) {
       filteredProjects = filteredProjects.filter(project =>
-        activeFilter.includes(String(project.finished))
+        activeFilter.includes(String(project.status))
       );
     }
 
@@ -79,7 +79,7 @@ export function ProjectsDataTable({ projects, user, isLoading }: ProjectsDataTab
   // Agora, conte os status nesses projetos filtrados
   return filteredProjects.reduce(
     (acc, project) => {
-      const status = String(project.finished)
+      const status = String(project.status)
       if (typeof status === 'string') {
         acc[status] = (acc[status] || 0) + 1
       }
@@ -102,8 +102,17 @@ export function ProjectsDataTable({ projects, user, isLoading }: ProjectsDataTab
 
   const activeOptions = useMemo(
     () => [
-      { value: '0', label: "Em Andamento", count: activeCounts["0"] || 0 },
-      { value: '1', label: "Concluído", count: activeCounts["1"] || 0 }
+      { value: 'comercial', label: "Comercial", count: activeCounts["comercial"] || 0},
+      { value: 'layout-initial', label: "Layout - Iniciar", count: activeCounts["layout-initial"] || 0},
+      { value: 'layout-approving', label: "Layout - Enviado para Aprovação", count: activeCounts["layout-approving"] || 0},
+      { value: 'layout-approved', label: "Layout - Aprovado", count: activeCounts["layout-approved"] || 0},
+      { value: 'development-initial', label: "Desenvolvimento - Iniciar", count: activeCounts["development-initial"] || 0},
+      { value: 'development-home', label: "Desenvolvimento - Home", count: activeCounts["development-home"] || 0},
+      { value: 'development-internal', label: "Desenvolvimento - Páginas Internas", count: activeCounts["development-internal"] || 0},
+      { value: 'financial-analysis', label: "Financeiro - Análise", count: activeCounts["financial-analysis"] || 0},
+      { value: 'financial-pending', label: "Financeiro - Pendente", count: activeCounts["financial-pending"] || 0},
+      { value: 'financial-ok', label: "Financeiro - Financeiro OK", count: activeCounts["financial-ok"] || 0},
+      { value: 'completed', label: "Concluído", count: activeCounts["completed"] || 0},
     ],
     [activeCounts],
   )
@@ -150,9 +159,9 @@ export function ProjectsDataTable({ projects, user, isLoading }: ProjectsDataTab
 
   useEffect(() => {
     if (activeFilter.length > 0) {
-      table.getColumn("finished")?.setFilterValue(activeFilter)
+      table.getColumn("status")?.setFilterValue(activeFilter)
     } else {
-      table.getColumn("finished")?.setFilterValue(undefined)
+      table.getColumn("status")?.setFilterValue(undefined)
     }
   }, [activeFilter, table])
 

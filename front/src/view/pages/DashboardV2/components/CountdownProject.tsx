@@ -21,7 +21,7 @@ export function CountdownProject({ numberDays, startDate }: CountdownProjectProp
     return (
       <>
         {!completed && (
-          <div className="font-mono text-gray-950 text-lg font-semibold">
+          <div className="font-mono text-gray-950 text-[17px] font-semibold">
             {days}d {hours}h {minutes}m {seconds}s
           </div>
         )}

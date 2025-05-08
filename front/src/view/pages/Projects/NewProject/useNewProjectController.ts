@@ -174,13 +174,26 @@ export function useNewProjectController() {
   const handleFormSubmit = form.handleSubmit(async (data) => {
     try {
       const planName = dataPlans?.data.filter(plan => plan.id === data.plan_id);
+      const defaultPages = [
+        {
+          name: 'Layout'
+        },
+        {
+          name: 'Informações Técnicas'
+        },
+      ];
+
+      const allPages = [
+        ...defaultPages,
+        ...data.pages
+      ];
 
       await mutateAsync({
         ...data,
         value_project: formatedPrice(data.value_project),
         entry_payment: data.entry_payment ? formatedPrice(data.entry_payment) : undefined,
         installment: Number(data.installment),
-        pages: data.pages.map((p) => p.name),
+        pages: allPages.map((p) => p.name),
         closing_date: formatedDate(data.closing_date.toISOString()),
         calendar_days: Number(data.calendar_days),
         number_pages: Number(data.number_pages),

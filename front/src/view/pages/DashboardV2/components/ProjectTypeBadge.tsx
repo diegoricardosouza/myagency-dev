@@ -12,7 +12,7 @@ export function ProjectTypeBadge({ type }: { type: ProjectType }) {
   }
 
   return (
-    <Badge variant="outline" className={`flex font-medium items-center ${typeConfig[type]?.color}`}>
+    <Badge variant="outline" className={`flex text-[11px] font-medium items-center ${typeConfig[type]?.color}`}>
       {typeConfig[type]?.icon}
       {type}
     </Badge>

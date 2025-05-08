@@ -29,12 +29,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Projetos em Andamento",
+          title: "Projetos",
           url: "/",
-        },
-        {
-          title: "Projetos Concluídos",
-          url: "/concluidos",
         }
       ],
     },

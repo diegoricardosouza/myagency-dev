@@ -39,8 +39,7 @@ export interface ProjectFile extends File {
 const schema = z.object({
   name: z.string()
     .min(1, 'Título da Página é obrigatório'),
-  description: z.string()
-    .min(1, 'Descrição é obrigatório'),
+  description: z.string().optional().nullable(),
   files: z.array(z.any()).optional().nullable(),
 });
 
@@ -220,7 +219,7 @@ export function useShowProjectController() {
       await mutateAsync({
         ...data,
         page: data.name,
-        content: data.description,
+        content: data.description || '',
         files: data.files,
         project_id: idProject
       });

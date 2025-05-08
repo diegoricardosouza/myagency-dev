@@ -1,7 +1,7 @@
 import { UserMe } from '@/app/contexts/AuthContext';
 import { Badge } from '@/view/components/ui/badge';
 import { Button } from '@/view/components/ui/button';
-import { CardDescription, CardTitle } from '@/view/components/ui/card';
+import { CardTitle } from '@/view/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/view/components/ui/dropdown-menu';
 import { Input } from '@/view/components/ui/input';
 import { Filter, PlusCircle, Search, SortAsc, SortDesc, X } from 'lucide-react';
@@ -20,7 +20,7 @@ interface HeaderDashProps {
   user: UserMe;
   filterType: string;
   filterStatus: string;
-  finished?: boolean;
+  finished?: boolean | undefined | null;
 }
 
 export function HeaderDash({
@@ -41,8 +41,9 @@ export function HeaderDash({
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 ">
         <div>
           <CardTitle className="text-2xl font-bold">Dashboard de Projetos</CardTitle>
-          <CardDescription>Gerencie seus projetos e acompanhe os prazos de entrega</CardDescription>
+          {/* <CardDescription>Gerencie seus projetos e acompanhe os prazos de entrega</CardDescription> */}
         </div>
+
         <div className="flex flex-wrap gap-2">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

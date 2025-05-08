@@ -38,7 +38,7 @@ export function ShowPage() {
   const numberFormated = whatsapp?.replace(/\D/g, '');
 
   return (
-    <div className="w-full mx-auto p-6 font-sans min-h-screen relative">
+    <div className="w-full mx-auto lg:p-6 font-sans min-h-screen relative">
       {isPending && (
         <div className="w-full h-full flex justify-center items-center absolute top-0 left-0 bg-white z-10">
           <Spinner className="w-6 h-6 fill-primary" />
@@ -48,7 +48,9 @@ export function ShowPage() {
       <div className="mb-8">
         <div className="block md:flex items-center justify-between">
           <div className="mb-4 md:mb-0">
-            <h1 className="text-3xl font-bold text-gray-800">Comentários</h1>
+            <h1 className="text-3xl font-bold text-gray-800">
+              {currentPage?.page}
+            </h1>
             <div className="h-1 w-20 bg-primary rounded-full mt-2"></div>
           </div>
 

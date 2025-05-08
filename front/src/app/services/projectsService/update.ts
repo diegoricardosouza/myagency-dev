@@ -32,6 +32,7 @@ export interface UpdateProjectParams {
   pages?: string[];
   checklists?: Check[];
   finished?: number;
+  status?: string;
   finished_date?: string;
 }
 
