@@ -15,14 +15,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
-  corporate_name: z.string()
-    .min(1, 'Razão Social é obrigatório'),
+  corporate_name: z.string().optional(),
   fantasy_name: z.string()
     .min(1, 'Nome Fantasia é obrigatório'),
-  cnpj: z.string()
-    .min(1, 'CNPJ é obrigatório'),
-  responsible: z.string()
-    .min(1, 'Responsável é obrigatório'),
+  cnpj: z.string().optional(),
+  responsible: z.string().optional(),
   email: z.string()
     .min(1, 'E-mail é obrigatório')
     .email('Informe um e-mail válido'),
@@ -170,9 +167,9 @@ export function useNewUserController() {
       if (myagencyValue === 'Sim') {
         try {
           await mutateAsyncMyAgency({
-            name: data.corporate_name,
-            company: data.corporate_name,
-            responsible: data.responsible,
+            name: data.corporate_name || data.fantasy_name,
+            company: data.corporate_name || data.fantasy_name,
+            responsible: data.responsible || data.fantasy_name,
             email: data.email,
             level: data.level,
             whatsapp: data.cellphone,
@@ -194,9 +191,9 @@ export function useNewUserController() {
       if (artsValue === 'Sim') {
         try {
           await mutateAsyncArts({
-            name: data.corporate_name,
-            company: data.corporate_name,
-            responsible: data.responsible,
+            name: data.corporate_name || data.fantasy_name,
+            company: data.corporate_name || data.fantasy_name,
+            responsible: data.responsible || data.fantasy_name,
             email: data.email,
             level: data.level,
             whatsapp: data.cellphone,

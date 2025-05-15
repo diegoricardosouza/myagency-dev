@@ -1,9 +1,9 @@
 import { httpClientMyagency } from "../httpClientMyagency";
 
 export interface UserMyAgencyParams {
-  name: string;
-  company: string;
-  responsible: string;
+  name?: string;
+  company?: string;
+  responsible?: string;
   email: string;
   level: string;
   whatsapp: string;

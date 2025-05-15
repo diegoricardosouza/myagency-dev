@@ -1,10 +1,10 @@
 import { httpClient } from "../httpClient";
 
 export interface UserParams {
-  corporate_name: string;
+  corporate_name?: string;
   fantasy_name: string;
-  cnpj: string;
-  responsible: string;
+  cnpj?: string;
+  responsible?: string;
   level: string;
   cpf: string;
   zipcode: string;

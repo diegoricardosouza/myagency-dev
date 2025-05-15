@@ -32,9 +32,10 @@ class StoreUpdateUserRequest extends FormRequest
                 'max:255',
             ],
             'corporate_name' => [
-                'required',
-                'min:3',
-                'max:255',
+                'nullable',
+            ],
+            'cnpj' => [
+                'nullable',
             ],
             'fantasy_name' => [
                 'required',

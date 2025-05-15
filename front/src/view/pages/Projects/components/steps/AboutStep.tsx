@@ -59,7 +59,7 @@ export function AboutStep({ users }: AboutStepProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {users?.map((user) => (
-                    <SelectItem key={user.id} value={user.id}>{user.corporate_name}</SelectItem>
+                    <SelectItem key={user.id} value={user.id}>{user.fantasy_name}</SelectItem>
                   ))}
                 </SelectContent>
 
