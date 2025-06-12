@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\MailController;
 use App\Http\Controllers\Api\v1\PlanController;
 use App\Http\Controllers\Api\v1\ProjectController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function() {
@@ -36,6 +37,8 @@ Route::prefix('v1')->group(function() {
 
         Route::post('/send-mail-finance', [MailController::class, 'verifyFinance']);
         Route::post('/send-mail-finished', [MailController::class, 'finishedProject']);
+
+        Route::post('/send-whatsapp', [WhatsAppController::class, 'send']);
     });
 
     // Route::post('/users/{id}', [UserController::class, 'update']);
