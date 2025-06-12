@@ -67,6 +67,14 @@ export function useShowPageController() {
     }
   });
 
+  // const {
+  //   mutateAsync: mutateWhatsApp
+  // } = useMutation({
+  //   mutationFn: async (data: SendWhatsAppParams) => {
+  //     return whatsAppService.sendComment(data);
+  //   }
+  // });
+
   function openCommentModal() {
     setOpenModalComment(true);
   }
@@ -114,6 +122,9 @@ export function useShowPageController() {
     }
   }
 
+  // console.log(formatPhoneNumber(jobData?.data.project?.user.cellphone));
+
+
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
       if (user?.data.level === 'CLIENTE') {
@@ -131,13 +142,21 @@ export function useShowPageController() {
         job_id: idPage!,
         user_id: user!.data.id
       });
+
+      // TODO: ENVIAR MENSAGEM NO WHATSAPP
+      // await mutateWhatsApp({
+      //   phone: formatPhoneNumber(jobData!.data.project!.user.cellphone),
+      //   message: `
+      //     Olá tudo bem?\nSua espera acabou!\n Página:jobData?.data.page \n Acesse o link abaixo para conferir!\n${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${id}/page/${idPage}
+      //   `
+      // })
+
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
       setSendComment(true);
       toast.success('Comentário cadastrado com sucesso!');
       if (user?.data.level === 'ADMIN') {
         openCommentModal();
       }
-
       reset();
       // navigate(0);
     } catch (error) {
@@ -155,6 +174,7 @@ export function useShowPageController() {
     currentPage: jobData?.data,
     comments: jobData?.data.comments,
     idJob: id,
+    idPage,
     sendComment,
     isPendingChangeStatus,
     isPending,
@@ -162,6 +182,7 @@ export function useShowPageController() {
     closeCommentModal,
     handleApprovedStatus,
     handleApprovingStatus,
-    handleOpenPageStatus
+    handleOpenPageStatus,
+    openCommentModal
   }
 }

@@ -1,12 +1,12 @@
 
 import { Modal } from "@/view/components/Modal"
 import { Spinner } from "@/view/components/Spinner"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog"
 import { Badge } from "@/view/components/ui/badge"
 import { Button } from "@/view/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/view/components/ui/card"
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import { id } from "date-fns/locale"
 import { ArrowLeft, CircleX, Loader2, PencilRuler, RotateCcw, ThumbsUp } from "lucide-react"
 import { Controller } from "react-hook-form"
 import { Link } from "react-router-dom"
@@ -24,6 +24,7 @@ export function ShowPage() {
     user,
     isLoadingCreateComment,
     idJob,
+    idPage,
     currentPage,
     sendComment,
     isPendingChangeStatus,
@@ -56,18 +57,32 @@ export function ShowPage() {
 
           <div className="space-x-4">
             {(currentPage?.status !== 'approved' && user?.data.level === 'CLIENTE') && (
-              <Button
-                className="bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all mb-4" onClick={handleApprovedStatus}
-                disabled={isPendingChangeStatus}
-                type="button"
-              >
-                {isPendingChangeStatus ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-                  <>
-                    <ThumbsUp className="mr-2 h-4 w-4" />
-                    Aprovar
-                  </>
-                )}
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <Button
+                    className="bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all mb-4"
+                    asChild
+                  >
+                    <a>
+                      <ThumbsUp className="mr-2 h-4 w-4" /> Aprovar
+                    </a>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Você deseja realmente aprovar esta página?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Lembrando que, após a aprovação, não será mais possível editar ou enviar novos conteúdos.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleApprovedStatus}>
+                      Confirmar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
 
             {(currentPage?.status !== 'approving' && currentPage?.status !== 'approved' && user?.data.level === 'ADMIN') && (
@@ -248,7 +263,7 @@ export function ShowPage() {
         </p>
 
         <Button asChild className="max-w-[250px] m-auto">
-          <Link to={`https://api.whatsapp.com/send/?phone=${numberFormated}&text=Olá%20tudo%20bem?%0DSua%20espera%20acabou!%0DAcesse%20o%20link%20abaixo%20para%20conferir!%0Dhttps://minhaagencia.inovasite.com/solicitacoes/detalhes/${id}`} target="_blank">
+          <Link to={`https://api.whatsapp.com/send/?phone=${numberFormated}&text=Olá%20tudo%20bem?%0DSua%20espera%20acabou!%0DAcesse%20o%20link%20abaixo%20para%20conferir!%0D${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`} target="_blank">
             Compartilhar
           </Link>
         </Button>

@@ -68,7 +68,7 @@ export default function ShowProject() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">{project?.project_name}</h1>
-          <p className="text-muted-foreground">Cliente: {project?.user.corporate_name}</p>
+          <p className="text-muted-foreground">Cliente: {project?.user.corporate_name || project?.user.fantasy_name}</p>
           <div className="text-muted-foreground">Status:
             <Badge className="ml-2">
               {getStatusProject(project?.status)}
@@ -157,9 +157,11 @@ export default function ShowProject() {
             pages={jobs}
           />
 
-          <Status
-            status={project?.status}
-          />
+          {user?.data.level === 'ADMIN' && (
+            <Status
+              status={project?.status}
+            />
+          )}
 
           <TemporaryLink
             temporaryLink={project?.temporary_link}

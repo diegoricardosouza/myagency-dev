@@ -130,7 +130,7 @@ export function NewUser() {
                         render={({ field: { onChange, value } }) => (
                           <InputMask
                             mask="(__) ____-____"
-                            value={value}
+                            value={value || ""}
                             onChange={onChange}
                             error={errors?.phone?.message}
                           />

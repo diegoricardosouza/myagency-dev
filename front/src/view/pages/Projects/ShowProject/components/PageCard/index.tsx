@@ -8,7 +8,7 @@ import { Button } from "@/view/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/view/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/view/components/ui/tooltip";
 import { format } from "date-fns";
-import { Edit, FileText, MessageSquare, Paperclip, RotateCcw, ScanEye, Trash2 } from "lucide-react";
+import { Edit, MessageSquare, Paperclip, RotateCcw, ScanEye, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getStatusIcon } from "../../useShowProjectController";
 
@@ -32,7 +32,6 @@ export function PageCard({
   isLoadingDelete,
   deleteItem,
   desapprovedPage,
-  openModalDetails,
   openModalEditPage,
   user
 }: PageCardProps) {
@@ -86,12 +85,12 @@ export function PageCard({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Visualizar</p>
+              <p>Editar</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
-        <TooltipProvider delayDuration={0}>
+        {/* <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild disabled={disabled}>
               <Button variant="outline" size="icon" className="w-8 h-8" onClick={openModalDetails}>
@@ -102,7 +101,7 @@ export function PageCard({
               <p>Detalhes</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> */}
 
         {user.data.level === 'ADMIN' && (
           <>

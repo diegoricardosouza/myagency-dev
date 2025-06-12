@@ -17,12 +17,25 @@ export function UploadFiles({ onChange, sendComment }: UploadFileProps) {
     }
   }
 
+  // 1) Dispara onChange sempre que selectedFiles mudar
   useEffect(() => {
-    onChange(selectedFiles)
+    onChange(selectedFiles);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFiles]); // NÃO colocamos sendComment aqui
+
+  // 2) Limpa o selectedFiles apenas quando sendComment mudar para true
+  useEffect(() => {
     if (sendComment) {
       setSelectedFiles([]);
     }
-  }, [onChange, selectedFiles, sendComment])
+  }, [sendComment]); // só dispara quando sendComment mudar
+
+  // useEffect(() => {
+  //   onChange(selectedFiles)
+  //   if (sendComment) {
+  //     setSelectedFiles([]);
+  //   }
+  // }, [onChange, selectedFiles, sendComment])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

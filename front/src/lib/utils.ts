@@ -276,3 +276,17 @@ export function getStatusProject(status: string | undefined) {
       return "Comercial"
   }
 }
+
+export function formatPhoneNumber(input: string | undefined) {
+  // Remove tudo que não for número
+  const digits = input?.replace(/\D/g, '');
+  // Adiciona o DDI do Brasil (55)
+  return '55' + digits;
+}
+
+export function isImageFile(filename: string | null | undefined) {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
+  if (!filename) return false;
+  const extension = filename.split('.').pop()?.toLowerCase();
+  return extension ? imageExtensions.includes(extension) : false;
+}

@@ -47,8 +47,8 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 {/* <AvatarImage src={user.logo} alt={user.name} /> */}
                 <AvatarFallback className="rounded-lg">
-                  {user?.data.corporate_name.charAt(0).toLocaleUpperCase()}
-                  {user?.data.corporate_name.charAt(1).toLocaleUpperCase()}
+                  {user?.data.corporate_name ? user?.data.corporate_name.charAt(0).toLocaleUpperCase() : user?.data.fantasy_name.charAt(0).toLocaleUpperCase()}
+                  {user?.data.corporate_name ? user?.data.corporate_name.charAt(1).toLocaleUpperCase() : user?.data.fantasy_name.charAt(1).toLocaleUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -69,8 +69,8 @@ export function NavUser() {
                 <Avatar className="h-8 w-8 rounded-lg">
                   {/* <AvatarImage src={user.logo} alt={user.name} /> */}
                   <AvatarFallback className="rounded-lg">
-                    {user?.data.corporate_name.charAt(0).toLocaleUpperCase()}
-                    {user?.data.corporate_name.charAt(1).toLocaleUpperCase()}
+                    {user?.data.corporate_name ? user?.data.corporate_name.charAt(0).toLocaleUpperCase() : user?.data.fantasy_name.charAt(0).toLocaleUpperCase()}
+                    {user?.data.corporate_name ? user?.data.corporate_name.charAt(1).toLocaleUpperCase() : user?.data.fantasy_name.charAt(1).toLocaleUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">

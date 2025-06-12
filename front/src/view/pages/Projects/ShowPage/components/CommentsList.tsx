@@ -1,9 +1,10 @@
 import { Comments } from "@/app/entities/Comments";
+import { isImageFile } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/view/components/ui/avatar";
 import { Badge } from "@/view/components/ui/badge";
 import { Button } from "@/view/components/ui/button";
 import { format } from "date-fns";
-import { Download } from "lucide-react";
+import { Download, FileArchive } from "lucide-react";
 import { toast } from "sonner";
 
 interface CommentsListProps {
@@ -51,21 +52,21 @@ export function CommentsList({ userId, comment, logo }: CommentsListProps) {
             className={`w-10 h-10 border-2 ${comment.user.id === userId ? "border-blue-300 shadow-sm" : "border-gray-100  shadow-sm"
               }`}
           >
-            <AvatarImage src={logo ? logo : '/placeholder-user.jpg'} alt={comment.user.corporate_name} />
+            <AvatarImage src={logo ? logo : '/placeholder-user.jpg'} alt={comment.user.corporate_name || comment.user.fantasy_name} />
             <AvatarFallback
               className={`${comment.user.id === userId
                 ? "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"
                 : "bg-gradient-to-br from-gray-500 to-gray-600 text-white"
                 }`}
             >
-              {comment.user.corporate_name.substring(0, 2)}
+              {comment.user.corporate_name ? comment.user.corporate_name.substring(0, 2) : comment.user.fantasy_name.substring(0, 2)}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex-1">
             <div className="block md:flex justify-between items-center mb-2 min-h-9">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-800">{comment.user.corporate_name}</span>
+                <span className="font-semibold text-gray-800">{comment.user.corporate_name || comment.user.fantasy_name}</span>
                 {comment.user.id === userId && (
                   <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-0 text-xs">
                     Você
@@ -81,7 +82,7 @@ export function CommentsList({ userId, comment, logo }: CommentsListProps) {
 
             <div className="text-gray-700 mb-4">
               <div
-                className="text-gray-700"
+                className="text-gray-700 max-h-[200px] overflow-auto"
                 dangerouslySetInnerHTML={{ __html: comment.content as string }}
               />
             </div>
@@ -97,11 +98,18 @@ export function CommentsList({ userId, comment, logo }: CommentsListProps) {
                         }`}
                     >
                       <div className="relative h-[130px] w-full">
-                        <img
-                          src={file.url || "/placeholder.svg"}
-                          alt={file.name}
-                          className="w-full h-[130px] object-cover"
-                        />
+                        {(file.url && isImageFile(file.url)) ? (
+                          <img
+                            src={file.url || "/placeholder.svg"}
+                            alt={file.name}
+                            className="w-full h-[130px] object-cover"
+                          />
+                        ) : (
+                          <div className="h-[130px] w-full flex items-center justify-center bg-gray-100">
+                            <FileArchive className="w-9 h-9" />
+                          </div>
+                        )}
+
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <Button
                             variant="outline"

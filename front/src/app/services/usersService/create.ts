@@ -13,7 +13,7 @@ export interface UserParams {
   neighborhood: string;
   state: string;
   number: string;
-  phone: string;
+  phone?: string;
   cellphone: string;
   site: string;
   email: string;
