@@ -11,17 +11,15 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
-  corporate_name: z.string().optional(),
+  corporate_name: z.string().nullable().optional(),
   fantasy_name: z.string()
     .min(1, 'Nome Fantasia é obrigatório'),
-  cnpj: z.string()
-    .min(1, 'CNPJ é obrigatório'),
-  responsible: z.string()
-    .min(1, 'Responsável é obrigatório'),
+  cnpj: z.string().nullable().optional(),
+  responsible: z.string().nullable().optional(),
   email: z.string()
     .min(1, 'E-mail é obrigatório')
     .email('Informe um e-mail válido'),
-  phone: z.string().optional(),
+  phone: z.string().nullable().optional(),
   cellphone: z.string()
     .min(1, 'Celular é obrigatório'),
   address: z.string()

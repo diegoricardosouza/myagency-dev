@@ -108,7 +108,7 @@ export function EditUser() {
                         render={({ field: { onChange, value } }) => (
                           <InputMask
                             mask="__.___.___/____-__"
-                            value={value}
+                            value={value || ""}
                             onChange={onChange}
                             error={errors?.cnpj?.message}
                           />

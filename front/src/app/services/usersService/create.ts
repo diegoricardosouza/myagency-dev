@@ -1,10 +1,10 @@
 import { httpClient } from "../httpClient";
 
 export interface UserParams {
-  corporate_name?: string;
+  corporate_name?: string | null;
   fantasy_name: string;
-  cnpj?: string;
-  responsible?: string;
+  cnpj?: string | null;
+  responsible?: string | null;
   level: string;
   cpf: string;
   zipcode: string;
@@ -13,7 +13,7 @@ export interface UserParams {
   neighborhood: string;
   state: string;
   number: string;
-  phone?: string;
+  phone?: string | null;
   cellphone: string;
   site: string;
   email: string;

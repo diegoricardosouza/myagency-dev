@@ -270,6 +270,8 @@ export function getStatusProject(status: string | undefined) {
       return "Financeiro - Pendente"
     case "financial-ok":
       return "Financeiro - Financeiro OK"
+    case "put-on-the-air":
+      return "Colocar no ar"
     case "completed":
       return "Concluído"
     default:

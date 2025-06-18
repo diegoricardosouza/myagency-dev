@@ -124,6 +124,10 @@ export const STATUS_PROJECT = [
     label: "Financeiro - Financeiro OK"
   },
   {
+    value: "put-on-the-air",
+    label: "Colocar no ar"
+  },
+  {
     value: "completed",
     label: "Concluído"
   },
