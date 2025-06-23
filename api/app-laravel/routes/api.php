@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\FileCommentController;
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\JobController;
 use App\Http\Controllers\Api\v1\MailController;
+use App\Http\Controllers\Api\v1\MessageController;
 use App\Http\Controllers\Api\v1\PlanController;
 use App\Http\Controllers\Api\v1\ProjectController;
 use App\Http\Controllers\Api\v1\UserController;
@@ -34,6 +35,7 @@ Route::prefix('v1')->group(function() {
         Route::post('/jobs/{id}', [JobController::class, 'update']);
         Route::get("/projects-all", [ProjectController::class, 'showAll']);
         Route::apiResource('/checklists', ChecklistController::class);
+        Route::apiResource('/messages', MessageController::class);
 
         Route::post('/send-mail-finance', [MailController::class, 'verifyFinance']);
         Route::post('/send-mail-finished', [MailController::class, 'finishedProject']);
