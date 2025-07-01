@@ -73,6 +73,19 @@ class CommentService
         return $commentCreated;
     }
 
+    public function findOne($id)
+    {
+        return $this->comment->findOrFail($id);
+    }
+
+    public function update($data, $id)
+    {
+        $comment = $this->comment->findOrFail($id);
+        $comment->update($data);
+
+        return $comment;
+    }
+
     public function delete($id)
     {
         $comment = $this->comment->with('files')->findOrFail($id);

@@ -61,9 +61,19 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreUpdateCommentRequest $request, string $id)
     {
-        //
+        $comment = $this->repository->findOne($id);
+
+        if (!$comment) {
+            return response()->json([
+                'error' => 'Not Found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->repository->update($request->all(), $id);
+
+        return new CommentResource($comment);
     }
 
     /**

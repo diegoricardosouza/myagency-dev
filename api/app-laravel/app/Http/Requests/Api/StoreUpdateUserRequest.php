@@ -54,15 +54,15 @@ class StoreUpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($this->segment(4))
             ],
             'cpf' => [
-                'required',
+                'nullable',
                 'min:3',
                 'max:255',
                 Rule::unique('users')->ignore($this->segment(4))
             ],
-            'address' => 'required',
-            'zipcode' => 'required',
-            'city' => 'required',
-            'state' => 'required',
+            'address' => 'nullable',
+            'zipcode' => 'nullable',
+            'city' => 'nullable',
+            'state' => 'nullable',
             'password' => [
                 'required',
                 'min:6',

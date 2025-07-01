@@ -16,9 +16,9 @@ return new class extends Migration
             $table->enum('level', ['ADMIN', 'EDITOR', 'CLIENTE']);
             $table->string('corporate_name')->nullable();
             $table->string('fantasy_name')->nullable();
-            $table->string('cnpj')->unique();
+            $table->string('cnpj')->unique()->nullable();
             $table->string('responsible')->nullable();
-            $table->string('cpf')->unique();
+            $table->string('cpf')->unique()->nullable();
             $table->string('zipcode')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
