@@ -47,7 +47,15 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $comment = $this->repository->findOne($id);
+
+        if (!$comment) {
+            return response()->json([
+                'error' => 'Not Found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return new CommentResource($comment);
     }
 
     /**

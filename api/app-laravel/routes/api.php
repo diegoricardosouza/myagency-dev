@@ -41,6 +41,7 @@ Route::prefix('v1')->group(function() {
         Route::post('/send-mail-finished', [MailController::class, 'finishedProject']);
 
         Route::post('/send-whatsapp', [WhatsAppController::class, 'send']);
+        Route::post("/send-approved-page", [JobController::class, 'sendApprovedPage']);
     });
 
     // Route::post('/users/{id}', [UserController::class, 'update']);

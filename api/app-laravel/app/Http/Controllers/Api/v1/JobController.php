@@ -9,6 +9,7 @@ use App\Services\JobService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class JobController extends Controller
 {
@@ -124,5 +125,53 @@ class JobController extends Controller
         $type = $request->get('type');
 
         // return $this->repository->countNumberJobs($this->userLogged->id, $type);
+    }
+
+    public function sendApprovedPage(Request $request)
+    {
+        $email = $request->input('email');
+        $cliente = $request->input('cliente');
+        $nomeProjeto = $request->input('nomeprojeto');
+        $tipoProjeto = $request->input('tipoprojeto');
+        $pagina = $request->input('pagina');
+
+        // CORREÇÃO: Validar os dados recebidos
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'cliente' => 'required|string',
+            'nomeprojeto' => 'required|string',
+            'tipoprojeto' => 'required|string',
+            'pagina' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dados inválidos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Verificar se o email não está vazio
+        if (empty($email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email é obrigatório'
+            ], 400);
+        }
+
+        $data = [
+            'cliente' => $cliente,
+            'nomeprojeto' => $nomeProjeto,
+            'tipoprojeto' => $tipoProjeto,
+            'pagina' => $pagina
+        ];
+
+        $this->repository->sendApprovedPage($data, $request->get('email'));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email enviado com sucesso!'
+        ], Response::HTTP_OK);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mail\CreateJobMail;
 use App\Mail\createJobMailAtt;
 use App\Mail\NoticeJobsExceeded;
+use App\Mail\SendApprovedPageMail;
 use App\Models\Comment;
 use App\Models\File;
 use App\Models\Job;
@@ -209,5 +210,15 @@ class JobService
             'observacoes' => $job->obs,
             'files' => implode("\n", $urlFile),
         ], $plan ." - ". $job->page." - (DEV" . Carbon::parse($job->created_at)->format('Y').$job->ref . ")"));
+    }
+
+    public function sendApprovedPage($data, $email)
+    {
+        Mail::to($email)->send(new SendApprovedPageMail([
+            'cliente' => $data['cliente'],
+            'nomeprojeto' => $data['nomeprojeto'],
+            'tipoprojeto' => $data['tipoprojeto'],
+            'pagina' => $data['pagina'],
+        ], "Página Aprovada"));
     }
 }
