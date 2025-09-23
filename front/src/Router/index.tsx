@@ -5,6 +5,7 @@ import { NotFound } from "@/view/pages/NotFound";
 import { DashboardLayoutV2 } from "@/view/layouts/DashboardLayoutV2";
 import Checklists from "@/view/pages/Checklists";
 import { DashboardV2 } from "@/view/pages/DashboardV2";
+import Messages from "@/view/pages/Messages";
 import { Profile } from "@/view/pages/Profile";
 import Projects from "@/view/pages/Projects";
 import { EditProject } from "@/view/pages/Projects/EditProject";
@@ -45,6 +46,7 @@ export function Router() {
               <Route path="/projetos/novo" element={<NewProject />} />
               <Route path="/projetos/edit/:id" element={<EditProject />} />
               <Route path="/configuracoes/checklists" element={<Checklists />} />
+              <Route path="/configuracoes/mensagens" element={<Messages />} />
             </Route>
             <Route path="/projetos/detalhes/:id" element={<ShowProject />} />
             <Route path="/projetos/detalhes/:id/page/:idPage" element={<ShowPage />} />

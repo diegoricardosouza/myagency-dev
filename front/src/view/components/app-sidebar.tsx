@@ -75,6 +75,10 @@ const data = {
         {
           title: "Checklists",
           url: "/configuracoes/checklists",
+        },
+        {
+          title: "Mensagens",
+          url: "/configuracoes/mensagens",
         }
       ],
     },

@@ -11,9 +11,10 @@ import { StepperFooter, StepperHeader, StepperNextButton } from "../Stepper";
 
 interface AboutStepProps {
   users?: User[]
+  handleValueClient?: (selectedId: string, onChange: (value: string) => void) => void;
 }
 
-export function AboutStep({ users }: AboutStepProps) {
+export function AboutStep({ users, handleValueClient }: AboutStepProps) {
   const { nextStep } = useStepper();
   const form = useFormContext<FormData>()
 
@@ -48,7 +49,9 @@ export function AboutStep({ users }: AboutStepProps) {
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <Select
-                onValueChange={onChange}
+                onValueChange={(selectedId) =>
+                  handleValueClient?.(selectedId, onChange)
+                }
                 value={value}
               >
                 <SelectTrigger

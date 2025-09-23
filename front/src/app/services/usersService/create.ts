@@ -6,16 +6,16 @@ export interface UserParams {
   cnpj?: string | null;
   responsible?: string | null;
   level: string;
-  cpf: string;
-  zipcode: string;
-  address: string;
-  city: string;
-  neighborhood: string;
-  state: string;
-  number: string;
+  cpf?: string | null;
+  zipcode?: string | null;
+  address?: string | null;
+  city?: string | null;
+  neighborhood?: string | null;
+  state?: string | null;
+  number?: string | null;
   phone?: string | null;
   cellphone: string;
-  site: string;
+  site?: string | null;
   email: string;
   password: string;
 }

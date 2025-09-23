@@ -43,7 +43,7 @@ export function PageCard({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg max-w-[160px]">{page.page}</CardTitle>
-          <Badge variant="outline" className={`flex items-center gap-1 ${getCardColorClass(page.status) }`}>
+          <Badge variant="outline" className={`flex items-center gap-1 whitespace-nowrap ${getCardColorClass(page.status) }`}>
             {getStatusIcon(page.status)}
             <span className={`${getTextBadgeColorClass(page.status)}`}>
               {getStatusText(page.status)}

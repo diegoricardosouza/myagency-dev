@@ -125,7 +125,7 @@ export function EditUser() {
                         render={({ field: { onChange, value } }) => (
                           <InputMask
                             mask="___.___.___-__"
-                            value={value}
+                            value={value ?? ""}
                             onChange={onChange}
                             error={errors?.cpf?.message}
                           />
@@ -181,7 +181,7 @@ export function EditUser() {
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                           <InputCepCardMask
-                            value={value}
+                            value={value ?? ""}
                             onChange={onChange}
                             error={errors?.zipcode?.message}
                           />
@@ -255,7 +255,7 @@ export function EditUser() {
                         render={({ field: { onChange, value } }) => (
                           <Select
                             onValueChange={onChange}
-                            value={value}
+                            value={value ?? ""}
                           >
                             <SelectTrigger
                               id="state"

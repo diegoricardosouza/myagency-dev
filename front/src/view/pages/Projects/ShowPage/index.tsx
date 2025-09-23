@@ -1,13 +1,16 @@
 
+import { CustomModal } from "@/view/components/CustomModal"
 import { Modal } from "@/view/components/Modal"
 import { Spinner } from "@/view/components/Spinner"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog"
 import { Badge } from "@/view/components/ui/badge"
 import { Button } from "@/view/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/view/components/ui/card"
+import { DialogFooter } from "@/view/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select"
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import { ArrowLeft, CircleX, Loader2, PencilRuler, RotateCcw, ThumbsUp } from "lucide-react"
+import { ArrowLeft, CircleX, Loader2, MessageSquareMore, PencilRuler, RotateCcw, ThumbsUp } from "lucide-react"
 import { Controller } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { UploadFiles } from "../ShowProject/components/UploadFiles"
@@ -29,18 +32,27 @@ export function ShowPage() {
     sendComment,
     isPendingChangeStatus,
     isPending,
+    messages,
+    selectedMessageId,
+    isLoadingDeleteComment,
+    openCommentMessageModal,
+    isPendingSendApproved,
     closeCommentModal,
     handleSubmit,
     handleApprovedStatus,
     handleApprovingStatus,
-    handleOpenPageStatus
+    handleOpenPageStatus,
+    handleSelectMessage,
+    deleteComment,
+    closeCommentMessageModal,
+    openCommentMessageModalFn
   } = useShowPageController();
 
   const numberFormated = whatsapp?.replace(/\D/g, '');
 
   return (
     <div className="w-full mx-auto lg:p-6 font-sans min-h-screen relative">
-      {isPending && (
+      {isPending || isLoadingDeleteComment && (
         <div className="w-full h-full flex justify-center items-center absolute top-0 left-0 bg-white z-10">
           <Spinner className="w-6 h-6 fill-primary" />
         </div>
@@ -106,7 +118,7 @@ export function ShowPage() {
                 disabled={isPendingChangeStatus}
                 type="button"
               >
-                {isPendingChangeStatus ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                {isPendingChangeStatus || isPendingSendApproved ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                   <>
                     <CircleX className="mr-2 h-4 w-4" />
                     Fechar
@@ -162,6 +174,9 @@ export function ShowPage() {
                   key={comment.id}
                   comment={comment}
                   userId={user!.data.id}
+                  userLevel={user!.data.level}
+                  deleteComment={deleteComment}
+                  openCommentMessageModalFn={openCommentMessageModalFn}
                 />
               ))}
             </CardContent>
@@ -178,6 +193,28 @@ export function ShowPage() {
 
               <CardContent className="p-6">
                 <form onSubmit={handleSubmit}>
+                  {user?.data.level === 'ADMIN' && (
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Mensagem:</label>
+
+                      <div className="flex items-center gap-2">
+                        <Select
+                          value={selectedMessageId || ""}
+                          onValueChange={handleSelectMessage}
+                        >
+                          <SelectTrigger className="bg-white/70 backdrop-blur-sm border-slate-200">
+                            <SelectValue placeholder="Selecionar uma mensagem" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {messages.map((message) => (
+                              <SelectItem key={message.id} value={message.id}>{message.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Comentário:</label>
 
@@ -263,11 +300,36 @@ export function ShowPage() {
         </p>
 
         <Button asChild className="max-w-[250px] m-auto">
-          <Link to={`https://api.whatsapp.com/send/?phone=${numberFormated}&text=Olá%20tudo%20bem?%0DSua%20espera%20acabou!%0DAcesse%20o%20link%20abaixo%20para%20conferir!%0D${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`} target="_blank">
+          <Link to={`https://api.whatsapp.com/send/?phone=55${numberFormated}&text=⚠️ Olá, seu site tem uma nova atualização%0DClique no link abaixo para conferir%0D${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`} target="_blank">
             Compartilhar
           </Link>
         </Button>
       </Modal>
+
+      <CustomModal
+        closeModal={closeCommentMessageModal}
+        openModalTech={openCommentMessageModal}
+        title={'Editar Comentário'}
+        icon={<MessageSquareMore className="h-5 w-5 text-primary" />}
+        description={'Edite os dados do comentário abaixo.'}
+      >
+        <form>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={closeCommentMessageModal}
+              className="bg-white text-slate-600 border-slate-300"
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" className="bg-primary text-white">
+              Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </form>
+      </CustomModal>
     </div>
   )
 }

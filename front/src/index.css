@@ -148,6 +148,11 @@
   word-break: break-word;
 }
 
+.imageModal#img {
+  height: 80vh;
+  object-fit: contain;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -197,6 +202,21 @@
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
   @apply bg-slate-400 rounded-full hover:bg-slate-500;
+}
+
+.content-paragraph p {
+  margin-bottom: 15px;
+}
+
+.content-paragraph ol,
+.content-paragraph ul {
+  list-style: initial;
+  margin: 16px 0;
+  padding: 0 0 0 40px;
+}
+
+.content-paragraph ol {
+  list-style: auto;
 }
 
 /* Snap scrolling */

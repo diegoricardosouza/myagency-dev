@@ -37,7 +37,7 @@ export function TechnicalInformation({ user, technicalInfo }: TechnicalInformati
 
           {technicalInfo && (
             <div
-              className="bg-muted p-3 rounded-md text-sm project-technicalInfo"
+              className="bg-muted p-3 rounded-md text-sm project-technicalInfo break-all"
               dangerouslySetInnerHTML={{ __html: technicalInfo || "" }}
             />
           )}

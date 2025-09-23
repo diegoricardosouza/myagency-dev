@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useAuth } from "@/app/hooks/useAuth";
 import { commentsService } from "@/app/services/commentsService";
 import { CommentsParams } from "@/app/services/commentsService/create";
 import { jobsService } from "@/app/services/jobs";
+import { SendApprovedParams } from "@/app/services/jobs/sendApproved";
 import { UpdateJobParams } from "@/app/services/jobs/update";
+import { messageService } from "@/app/services/messageService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -25,11 +28,14 @@ export function useShowPageController() {
   const navigate = useNavigate();
   const [openModalComment, setOpenModalComment] = useState(false);
   const [sendComment, setSendComment] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [openCommentMessageModal, setOpenCommentMessageModal] = useState(false);
 
   const {
     control,
     reset,
     handleSubmit: hookFormSubmit,
+    setValue,
     formState: { errors }
   } = useForm<FormData>({
     resolver: zodResolver(schema)
@@ -49,12 +55,31 @@ export function useShowPageController() {
     }
   });
 
+  const { data: dataMessage, isLoading } = useQuery({
+    queryKey: ['messages'],
+    staleTime: 0,
+    queryFn: async () => {
+      const response = await messageService.getAll();
+
+      return response;
+    },
+  });
+
   const {
     isPending: isLoadingCreateComment,
     mutateAsync
   } = useMutation({
     mutationFn: async (data: CommentsParams) => {
       return commentsService.create(data);
+    }
+  });
+
+  const {
+    isPending: isLoadingDeleteComment,
+    mutateAsync: mutateAsyncDeleteComment
+  } = useMutation({
+    mutationFn: async (id: string) => {
+      return commentsService.remove(id);
     }
   });
 
@@ -66,6 +91,24 @@ export function useShowPageController() {
       return jobsService.update(data);
     }
   });
+
+  const {
+    mutateAsync: mutateSendApproved,
+    isPending: isPendingSendApproved
+  } = useMutation({
+    mutationFn: async (data: SendApprovedParams) => {
+      return jobsService.sendApproved(data);
+    }
+  });
+
+  const handleSelectMessage = (messageId: string) => {
+    setSelectedMessageId(messageId);
+
+    const selectedMessage = dataMessage?.data.find(msg => msg.id === messageId);
+    if (selectedMessage) {
+      setValue("content", selectedMessage.content);
+    }
+  };
 
   // const {
   //   mutateAsync: mutateWhatsApp
@@ -83,12 +126,33 @@ export function useShowPageController() {
     setOpenModalComment(false);
   }
 
+  function openCommentMessageModalFn(commentId: string, userCommentId: string) {
+    console.log({ commentId, userCommentId });
+
+    setOpenCommentMessageModal(true);
+  }
+
+  function closeCommentMessageModal() {
+    setOpenCommentMessageModal(false);
+  }
+
   async function handleApprovedStatus() {
     try {
       await mutateChangeStatus({
         id: idPage!,
         status: "approved"
       });
+
+      const emailData = {
+        email: 'marcelo@inovasite.com',
+        cliente: jobData?.data.project?.user.corporate_name || jobData?.data.project?.user.fantasy_name || "",
+        nomeprojeto: jobData!.data.project!.project_name,
+        tipoprojeto: jobData!.data.project!.type,
+        pagina: jobData!.data.page
+      };
+
+      await mutateSendApproved(emailData);
+
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
       toast.success('Página aprovada!');
     } catch (error) {
@@ -102,6 +166,7 @@ export function useShowPageController() {
         id: idPage!,
         status: "approving"
       });
+
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
       toast.success('Enviado para aprovação!');
     } catch (error) {
@@ -122,8 +187,16 @@ export function useShowPageController() {
     }
   }
 
-  // console.log(formatPhoneNumber(jobData?.data.project?.user.cellphone));
-
+  async function deleteComment(commentId: string) {
+    console.log('Delete comment with ID:', commentId);
+    try {
+      await mutateAsyncDeleteComment(commentId);
+      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
+      toast.success('Comentário deletado com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao deletar o comentário!');
+    }
+  }
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
@@ -178,11 +251,21 @@ export function useShowPageController() {
     sendComment,
     isPendingChangeStatus,
     isPending,
+    messages: dataMessage?.data || [],
+    isLoading,
+    selectedMessageId,
+    isLoadingDeleteComment,
+    openCommentMessageModal,
+    isPendingSendApproved,
     handleSubmit,
     closeCommentModal,
     handleApprovedStatus,
     handleApprovingStatus,
     handleOpenPageStatus,
-    openCommentModal
+    openCommentModal,
+    handleSelectMessage,
+    deleteComment,
+    closeCommentMessageModal,
+    openCommentMessageModalFn
   }
 }

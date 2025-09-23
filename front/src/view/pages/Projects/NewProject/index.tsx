@@ -21,7 +21,8 @@ export function NewProject() {
     fieldsChecklist,
     isPending,
     handleRemoveChecklist,
-    handleAddChecklist
+    handleAddChecklist,
+    handleValueClient
   } = useNewProjectController();
 
   return (
@@ -48,7 +49,7 @@ export function NewProject() {
               steps={[
                 {
                   label: "Sobre o projeto",
-                  content: <AboutStep users={users?.data} />
+                  content: <AboutStep users={users?.data} handleValueClient={handleValueClient} />
                 },
                 {
                   label: "Páginas",

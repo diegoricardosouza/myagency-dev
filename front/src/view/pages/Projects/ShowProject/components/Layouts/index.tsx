@@ -36,7 +36,7 @@ export function Layouts({ user, layouts }: TechnicalInformationProps) {
           </div>
           {layouts && (
             <div
-              className="bg-muted p-3 rounded-md text-sm project-technicalInfo"
+              className="bg-muted p-3 rounded-md text-sm project-technicalInfo break-all"
               dangerouslySetInnerHTML={{ __html: layouts || "" }}
             />
           )}

@@ -26,22 +26,14 @@ const schema = z.object({
   phone: z.string().nullable().optional(),
   cellphone: z.string()
     .min(1, 'Celular é obrigatório'),
-  address: z.string()
-    .min(1, 'Endereço é de preenchimento obrigatório.'),
-  zipcode: z.string()
-    .min(1, 'CEP é de preenchimento obrigatório.'),
-  city: z.string()
-    .min(1, 'Cidade é de preenchimento obrigatório.'),
-  state: z.string()
-    .min(1, 'Estado é de preenchimento obrigatório.'),
-  number: z.string()
-    .min(1, 'Número é de preenchimento obrigatório.'),
-  neighborhood: z.string()
-    .min(1, 'Bairro é de preenchimento obrigatório.'),
-  cpf: z.string()
-    .min(1, 'CPF é de preenchimento obrigatório.'),
-  site: z.string()
-    .min(1, 'Site é de preenchimento obrigatório.'),
+  address: z.string().nullable().optional(),
+  zipcode: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  state: z.string().nullable().optional(),
+  number: z.string().nullable().optional(),
+  neighborhood: z.string().nullable().optional(),
+  cpf: z.string().nullable().optional(),
+  site: z.string().nullable().optional(),
   password: z.string()
     .min(3, 'A senha deve conter pelo menos 3 dígitos'),
   level: z.string()
@@ -61,6 +53,15 @@ const schema = z.object({
 }, {
   message: 'Plano é obrigatório',
   path: ['plan'], // Especifica que o erro é no campo 'plan'
+}).refine((data) => {
+  // CPF é obrigatório apenas se ambos forem "Sim"
+  if (data.myagency === 'Sim' || data.arts === 'Sim') {
+    return !!data.cpf && data.cpf.trim() !== '';
+  }
+  return true;
+}, {
+  message: 'CPF é obrigatório quando Minha Agência ou Artes estão marcados como Sim.',
+  path: ['cpf']
 });
 
 type FormData = z.infer<typeof schema>
@@ -132,7 +133,7 @@ export function useNewUserController() {
       }
     };
 
-    fetchAddress(zipcode);
+    fetchAddress(zipcode ?? "");
   }, [zipcode, setValue]);
 
   const { data: dataPlans, isPending: isPendingPlan } = useQuery({
@@ -196,16 +197,16 @@ export function useNewUserController() {
             email: data.email,
             level: data.level,
             whatsapp: data.cellphone,
-            cpf: data.cpf,
+            cpf: data.cpf ?? '',
             password: data.password,
             logo: null,
-            address: data.address,
-            zipcode: data.zipcode,
-            city: data.city,
-            state: data.state,
-            neighborhood: data.neighborhood,
+            address: data.address ?? '',
+            zipcode: data.zipcode ?? '',
+            city: data.city ?? '',
+            state: data.state ?? '',
+            neighborhood: data.neighborhood ?? '',
             credits: 0,
-            number: data.number
+            number: data.number ?? ''
           });
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {

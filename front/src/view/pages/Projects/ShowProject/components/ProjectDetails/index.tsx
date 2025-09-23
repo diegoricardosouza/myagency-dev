@@ -1,4 +1,5 @@
 import { Jobs } from "@/app/entities/Jobs";
+import { Project } from "@/app/entities/Project";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
@@ -28,9 +29,10 @@ interface ProjectDetailsProps {
   description?: string;
   typeProject?: string;
   pages?: Jobs[];
+  project?: Project;
 }
 
-export function ProjectDetails({ temporaryLink, description, pages, typeProject }: ProjectDetailsProps) {
+export function ProjectDetails({ temporaryLink, pages, typeProject, project }: ProjectDetailsProps) {
   const [showProjectDetails, setShowProjectDetails] = useState(false)
 
   return (
@@ -48,8 +50,19 @@ export function ProjectDetails({ temporaryLink, description, pages, typeProject 
           <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-medium mb-2">Descrição</h3>
-                <div className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: description ? description : '' }} />
+                {/* <h3 className="text-lg font-medium mb-2">Descrição</h3> */}
+                <h3 className="text-lg font-medium mb-2">Dados do Cliente</h3>
+                {/* <div className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: description ? description : '' }} /> */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Telefone:</span>
+                    <span className="text-sm text-muted-foreground">{project?.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">E-mail:</span>
+                    <span className="text-sm text-muted-foreground">{project?.email}</span>
+                  </div>
+                </div>
               </div>
               <div>
                 <h3 className="text-lg font-medium mb-2">Informações Adicionais</h3>

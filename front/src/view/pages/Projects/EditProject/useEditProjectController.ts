@@ -220,6 +220,18 @@ export function useEditProjectController() {
     removeChecklist(index);
   }
 
+  function handleValueClient(selectedId: string, onChange: (value: string) => void) {
+    const selectedUser = dataUser?.data.find((user) => user.id === selectedId);
+    onChange(selectedId); // Continua o funcionamento do formulário
+    // console.log("Usuário selecionado:", selectedUser); // ✅ Aqui você vê os dados no console
+
+    if (selectedUser) {
+      form.setValue("phone", selectedUser.cellphone || '');
+      form.setValue("name", selectedUser.responsible || '');
+      form.setValue("email", selectedUser.email || '');
+    }
+  }
+
   const handleFormSubmit = form.handleSubmit(async (data) => {
     try {
       if(id) {
@@ -262,6 +274,7 @@ export function useEditProjectController() {
     handleAddChecklist,
     handleRemovePage,
     handleRemoveChecklist,
+    handleValueClient,
     fields,
     fieldsChecklist,
     linkProof,

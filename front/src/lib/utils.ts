@@ -292,3 +292,8 @@ export function isImageFile(filename: string | null | undefined) {
   const extension = filename.split('.').pop()?.toLowerCase();
   return extension ? imageExtensions.includes(extension) : false;
 }
+
+export function truncateText(text: string, maxLength = 200) {
+  if (text?.length <= maxLength) return text
+  return text?.substring(0, maxLength) + "..."
+}

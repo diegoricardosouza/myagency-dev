@@ -80,6 +80,8 @@ export function FinanceStep({ linkProof, nameProof }: FinanceStepProps) {
                   <SelectItem value="Cartão de Crédito">Cartão de Crédito</SelectItem>
                   <SelectItem value="Pix">Pix</SelectItem>
                   <SelectItem value="Boleto">Boleto</SelectItem>
+                  <SelectItem value="Permuta">Permuta</SelectItem>
+                  <SelectItem value="Outra">Outra</SelectItem>
                 </SelectContent>
 
                 {form.formState.errors?.payment_method?.message && (
@@ -104,16 +106,6 @@ export function FinanceStep({ linkProof, nameProof }: FinanceStepProps) {
           />
         </div>
 
-        <div className="grid gap-2 col-span-2">
-          <Label htmlFor="other">Outra</Label>
-          <Input
-            id="other"
-            className="w-full"
-            {...form.register('other')}
-            error={form.formState.errors?.other?.message}
-          />
-        </div>
-
         <div className="grid gap-2">
           <Label htmlFor="entry_payment">Entrada</Label>
           <Controller
@@ -129,6 +121,16 @@ export function FinanceStep({ linkProof, nameProof }: FinanceStepProps) {
                 />
               )
             }}
+          />
+        </div>
+
+        <div className="grid gap-2 col-span-2">
+          <Label htmlFor="other">Outra</Label>
+          <Input
+            id="other"
+            className="w-full"
+            {...form.register('other')}
+            error={form.formState.errors?.other?.message}
           />
         </div>
 

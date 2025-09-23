@@ -22,7 +22,7 @@ const schema = z.object({
   project_name: z.string()
     .min(1, 'Nome do Projeto é obrigatório'),
   name: z.string()
-    .min(1, 'Nome Fantasia é obrigatório'),
+    .min(1, 'Nome é obrigatório'),
   phone: z.string()
     .min(1, 'Whatsapp é obrigatório'),
   email: z.string()
@@ -171,6 +171,18 @@ export function useNewProjectController() {
     removeChecklist(index);
   }
 
+  function handleValueClient(selectedId: string, onChange: (value: string) => void ) {
+    const selectedUser = dataUser?.data.find((user) => user.id === selectedId);
+    onChange(selectedId); // Continua o funcionamento do formulário
+    // console.log("Usuário selecionado:", selectedUser); // ✅ Aqui você vê os dados no console
+
+    if (selectedUser) {
+      form.setValue("phone", selectedUser.cellphone || '');
+      form.setValue("name", selectedUser.responsible || '');
+      form.setValue("email", selectedUser.email || '');
+    }
+  }
+
   const handleFormSubmit = form.handleSubmit(async (data) => {
     try {
       const planName = dataPlans?.data.filter(plan => plan.id === data.plan_id);
@@ -214,18 +226,19 @@ export function useNewProjectController() {
   });
 
   return {
-    handleFormSubmit,
     isPending,
     plans: dataPlans,
     checklists: dataChecklist,
     users: dataUser,
     isFetching,
     fields,
-    handleRemovePage,
+    fieldsChecklist,
     form,
     isFetchingUser,
+    handleFormSubmit,
+    handleRemovePage,
     handleAddChecklist,
     handleRemoveChecklist,
-    fieldsChecklist
+    handleValueClient
   }
 }

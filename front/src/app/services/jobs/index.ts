@@ -4,6 +4,7 @@ import { getAll } from "./getAll";
 import { getAllNoPagination } from "./getAllNoPagination";
 import { getById } from "./getById";
 import { remove } from "./remove";
+import { sendApproved } from "./sendApproved";
 import { update } from "./update";
 
 export const jobsService = {
@@ -13,5 +14,6 @@ export const jobsService = {
   getById,
   update,
   getAllNoPagination,
-  countByType
+  countByType,
+  sendApproved
 }

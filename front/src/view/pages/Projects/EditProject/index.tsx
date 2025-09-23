@@ -22,7 +22,8 @@ export function EditProject() {
     handleRemovePage,
     handleAddChecklist,
     linkProof,
-    nameProof
+    nameProof,
+    handleValueClient
   } = useEditProjectController();
 
   return (
@@ -62,7 +63,7 @@ export function EditProject() {
                 steps={[
                   {
                     label: "Sobre o projeto",
-                    content: <AboutStep users={users?.data} />
+                    content: <AboutStep users={users?.data} handleValueClient={handleValueClient} />
                   },
                   {
                     label: "Páginas",

@@ -8,9 +8,10 @@ interface CustomModalProps {
   children: React.ReactNode;
   title?: string;
   description?: string;
+  icon?: React.ReactNode;
 }
 
-export function CustomModal({ openModalTech, closeModal, children, title, description }: CustomModalProps) {
+export function CustomModal({ openModalTech, closeModal, children, title, description, icon }: CustomModalProps) {
   useEffect(() => {
     if (openModalTech) {
       // Quando o modal abre, remove a barra de rolagem
@@ -44,7 +45,8 @@ export function CustomModal({ openModalTech, closeModal, children, title, descri
         className="fixed z-[90] w-full max-w-2xl top-[35%] left-[50%] lg:top-[50%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg rounded-lg transition-all duration-200"
       >
         <div className="mb-4">
-          <h3 className="text-lg font-semibold leading-none tracking-tight">
+          <h3 className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2">
+            {icon}
             {title}
           </h3>
           <p className="text-sm text-muted-foreground mt-[6px]">
