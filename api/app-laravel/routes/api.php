@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function() {
         Route::get("/jobs-count", [JobController::class, 'count']);
         Route::apiResource('/files', FileController::class);
         Route::apiResource('/comments', CommentController::class);
+        Route::post('/comments/{id}', [CommentController::class, 'update']);
         Route::apiResource('/files-comments', FileCommentController::class);
         Route::apiResource('/projects', ProjectController::class);
         Route::post('/projects/{id}', [ProjectController::class, 'update']);

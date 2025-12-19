@@ -81,6 +81,15 @@ class CommentService
     public function update($data, $id)
     {
         $comment = $this->comment->findOrFail($id);
+
+        if (!empty($data['files'])) {
+            foreach ($data['files'] as $file) {
+                $dataFile['comment_id'] = $id;
+                $dataFile['url'] = $file->storeAs('comments', $file->hashName());
+                $fileCreated = FileComment::create($dataFile);
+            }
+        }
+
         $comment->update($data);
 
         return $comment;
