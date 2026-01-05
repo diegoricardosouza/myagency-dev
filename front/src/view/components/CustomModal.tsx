@@ -36,13 +36,13 @@ export function CustomModal({ openModalTech, closeModal, children, title, descri
     <div>
       {/* Overlay */}
       <div
-        className="fixed z-50 bg-black/80 opacity-100 pointer-events-auto top-0 left-0 w-full h-screen transition-all duration-200"
+        className="fixed z-40 bg-black/80 opacity-100 pointer-events-auto top-0 left-0 w-full h-screen transition-all duration-200"
         onClick={closeModal}
       />
 
       {/* Modal */}
       <div
-        className="fixed z-[90] w-full max-w-2xl top-[35%] left-[50%] lg:top-[50%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg rounded-lg transition-all duration-200"
+        className="fixed z-[90] w-full max-w-2xl top-[35%] left-[50%] lg:top-[50%] translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg rounded-lg transition-all duration-200 max-h-[90%] overflow-y-auto pr-2 scroll-selected-files"
       >
         <div className="mb-4">
           <h3 className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2">

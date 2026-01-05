@@ -297,3 +297,7 @@ export function truncateText(text: string, maxLength = 200) {
   if (text?.length <= maxLength) return text
   return text?.substring(0, maxLength) + "..."
 }
+
+export function removeTextNameFile(filename: string, textToRemove: string) {
+  return filename.replace(textToRemove, '');
+}

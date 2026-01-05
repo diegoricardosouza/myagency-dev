@@ -1,21 +1,21 @@
 
-import { CustomModal } from "@/view/components/CustomModal"
-import { Modal } from "@/view/components/Modal"
-import { Spinner } from "@/view/components/Spinner"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog"
-import { Badge } from "@/view/components/ui/badge"
-import { Button } from "@/view/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/view/components/ui/card"
-import { DialogFooter } from "@/view/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select"
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import { ArrowLeft, CircleX, Loader2, MessageSquareMore, PencilRuler, RotateCcw, ThumbsUp } from "lucide-react"
-import { Controller } from "react-hook-form"
-import { Link } from "react-router-dom"
-import { UploadFiles } from "../ShowProject/components/UploadFiles"
-import { CommentsList } from "./components/CommentsList"
-import { useShowPageController } from "./useShowPageController"
+import { Modal } from "@/view/components/Modal";
+import { Spinner } from "@/view/components/Spinner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog";
+import { Badge } from "@/view/components/ui/badge";
+import { Button } from "@/view/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/view/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { ArrowLeft, CircleX, Loader2, PencilRuler, RotateCcw, ThumbsUp } from "lucide-react";
+import { Controller } from "react-hook-form";
+import { SiWhatsapp } from "react-icons/si";
+import { Link } from "react-router-dom";
+import { UploadFiles } from "../ShowProject/components/UploadFiles";
+import { CommentModalEdit } from "./components/CommentModalEdit";
+import { CommentsList } from "./components/CommentsList";
+import { useShowPageController } from "./useShowPageController";
 
 export function ShowPage() {
   const {
@@ -37,6 +37,8 @@ export function ShowPage() {
     isLoadingDeleteComment,
     openCommentMessageModal,
     isPendingSendApproved,
+    commentId,
+    userCommentId,
     closeCommentModal,
     handleSubmit,
     handleApprovedStatus,
@@ -49,6 +51,9 @@ export function ShowPage() {
   } = useShowPageController();
 
   const numberFormated = whatsapp?.replace(/\D/g, '');
+  let msg = `⚠️ Olá, seu site tem uma nova atualização!\n`;
+  msg += '🔗 Clique no link abaixo para conferir:\n';
+  msg += `${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`
 
   return (
     <div className="w-full mx-auto lg:p-6 font-sans min-h-screen relative">
@@ -68,6 +73,18 @@ export function ShowPage() {
           </div>
 
           <div className="space-x-4">
+            {user?.data.level === 'ADMIN' && (
+              <Button
+                asChild
+                className="bg-[#25d366] hover:bg-[#128c7e] text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all mb-4"
+              >
+                <Link to={`https://api.whatsapp.com/send/?phone=55${numberFormated}&text=${encodeURIComponent(msg)}`} target="_blank">
+                  <SiWhatsapp className="mr-2 h-4 w-4" />
+                  Compartilhar
+                </Link>
+              </Button>
+            )}
+
             {(currentPage?.status !== 'approved' && user?.data.level === 'CLIENTE') && (
               <AlertDialog>
                 <AlertDialogTrigger>
@@ -306,7 +323,7 @@ export function ShowPage() {
         </Button>
       </Modal>
 
-      <CustomModal
+      {/* <CustomModal
         closeModal={closeCommentMessageModal}
         openModalTech={openCommentMessageModal}
         title={'Editar Comentário'}
@@ -314,7 +331,89 @@ export function ShowPage() {
         description={'Edite os dados do comentário abaixo.'}
       >
         <form>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Mensagem:</label>
 
+            <div className="flex items-center gap-2">
+              <Select
+                value={selectedMessageId || ""}
+                onValueChange={handleSelectMessage}
+              >
+                <SelectTrigger className="bg-white/70 backdrop-blur-sm border-slate-200">
+                  <SelectValue placeholder="Selecionar uma mensagem" />
+                </SelectTrigger>
+                <SelectContent>
+                  {messages.map((message) => (
+                    <SelectItem key={message.id} value={message.id}>{message.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Comentário:</label>
+
+            <div className="w-full max-w-[258px] sm:max-w-full">
+              <Controller
+                control={control}
+                name="content"
+                defaultValue=""
+                render={({ field: { onChange, value } }) => (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <CKEditor
+                      editor={ClassicEditor}
+                      data={value}
+                      config={{
+                        licenseKey: 'GPL',
+                        language: 'pt-br'
+                      }}
+                      onChange={(_event, editor) => {
+                        const data = editor.getData();
+                        onChange(data);
+                      }}
+                    />
+                  </div>
+                )}
+              />
+            </div>
+            {errors?.content?.message && (
+              <div className="flex gap-2 items-center text-red-700">
+                <span className="text-xs">{errors?.content?.message}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Arquivos:</label>
+            <Controller
+              control={control}
+              name="files"
+              defaultValue={null}
+              render={({ field: { onChange } }) => (
+                <UploadFiles
+                  onChange={onChange}
+                  sendComment={sendComment}
+                />
+              )}
+            />
+
+            {errors?.files?.message && (
+              <div className="flex gap-2 items-center text-red-700">
+                <span className="text-xs">{errors?.files?.message}</span>
+              </div>
+            )}
+
+            <div className="mt-3">
+              <p className="text-xs text-gray-500">
+                Arquivos permitidos (max: 20mb):
+                <br />
+                <span className="text-gray-600">
+                  JPG, JPEG, PNG, GIF, SVG, PDF, DOC, DOCX, TXT, CSV, XLS, XLSX, ZIP, RAR
+                </span>
+              </p>
+            </div>
+          </div>
           <DialogFooter>
             <Button
               type="button"
@@ -329,7 +428,14 @@ export function ShowPage() {
             </Button>
           </DialogFooter>
         </form>
-      </CustomModal>
+      </CustomModal> */}
+
+      <CommentModalEdit
+        closeModal={closeCommentMessageModal}
+        openModalTech={openCommentMessageModal}
+        commentId={commentId}
+        userCommentId={userCommentId}
+      />
     </div>
   )
 }

@@ -6602,6 +6602,7 @@ __metadata:
     react-dropzone: "npm:^14.2.3"
     react-hook-form: "npm:^7.51.2"
     react-hook-mask: "npm:^1.1.18"
+    react-icons: "npm:^5.5.0"
     react-router-dom: "npm:^6.22.3"
     sonner: "npm:^1.4.41"
     tailwind-merge: "npm:^3.0.1"
@@ -8434,6 +8435,15 @@ __metadata:
     react: ">= 17.0.0"
     react-dom: ">= 17.0.0"
   checksum: 10c0/89d809518de293dbfd7e863b88cce0ce53df0441cb7cb1081884fdba3a2cdcc9cdd8fdaeb05a168339acb0da1832d3349ce9a2dcbbcc5f3cad5f15ed923e76df
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-icons@npm:5.5.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/a24309bfc993c19cbcbfc928157e53a137851822779977b9588f6dd41ffc4d11ebc98b447f4039b0d309a858f0a42980f6bfb4477fb19f9f2d1bc2e190fcf79c
   languageName: node
   linkType: hard
 

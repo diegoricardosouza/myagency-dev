@@ -30,6 +30,8 @@ export function useShowPageController() {
   const [sendComment, setSendComment] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [openCommentMessageModal, setOpenCommentMessageModal] = useState(false);
+  const [commentId, setCommentId] = useState('');
+  const [userCommentId, setUserCommentId] = useState('');
 
   const {
     control,
@@ -127,13 +129,16 @@ export function useShowPageController() {
   }
 
   function openCommentMessageModalFn(commentId: string, userCommentId: string) {
-    console.log({ commentId, userCommentId });
+    setCommentId(commentId);
+    setUserCommentId(userCommentId);
+    queryClient.invalidateQueries({ queryKey: ['comment', commentId] });
 
     setOpenCommentMessageModal(true);
   }
 
   function closeCommentMessageModal() {
     setOpenCommentMessageModal(false);
+    reset();
   }
 
   async function handleApprovedStatus() {
@@ -188,7 +193,6 @@ export function useShowPageController() {
   }
 
   async function deleteComment(commentId: string) {
-    console.log('Delete comment with ID:', commentId);
     try {
       await mutateAsyncDeleteComment(commentId);
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
@@ -227,9 +231,9 @@ export function useShowPageController() {
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
       setSendComment(true);
       toast.success('Comentário cadastrado com sucesso!');
-      if (user?.data.level === 'ADMIN') {
-        openCommentModal();
-      }
+      // if (user?.data.level === 'ADMIN') {
+      //   openCommentModal();
+      // }
       reset();
       // navigate(0);
     } catch (error) {
@@ -257,6 +261,8 @@ export function useShowPageController() {
     isLoadingDeleteComment,
     openCommentMessageModal,
     isPendingSendApproved,
+    commentId,
+    userCommentId,
     handleSubmit,
     closeCommentModal,
     handleApprovedStatus,
