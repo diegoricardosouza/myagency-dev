@@ -64,10 +64,22 @@ class CommentService
         }
         // $this->sendMail(env('EMAIL_SOLICITACOES_SINGLE'), $commentAfterCreation);
 
-        if(Auth::user()->level != 'CLIENTE') {
+        // if(Auth::user()->level != 'CLIENTE') {
+        //     $user = $this->user->where('id', $job->project->user_id)->first();
+        //     // $user = $this->user->where('id', $commentAfterCreation->job->user_id)->first();
+        //     $this->sendMailAdmin($user->email, $commentAfterCreation, $job->project->id, $commentAfterCreation->job->id);
+        // }
+
+        if (Auth::user()->level != 'CLIENTE') {
             $user = $this->user->where('id', $job->project->user_id)->first();
-            // $user = $this->user->where('id', $commentAfterCreation->job->user_id)->first();
-            $this->sendMailAdmin($user->email, $commentAfterCreation, $job->project->id, $commentAfterCreation->job->id);
+
+            try {
+                $this->sendMailAdmin($user->email, $commentAfterCreation, $job->project->id, $commentAfterCreation->job->id);
+            } catch (\Exception $e) {
+                // Opcional: registrar o erro em log sem interromper a execução
+                //\Log::warning('Falha ao enviar email: ' . $e->getMessage());
+                // Continua a execução normalmente sem retornar erro
+            }
         }
 
         return $commentCreated;
