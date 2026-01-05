@@ -40,9 +40,20 @@ export default defineConfig({
       }
     }),
   ],
+  base: '/', // Importante: deve ser '/' para root domain
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
   server: {

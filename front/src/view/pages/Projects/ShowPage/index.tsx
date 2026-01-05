@@ -430,12 +430,14 @@ export function ShowPage() {
         </form>
       </CustomModal> */}
 
-      <CommentModalEdit
-        closeModal={closeCommentMessageModal}
-        openModalTech={openCommentMessageModal}
-        commentId={commentId}
-        userCommentId={userCommentId}
-      />
+      {commentId && userCommentId && (
+        <CommentModalEdit
+          closeModal={closeCommentMessageModal}
+          openModalTech={openCommentMessageModal}
+          commentId={commentId}
+          userCommentId={userCommentId}
+        />
+      )}
     </div>
   )
 }
