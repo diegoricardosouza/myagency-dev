@@ -28,6 +28,7 @@ export function useCommentModalEditController(closeModal: () => void, commentId?
   const [sendComment, setSendComment] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [filesComment, setFilesComment] = useState<FileComment[] | null | undefined>(null);
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
 
   const {
     control,
@@ -91,21 +92,21 @@ export function useCommentModalEditController(closeModal: () => void, commentId?
   };
 
   async function removeFileComment(fileId: string) {
-    console.log(fileId);
     try {
+      setDeletingFileId(fileId);
       await mutateAsyncDeleteFileComment(fileId);
       queryClient.invalidateQueries({ queryKey: ['comment', commentId] });
       queryClient.invalidateQueries({ queryKey: ['viewjob'] });
       toast.success('arquivo deletado com sucesso!');
     } catch (error) {
       toast.error('Erro ao deletar o arquivo!');
+    } finally {
+      setDeletingFileId(null);
     }
   }
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
-      console.log({data});
-
       await mutateAsync({
         ...data,
         id: commentId!,
@@ -130,6 +131,7 @@ export function useCommentModalEditController(closeModal: () => void, commentId?
     selectedMessageId,
     filesComment,
     isLoadingUpdateComment,
+    deletingFileId,
     handleSubmit,
     handleSelectMessage,
     removeFileComment

@@ -26,6 +26,7 @@ export function CommentModalEdit({ closeModal, openModalTech, commentId, userCom
     selectedMessageId,
     filesComment,
     isLoadingUpdateComment,
+    deletingFileId,
     handleSubmit,
     handleSelectMessage,
     removeFileComment
@@ -108,15 +109,20 @@ export function CommentModalEdit({ closeModal, openModalTech, commentId, userCom
                         </p>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 flex-shrink-0"
-                      type="button"
-                      onClick={() => removeFileComment(file.id)}
-                    >
-                      <Trash className="h-3 w-3" />
-                    </Button>
+                    {deletingFileId === file.id ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 flex-shrink-0"
+                        type="button"
+                        onClick={() => removeFileComment(file.id)}
+                        disabled={!!deletingFileId}
+                      >
+                        <Trash className="h-3 w-3" />
+                      </Button>
+                    )}
                   </div>
               ))}
             </div>
