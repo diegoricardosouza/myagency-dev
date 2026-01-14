@@ -1,5 +1,3 @@
-
-import { Modal } from "@/view/components/Modal";
 import { Spinner } from "@/view/components/Spinner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/view/components/ui/alert-dialog";
 import { Badge } from "@/view/components/ui/badge";
@@ -21,13 +19,10 @@ export function ShowPage() {
   const {
     errors,
     control,
-    openModalComment,
-    whatsapp,
     comments,
     user,
     isLoadingCreateComment,
     idJob,
-    idPage,
     currentPage,
     sendComment,
     isPendingChangeStatus,
@@ -39,7 +34,7 @@ export function ShowPage() {
     isPendingSendApproved,
     commentId,
     userCommentId,
-    closeCommentModal,
+    sendWhats,
     handleSubmit,
     handleApprovedStatus,
     handleApprovingStatus,
@@ -47,13 +42,9 @@ export function ShowPage() {
     handleSelectMessage,
     deleteComment,
     closeCommentMessageModal,
-    openCommentMessageModalFn
+    openCommentMessageModalFn,
+    sendWhatsAppNotification
   } = useShowPageController();
-
-  const numberFormated = whatsapp?.replace(/\D/g, '');
-  let msg = `⚠️ Olá, seu site tem uma nova atualização!\n`;
-  msg += '🔗 Clique no link abaixo para conferir:\n';
-  msg += `${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`
 
   return (
     <div className="w-full mx-auto lg:p-6 font-sans min-h-screen relative">
@@ -75,13 +66,20 @@ export function ShowPage() {
           <div className="space-x-4">
             {user?.data.level === 'ADMIN' && (
               <Button
-                asChild
                 className="bg-[#25d366] hover:bg-[#128c7e] text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all mb-4"
+                onClick={sendWhatsAppNotification}
               >
-                <Link to={`https://api.whatsapp.com/send/?phone=55${numberFormated}&text=${encodeURIComponent(msg)}`} target="_blank">
-                  <SiWhatsapp className="mr-2 h-4 w-4" />
-                  Compartilhar
-                </Link>
+                {sendWhats ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <SiWhatsapp className="mr-2 h-4 w-4" />
+                    Compartilhar
+                  </>
+                )}
               </Button>
             )}
 
@@ -310,125 +308,6 @@ export function ShowPage() {
           )}
         </div>
       </div>
-
-      <Modal open={openModalComment} onClose={closeCommentModal}>
-        <p className="text-center">
-          Clique no botão para compartilhar com o cliente
-        </p>
-
-        <Button asChild className="max-w-[250px] m-auto">
-          <Link to={`https://api.whatsapp.com/send/?phone=55${numberFormated}&text=⚠️ Olá, seu site tem uma nova atualização%0DClique no link abaixo para conferir%0D${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${idJob}/page/${idPage}`} target="_blank">
-            Compartilhar
-          </Link>
-        </Button>
-      </Modal>
-
-      {/* <CustomModal
-        closeModal={closeCommentMessageModal}
-        openModalTech={openCommentMessageModal}
-        title={'Editar Comentário'}
-        icon={<MessageSquareMore className="h-5 w-5 text-primary" />}
-        description={'Edite os dados do comentário abaixo.'}
-      >
-        <form>
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Mensagem:</label>
-
-            <div className="flex items-center gap-2">
-              <Select
-                value={selectedMessageId || ""}
-                onValueChange={handleSelectMessage}
-              >
-                <SelectTrigger className="bg-white/70 backdrop-blur-sm border-slate-200">
-                  <SelectValue placeholder="Selecionar uma mensagem" />
-                </SelectTrigger>
-                <SelectContent>
-                  {messages.map((message) => (
-                    <SelectItem key={message.id} value={message.id}>{message.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Comentário:</label>
-
-            <div className="w-full max-w-[258px] sm:max-w-full">
-              <Controller
-                control={control}
-                name="content"
-                defaultValue=""
-                render={({ field: { onChange, value } }) => (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={value}
-                      config={{
-                        licenseKey: 'GPL',
-                        language: 'pt-br'
-                      }}
-                      onChange={(_event, editor) => {
-                        const data = editor.getData();
-                        onChange(data);
-                      }}
-                    />
-                  </div>
-                )}
-              />
-            </div>
-            {errors?.content?.message && (
-              <div className="flex gap-2 items-center text-red-700">
-                <span className="text-xs">{errors?.content?.message}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Arquivos:</label>
-            <Controller
-              control={control}
-              name="files"
-              defaultValue={null}
-              render={({ field: { onChange } }) => (
-                <UploadFiles
-                  onChange={onChange}
-                  sendComment={sendComment}
-                />
-              )}
-            />
-
-            {errors?.files?.message && (
-              <div className="flex gap-2 items-center text-red-700">
-                <span className="text-xs">{errors?.files?.message}</span>
-              </div>
-            )}
-
-            <div className="mt-3">
-              <p className="text-xs text-gray-500">
-                Arquivos permitidos (max: 20mb):
-                <br />
-                <span className="text-gray-600">
-                  JPG, JPEG, PNG, GIF, SVG, PDF, DOC, DOCX, TXT, CSV, XLS, XLSX, ZIP, RAR
-                </span>
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={closeCommentMessageModal}
-              className="bg-white text-slate-600 border-slate-300"
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" className="bg-primary text-white">
-              Salvar Alterações
-            </Button>
-          </DialogFooter>
-        </form>
-      </CustomModal> */}
 
       {commentId && userCommentId && (
         <CommentModalEdit

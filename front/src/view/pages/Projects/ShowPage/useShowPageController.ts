@@ -8,6 +8,7 @@ import { UpdateJobParams } from "@/app/services/jobs/update";
 import { messageService } from "@/app/services/messageService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -32,6 +33,7 @@ export function useShowPageController() {
   const [openCommentMessageModal, setOpenCommentMessageModal] = useState(false);
   const [commentId, setCommentId] = useState('');
   const [userCommentId, setUserCommentId] = useState('');
+  const [sendWhats, setSendWhats] = useState(false);
 
   const {
     control,
@@ -202,6 +204,42 @@ export function useShowPageController() {
     }
   }
 
+  async function sendWhatsAppNotification() {
+    try {
+      setSendWhats(true);
+
+      const whatsapp = jobData?.data.project?.user.cellphone;
+      const numberFormated = whatsapp?.replace(/\D/g, '');
+
+      let msg = `⚠️ Olá, seu site tem uma nova atualização!\n`;
+      msg += '🔗 Clique no link abaixo para conferir:\n';
+      msg += `${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${id}/page/${idPage}`;
+
+      const res = await axios.post(
+        'https://dropestore.com/wp-json/wdm/v1/send/text',
+        {
+          number: `55${numberFormated}`,
+          text: msg
+        },
+        {
+          headers: {
+            Accept: 'application/json',
+            token: import.meta.env.VITE_TOKEN_WHATSAPP,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log(res.data);
+      toast.success('WhatsApp enviado com sucesso!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao enviar WhatsApp');
+    } finally {
+      setSendWhats(false);
+    }
+  }
+
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
       if (user?.data.level === 'CLIENTE') {
@@ -263,6 +301,7 @@ export function useShowPageController() {
     isPendingSendApproved,
     commentId,
     userCommentId,
+    sendWhats,
     handleSubmit,
     closeCommentModal,
     handleApprovedStatus,
@@ -272,6 +311,7 @@ export function useShowPageController() {
     handleSelectMessage,
     deleteComment,
     closeCommentMessageModal,
-    openCommentMessageModalFn
+    openCommentMessageModalFn,
+    sendWhatsAppNotification
   }
 }
