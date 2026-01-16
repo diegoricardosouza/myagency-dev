@@ -5,7 +5,13 @@ import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { Input } from "@/view/components/ui/input";
 import { Label } from "@/view/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/view/components/ui/select";
 import { ChevronLeft, Loader2, PlusCircle } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -20,7 +26,7 @@ export function EditUser() {
     isPending,
     id,
     zipcodeValid,
-    user
+    user,
   } = useEditUserController();
   // const { user } = useAuth();
 
@@ -36,11 +42,11 @@ export function EditUser() {
               </Link>
             </Button>
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              {id === user?.data.id ? 'Meu Perfil' : 'Editar Usuário'}
+              {id === user?.data.id ? "Meu Perfil" : "Editar Usuário"}
             </h1>
           </div>
 
-          {user?.data.level !== 'CLIENTE' && (
+          {user?.data.level !== "CLIENTE" && (
             <div>
               <Button size="sm" className="h-8 gap-1" asChild>
                 <Link to="/usuarios/novo">
@@ -70,7 +76,7 @@ export function EditUser() {
                         id="name"
                         type="text"
                         className="w-full"
-                        {...register('corporate_name')}
+                        {...register("corporate_name")}
                         error={errors?.corporate_name?.message}
                       />
                     </div>
@@ -81,7 +87,7 @@ export function EditUser() {
                         id="company"
                         type="text"
                         className="w-full"
-                        {...register('fantasy_name')}
+                        {...register("fantasy_name")}
                         error={errors?.fantasy_name?.message}
                       />
                     </div>
@@ -94,7 +100,7 @@ export function EditUser() {
                         id="responsible"
                         type="text"
                         className="w-full"
-                        {...register('responsible')}
+                        {...register("responsible")}
                         error={errors?.responsible?.message}
                       />
                     </div>
@@ -153,19 +159,14 @@ export function EditUser() {
                     </div>
 
                     <div className="grid gap-3">
-                      <Label htmlFor="company">Celular</Label>
-                      <Controller
-                        control={control}
-                        name="cellphone"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                          <InputMask
-                            mask="(__) _____-____"
-                            value={value}
-                            onChange={onChange}
-                            error={errors?.cellphone?.message}
-                          />
-                        )}
+                      <Label htmlFor="cellphone">Celular</Label>
+                      <Input
+                        id="cellphone"
+                        type="text"
+                        className="w-full"
+                        {...register("cellphone")}
+                        error={errors?.cellphone?.message}
+                        placeholder="Ex.: 5541999999999"
                       />
                     </div>
                   </div>
@@ -188,7 +189,9 @@ export function EditUser() {
                         )}
                       />
                       {zipcodeValid && (
-                        <span className="flex gap-2 items-center text-red-700 text-xs">{zipcodeValid}</span>
+                        <span className="flex gap-2 items-center text-red-700 text-xs">
+                          {zipcodeValid}
+                        </span>
                       )}
                     </div>
 
@@ -199,7 +202,7 @@ export function EditUser() {
                       <Input
                         id="address"
                         type="text"
-                        {...register('address')}
+                        {...register("address")}
                         error={errors?.address?.message}
                       />
                     </div>
@@ -213,7 +216,7 @@ export function EditUser() {
                       <Input
                         id="neighborhood"
                         type="text"
-                        {...register('neighborhood')}
+                        {...register("neighborhood")}
                         error={errors?.neighborhood?.message}
                       />
                     </div>
@@ -225,7 +228,7 @@ export function EditUser() {
                       <Input
                         id="number"
                         type="number"
-                        {...register('number')}
+                        {...register("number")}
                         error={errors?.number?.message}
                       />
                     </div>
@@ -239,7 +242,7 @@ export function EditUser() {
                       <Input
                         id="city"
                         type="text"
-                        {...register('city')}
+                        {...register("city")}
                         error={errors?.city?.message}
                       />
                     </div>
@@ -253,10 +256,7 @@ export function EditUser() {
                         name="state"
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
-                          <Select
-                            onValueChange={onChange}
-                            value={value ?? ""}
-                          >
+                          <Select onValueChange={onChange} value={value ?? ""}>
                             <SelectTrigger
                               id="state"
                               aria-label="Selecione o estado"
@@ -265,13 +265,20 @@ export function EditUser() {
                             </SelectTrigger>
                             <SelectContent>
                               {STATES.map((level: LevelProps) => (
-                                <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                                <SelectItem
+                                  key={level.value}
+                                  value={level.value}
+                                >
+                                  {level.label}
+                                </SelectItem>
                               ))}
                             </SelectContent>
 
                             {errors?.state?.message && (
                               <div className="flex gap-2 items-center text-red-700">
-                                <span className="text-xs">{errors?.state?.message}</span>
+                                <span className="text-xs">
+                                  {errors?.state?.message}
+                                </span>
                               </div>
                             )}
                           </Select>
@@ -286,7 +293,7 @@ export function EditUser() {
                       id="site"
                       type="text"
                       className="w-full"
-                      {...register('site')}
+                      {...register("site")}
                       error={errors?.site?.message}
                     />
                   </div>
@@ -297,7 +304,7 @@ export function EditUser() {
                       id="email"
                       type="text"
                       className="w-full"
-                      {...register('email')}
+                      {...register("email")}
                       error={errors?.email?.message}
                     />
                   </div>
@@ -308,7 +315,7 @@ export function EditUser() {
                       id="password"
                       type="password"
                       className="w-full"
-                      {...register('password')}
+                      {...register("password")}
                       error={errors?.password?.message}
                     />
                   </div>
@@ -328,10 +335,7 @@ export function EditUser() {
                       name="level"
                       defaultValue=""
                       render={({ field: { onChange, value } }) => (
-                        <Select
-                          onValueChange={onChange}
-                          value={value}
-                        >
+                        <Select onValueChange={onChange} value={value}>
                           <SelectTrigger
                             id="nivel"
                             aria-label="Selecione o nível"
@@ -340,13 +344,17 @@ export function EditUser() {
                           </SelectTrigger>
                           <SelectContent>
                             {LEVELS.map((level: LevelProps) => (
-                              <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                              <SelectItem key={level.value} value={level.value}>
+                                {level.label}
+                              </SelectItem>
                             ))}
                           </SelectContent>
 
                           {errors?.level?.message && (
                             <div className="flex gap-2 items-center text-red-700">
-                              <span className="text-xs">{errors?.level?.message}</span>
+                              <span className="text-xs">
+                                {errors?.level?.message}
+                              </span>
                             </div>
                           )}
                         </Select>
@@ -367,5 +375,5 @@ export function EditUser() {
         </form>
       </div>
     </div>
-  )
+  );
 }

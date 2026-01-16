@@ -6,7 +6,13 @@ import { Button } from "@/view/components/ui/button";
 import { Card, CardContent } from "@/view/components/ui/card";
 import { Input } from "@/view/components/ui/input";
 import { Label } from "@/view/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/view/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/view/components/ui/select";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -22,7 +28,7 @@ export function NewUser() {
     plans,
     showPlanField,
     isPendingPlan,
-    isLoading
+    isLoading,
   } = useNewUserController();
 
   return (
@@ -56,7 +62,7 @@ export function NewUser() {
                         id="name"
                         type="text"
                         className="w-full"
-                        {...register('corporate_name')}
+                        {...register("corporate_name")}
                         error={errors?.corporate_name?.message}
                       />
                     </div>
@@ -67,7 +73,7 @@ export function NewUser() {
                         id="company"
                         type="text"
                         className="w-full"
-                        {...register('fantasy_name')}
+                        {...register("fantasy_name")}
                         error={errors?.fantasy_name?.message}
                       />
                     </div>
@@ -80,7 +86,7 @@ export function NewUser() {
                         id="responsible"
                         type="text"
                         className="w-full"
-                        {...register('responsible')}
+                        {...register("responsible")}
                         error={errors?.responsible?.message}
                       />
                     </div>
@@ -139,19 +145,14 @@ export function NewUser() {
                     </div>
 
                     <div className="grid gap-3">
-                      <Label htmlFor="company">Celular</Label>
-                      <Controller
-                        control={control}
-                        name="cellphone"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                          <InputMask
-                            mask="(__) _____-____"
-                            value={value}
-                            onChange={onChange}
-                            error={errors?.cellphone?.message}
-                          />
-                        )}
+                      <Label htmlFor="cellphone">Celular</Label>
+                      <Input
+                        id="cellphone"
+                        type="text"
+                        className="w-full"
+                        {...register("cellphone")}
+                        error={errors?.cellphone?.message}
+                        placeholder="Ex.: 5541999999999"
                       />
                     </div>
                   </div>
@@ -174,7 +175,9 @@ export function NewUser() {
                         )}
                       />
                       {zipcodeValid && (
-                        <span className="flex gap-2 items-center text-red-700 text-xs">{zipcodeValid}</span>
+                        <span className="flex gap-2 items-center text-red-700 text-xs">
+                          {zipcodeValid}
+                        </span>
                       )}
                     </div>
 
@@ -185,7 +188,7 @@ export function NewUser() {
                       <Input
                         id="address"
                         type="text"
-                        {...register('address')}
+                        {...register("address")}
                         error={errors?.address?.message}
                       />
                     </div>
@@ -199,7 +202,7 @@ export function NewUser() {
                       <Input
                         id="neighborhood"
                         type="text"
-                        {...register('neighborhood')}
+                        {...register("neighborhood")}
                         error={errors?.neighborhood?.message}
                       />
                     </div>
@@ -211,7 +214,7 @@ export function NewUser() {
                       <Input
                         id="number"
                         type="number"
-                        {...register('number')}
+                        {...register("number")}
                         error={errors?.number?.message}
                       />
                     </div>
@@ -225,7 +228,7 @@ export function NewUser() {
                       <Input
                         id="city"
                         type="text"
-                        {...register('city')}
+                        {...register("city")}
                         error={errors?.city?.message}
                       />
                     </div>
@@ -239,10 +242,7 @@ export function NewUser() {
                         name="state"
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
-                          <Select
-                            onValueChange={onChange}
-                            value={value || ""}
-                          >
+                          <Select onValueChange={onChange} value={value || ""}>
                             <SelectTrigger
                               id="state"
                               aria-label="Selecione o estado"
@@ -251,13 +251,20 @@ export function NewUser() {
                             </SelectTrigger>
                             <SelectContent>
                               {STATES.map((level: LevelProps) => (
-                                <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                                <SelectItem
+                                  key={level.value}
+                                  value={level.value}
+                                >
+                                  {level.label}
+                                </SelectItem>
                               ))}
                             </SelectContent>
 
                             {errors?.state?.message && (
                               <div className="flex gap-2 items-center text-red-700">
-                                <span className="text-xs">{errors?.state?.message}</span>
+                                <span className="text-xs">
+                                  {errors?.state?.message}
+                                </span>
                               </div>
                             )}
                           </Select>
@@ -272,7 +279,7 @@ export function NewUser() {
                       id="site"
                       type="text"
                       className="w-full"
-                      {...register('site')}
+                      {...register("site")}
                       error={errors?.site?.message}
                     />
                   </div>
@@ -283,7 +290,7 @@ export function NewUser() {
                       id="email"
                       type="text"
                       className="w-full"
-                      {...register('email')}
+                      {...register("email")}
                       error={errors?.email?.message}
                     />
                   </div>
@@ -294,7 +301,7 @@ export function NewUser() {
                       id="password"
                       type="password"
                       className="w-full"
-                      {...register('password')}
+                      {...register("password")}
                       error={errors?.password?.message}
                     />
                   </div>
@@ -314,10 +321,7 @@ export function NewUser() {
                       name="level"
                       defaultValue=""
                       render={({ field: { onChange, value } }) => (
-                        <Select
-                          onValueChange={onChange}
-                          value={value}
-                        >
+                        <Select onValueChange={onChange} value={value}>
                           <SelectTrigger
                             id="nivel"
                             aria-label="Selecione o nível"
@@ -326,13 +330,17 @@ export function NewUser() {
                           </SelectTrigger>
                           <SelectContent>
                             {LEVELS.map((level: LevelProps) => (
-                              <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                              <SelectItem key={level.value} value={level.value}>
+                                {level.label}
+                              </SelectItem>
                             ))}
                           </SelectContent>
 
                           {errors?.level?.message && (
                             <div className="flex gap-2 items-center text-red-700">
-                              <span className="text-xs">{errors?.level?.message}</span>
+                              <span className="text-xs">
+                                {errors?.level?.message}
+                              </span>
                             </div>
                           )}
                         </Select>
@@ -347,14 +355,8 @@ export function NewUser() {
                       name="arts"
                       defaultValue="Não"
                       render={({ field: { onChange, value } }) => (
-                        <Select
-                          onValueChange={onChange}
-                          value={value}
-                        >
-                          <SelectTrigger
-                            id="arts"
-                            aria-label="Selecione..."
-                          >
+                        <Select onValueChange={onChange} value={value}>
+                          <SelectTrigger id="arts" aria-label="Selecione...">
                             <SelectValue placeholder="Selecione..." />
                           </SelectTrigger>
                           <SelectContent>
@@ -364,7 +366,9 @@ export function NewUser() {
 
                           {errors?.arts?.message && (
                             <div className="flex gap-2 items-center text-red-700">
-                              <span className="text-xs">{errors?.arts?.message}</span>
+                              <span className="text-xs">
+                                {errors?.arts?.message}
+                              </span>
                             </div>
                           )}
                         </Select>
@@ -379,10 +383,7 @@ export function NewUser() {
                       name="myagency"
                       defaultValue="Não"
                       render={({ field: { onChange, value } }) => (
-                        <Select
-                          onValueChange={onChange}
-                          value={value}
-                        >
+                        <Select onValueChange={onChange} value={value}>
                           <SelectTrigger
                             id="myagency"
                             aria-label="Selecione..."
@@ -396,7 +397,9 @@ export function NewUser() {
 
                           {errors?.myagency?.message && (
                             <div className="flex gap-2 items-center text-red-700">
-                              <span className="text-xs">{errors?.myagency?.message}</span>
+                              <span className="text-xs">
+                                {errors?.myagency?.message}
+                              </span>
                             </div>
                           )}
                         </Select>
@@ -418,10 +421,7 @@ export function NewUser() {
                             name="plan"
                             defaultValue=""
                             render={({ field: { onChange, value } }) => (
-                              <Select
-                                onValueChange={onChange}
-                                value={value}
-                              >
+                              <Select onValueChange={onChange} value={value}>
                                 <SelectTrigger
                                   id="plan"
                                   aria-label="Selecione..."
@@ -430,13 +430,17 @@ export function NewUser() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   {plans?.map((plan) => (
-                                    <SelectItem key={plan.id} value={plan.id}>{plan.name}</SelectItem>
+                                    <SelectItem key={plan.id} value={plan.id}>
+                                      {plan.name}
+                                    </SelectItem>
                                   ))}
                                 </SelectContent>
 
                                 {errors?.plan?.message && (
                                   <div className="flex gap-2 items-center text-red-700">
-                                    <span className="text-xs">{errors?.plan?.message}</span>
+                                    <span className="text-xs">
+                                      {errors?.plan?.message}
+                                    </span>
                                   </div>
                                 )}
                               </Select>
@@ -460,5 +464,5 @@ export function NewUser() {
         </form>
       </div>
     </div>
-  )
+  );
 }

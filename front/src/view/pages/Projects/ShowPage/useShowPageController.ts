@@ -16,11 +16,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
-  content: z.string().min(1, 'Comentário é obrigatório'),
+  content: z.string().min(1, "Comentário é obrigatório"),
   files: z.array(z.any()).optional().nullable(),
 });
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 export function useShowPageController() {
   const { id, idPage } = useParams();
@@ -29,10 +29,12 @@ export function useShowPageController() {
   const navigate = useNavigate();
   const [openModalComment, setOpenModalComment] = useState(false);
   const [sendComment, setSendComment] = useState(false);
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null,
+  );
   const [openCommentMessageModal, setOpenCommentMessageModal] = useState(false);
-  const [commentId, setCommentId] = useState('');
-  const [userCommentId, setUserCommentId] = useState('');
+  const [commentId, setCommentId] = useState("");
+  const [userCommentId, setUserCommentId] = useState("");
   const [sendWhats, setSendWhats] = useState(false);
 
   const {
@@ -40,27 +42,27 @@ export function useShowPageController() {
     reset,
     handleSubmit: hookFormSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
 
   const { data: jobData, isPending } = useQuery({
-    queryKey: ['viewjob', idPage],
+    queryKey: ["viewjob", idPage],
     staleTime: 0,
     queryFn: async () => {
       try {
         const response = await jobsService.getById(idPage!);
         return response;
       } catch (error) {
-        toast.error('Página não encontrada');
+        toast.error("Página não encontrada");
         navigate("/");
       }
-    }
+    },
   });
 
   const { data: dataMessage, isLoading } = useQuery({
-    queryKey: ['messages'],
+    queryKey: ["messages"],
     staleTime: 0,
     queryFn: async () => {
       const response = await messageService.getAll();
@@ -69,46 +71,41 @@ export function useShowPageController() {
     },
   });
 
-  const {
-    isPending: isLoadingCreateComment,
-    mutateAsync
-  } = useMutation({
+  const { isPending: isLoadingCreateComment, mutateAsync } = useMutation({
     mutationFn: async (data: CommentsParams) => {
       return commentsService.create(data);
-    }
+    },
   });
 
   const {
     isPending: isLoadingDeleteComment,
-    mutateAsync: mutateAsyncDeleteComment
+    mutateAsync: mutateAsyncDeleteComment,
   } = useMutation({
     mutationFn: async (id: string) => {
       return commentsService.remove(id);
-    }
+    },
   });
 
-  const {
-    mutateAsync: mutateChangeStatus,
-    isPending: isPendingChangeStatus
-  } = useMutation({
-    mutationFn: async (data: UpdateJobParams) => {
-      return jobsService.update(data);
-    }
-  });
+  const { mutateAsync: mutateChangeStatus, isPending: isPendingChangeStatus } =
+    useMutation({
+      mutationFn: async (data: UpdateJobParams) => {
+        return jobsService.update(data);
+      },
+    });
 
-  const {
-    mutateAsync: mutateSendApproved,
-    isPending: isPendingSendApproved
-  } = useMutation({
-    mutationFn: async (data: SendApprovedParams) => {
-      return jobsService.sendApproved(data);
-    }
-  });
+  const { mutateAsync: mutateSendApproved, isPending: isPendingSendApproved } =
+    useMutation({
+      mutationFn: async (data: SendApprovedParams) => {
+        return jobsService.sendApproved(data);
+      },
+    });
 
   const handleSelectMessage = (messageId: string) => {
     setSelectedMessageId(messageId);
 
-    const selectedMessage = dataMessage?.data.find(msg => msg.id === messageId);
+    const selectedMessage = dataMessage?.data.find(
+      (msg) => msg.id === messageId,
+    );
     if (selectedMessage) {
       setValue("content", selectedMessage.content);
     }
@@ -133,7 +130,7 @@ export function useShowPageController() {
   function openCommentMessageModalFn(commentId: string, userCommentId: string) {
     setCommentId(commentId);
     setUserCommentId(userCommentId);
-    queryClient.invalidateQueries({ queryKey: ['comment', commentId] });
+    queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
 
     setOpenCommentMessageModal(true);
   }
@@ -147,23 +144,26 @@ export function useShowPageController() {
     try {
       await mutateChangeStatus({
         id: idPage!,
-        status: "approved"
+        status: "approved",
       });
 
       const emailData = {
-        email: 'marcelo@inovasite.com',
-        cliente: jobData?.data.project?.user.corporate_name || jobData?.data.project?.user.fantasy_name || "",
+        email: "marcelo@inovasite.com",
+        cliente:
+          jobData?.data.project?.user.corporate_name ||
+          jobData?.data.project?.user.fantasy_name ||
+          "",
         nomeprojeto: jobData!.data.project!.project_name,
         tipoprojeto: jobData!.data.project!.type,
-        pagina: jobData!.data.page
+        pagina: jobData!.data.page,
       };
 
       await mutateSendApproved(emailData);
 
-      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
-      toast.success('Página aprovada!');
+      queryClient.invalidateQueries({ queryKey: ["viewjob"] });
+      toast.success("Página aprovada!");
     } catch (error) {
-      toast.error('Erro ao alterar status!');
+      toast.error("Erro ao alterar status!");
     }
   }
 
@@ -171,13 +171,13 @@ export function useShowPageController() {
     try {
       await mutateChangeStatus({
         id: idPage!,
-        status: "approving"
+        status: "approving",
       });
 
-      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
-      toast.success('Enviado para aprovação!');
+      queryClient.invalidateQueries({ queryKey: ["viewjob"] });
+      toast.success("Enviado para aprovação!");
     } catch (error) {
-      toast.error('Erro ao alterar status!');
+      toast.error("Erro ao alterar status!");
     }
   }
 
@@ -185,22 +185,22 @@ export function useShowPageController() {
     try {
       await mutateChangeStatus({
         id: idPage!,
-        status: "pending"
+        status: "pending",
       });
-      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
-      toast.success('Página reaberta com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ["viewjob"] });
+      toast.success("Página reaberta com sucesso!");
     } catch (error) {
-      toast.error('Erro ao alterar status!');
+      toast.error("Erro ao alterar status!");
     }
   }
 
   async function deleteComment(commentId: string) {
     try {
       await mutateAsyncDeleteComment(commentId);
-      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
-      toast.success('Comentário deletado com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ["viewjob"] });
+      toast.success("Comentário deletado com sucesso!");
     } catch (error) {
-      toast.error('Erro ao deletar o comentário!');
+      toast.error("Erro ao deletar o comentário!");
     }
   }
 
@@ -209,32 +209,32 @@ export function useShowPageController() {
       setSendWhats(true);
 
       const whatsapp = jobData?.data.project?.user.cellphone;
-      const numberFormated = whatsapp?.replace(/\D/g, '');
+      const numberFormated = whatsapp?.replace(/\D/g, "");
 
       let msg = `⚠️ Olá, seu site tem uma nova atualização!\n`;
-      msg += '🔗 Clique no link abaixo para conferir:\n';
+      msg += "🔗 Clique no link abaixo para conferir:\n";
       msg += `${import.meta.env.VITE_PROJECT_URL}/projetos/detalhes/${id}/page/${idPage}`;
 
       const res = await axios.post(
-        'https://dropestore.com/wp-json/wdm/v1/send/text',
+        "https://dropestore.com/wp-json/wdm/v1/send/text",
         {
-          number: `55${numberFormated}`,
-          text: msg
+          number: `${numberFormated}`,
+          text: msg,
         },
         {
           headers: {
-            Accept: 'application/json',
+            Accept: "application/json",
             token: import.meta.env.VITE_TOKEN_WHATSAPP,
-            'Content-Type': 'application/json'
-          }
-        }
+            "Content-Type": "application/json",
+          },
+        },
       );
 
       console.log(res.data);
-      toast.success('WhatsApp enviado com sucesso!');
+      toast.success("WhatsApp enviado com sucesso!");
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao enviar WhatsApp');
+      toast.error("Erro ao enviar WhatsApp");
     } finally {
       setSendWhats(false);
     }
@@ -242,12 +242,12 @@ export function useShowPageController() {
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
-      if (user?.data.level === 'CLIENTE') {
+      if (user?.data.level === "CLIENTE") {
         await mutateChangeStatus({
           id: idPage!,
-          status: "changing"
+          status: "changing",
         });
-        queryClient.invalidateQueries({ queryKey: ['viewjob'] });
+        queryClient.invalidateQueries({ queryKey: ["viewjob"] });
         setSendComment(true);
         reset();
       }
@@ -255,7 +255,7 @@ export function useShowPageController() {
       await mutateAsync({
         ...data,
         job_id: idPage!,
-        user_id: user!.data.id
+        user_id: user!.data.id,
       });
 
       // TODO: ENVIAR MENSAGEM NO WHATSAPP
@@ -266,16 +266,16 @@ export function useShowPageController() {
       //   `
       // })
 
-      queryClient.invalidateQueries({ queryKey: ['viewjob'] });
+      queryClient.invalidateQueries({ queryKey: ["viewjob"] });
       setSendComment(true);
-      toast.success('Comentário cadastrado com sucesso!');
+      toast.success("Comentário cadastrado com sucesso!");
       // if (user?.data.level === 'ADMIN') {
       //   openCommentModal();
       // }
       reset();
       // navigate(0);
     } catch (error) {
-      toast.error('Erro ao cadastrar o comentário!');
+      toast.error("Erro ao cadastrar o comentário!");
     }
   });
 
@@ -312,6 +312,6 @@ export function useShowPageController() {
     deleteComment,
     closeCommentMessageModal,
     openCommentMessageModalFn,
-    sendWhatsAppNotification
-  }
+    sendWhatsAppNotification,
+  };
 }
