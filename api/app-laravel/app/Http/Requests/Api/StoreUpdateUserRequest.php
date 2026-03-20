@@ -36,6 +36,9 @@ class StoreUpdateUserRequest extends FormRequest
             ],
             'cnpj' => [
                 'nullable',
+                'min:3',
+                'max:255',
+                Rule::unique('users')->ignore($this->segment(4))
             ],
             'fantasy_name' => [
                 'required',
@@ -90,7 +93,9 @@ class StoreUpdateUserRequest extends FormRequest
             'cellphone.min'         => 'O campo celular precisa ter no mínimo 13 caracteres.',
             'email.required'        => 'O campo email é de preenchimento obrigatório.',
             'email.email'           => 'O e-mail informato tem o formato inválido.',
-            'email.unique'          => 'O e-mail informato já está sendo usado.',
+            'email.unique'          => 'O e-mail informado já está sendo usado.',
+            'cpf.unique'            => 'O CPF informado já está sendo usado.',
+            'cnpj.unique'           => 'O CNPJ informado já está sendo usado.',
             'password.required'     => 'O campo senha é de preenchimento obrigatório.',
             'password.min'          => 'A senha precisa ter no minimo 6 caracteres.',
         ];

@@ -231,7 +231,7 @@ export function useNewUserController() {
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error) && error.response) {
-        toast.error(`Erro ao cadastrar o usuário: ${error.response.data.message || 'Erro desconhecido'}`);
+        toast.error(`Erro: ${error.response.data.message || 'Erro desconhecido'}`);
       } else {
         toast.error('Erro ao cadastrar o usuário');
       }

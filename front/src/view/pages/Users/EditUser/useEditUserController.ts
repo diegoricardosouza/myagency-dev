@@ -160,7 +160,12 @@ export function useEditUserController() {
       // queryClient.invalidateQueries({ queryKey: ['editUser'] });
       toast.success('Usuário atualizado com sucesso!');
     } catch (error) {
-      toast.error('Erro ao cadastrar o usuário');
+      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(`Erro: ${error.response.data.message || 'Erro desconhecido'}`);
+      } else {
+        toast.error('Erro ao cadastrar o usuário');
+      }
     }
   });
 
