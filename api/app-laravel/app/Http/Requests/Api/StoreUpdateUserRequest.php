@@ -104,11 +104,14 @@ class StoreUpdateUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'     => 'O campo email é de preenchimento obrigatório.',
-            'email.email'        => 'O e-mail informato tem o formato inválido.',
-            'email.unique'       => 'O e-mail informato já está sendo usado.',
-            'password.required'  => 'O campo senha é de preenchimento obrigatório.',
-            'password.min'       => 'A senha precisa ter no minimo 6 caracteres.',
+            'name.required'         => 'O campo nome é de preenchimento obrigatório.',
+            'fantasy_name.required' => 'O campo nome fantasia é de preenchimento obrigatório.',
+            'level.required'        => 'O campo nível é de preenchimento obrigatório.',
+            'email.required'        => 'O campo email é de preenchimento obrigatório.',
+            'email.email'           => 'O e-mail informato tem o formato inválido.',
+            'email.unique'          => 'O e-mail informato já está sendo usado.',
+            'password.required'     => 'O campo senha é de preenchimento obrigatório.',
+            'password.min'          => 'A senha precisa ter no minimo 6 caracteres.',
         ];
     }
 }
