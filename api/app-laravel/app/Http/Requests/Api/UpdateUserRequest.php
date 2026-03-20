@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreUpdateUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -66,14 +66,14 @@ class StoreUpdateUserRequest extends FormRequest
             'state' => 'nullable',
             'number' => 'nullable',
             'phone' => 'nullable',
-            'site' => 'nullable',
             'cellphone' => [
                 'nullable',
                 'min:13',
                 'max:255',
             ],
+            'site' => 'nullable',
             'password' => [
-                'required',
+                'nullable',
                 'min:6',
                 'max:100',
             ],

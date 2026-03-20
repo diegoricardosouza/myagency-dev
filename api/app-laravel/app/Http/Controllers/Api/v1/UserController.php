@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreUpdateUserRequest;
+use App\Http\Requests\Api\UpdateUserRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Response;
@@ -62,8 +63,9 @@ class UserController extends Controller
     public function store(StoreUpdateUserRequest $request)
     {
         // $this->verifyUserLogged();
+        $data = $request->validated();
 
-        $user = $this->repository->createNew($request->all());
+        $user = $this->repository->createNew($data);
         return new UserResource($user);
     }
 
@@ -94,9 +96,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreUpdateUserRequest $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         $user = $this->repository->findById($id);
+        $data = $request->validated();
 
         if (!$user) {
             return response()->json([
@@ -104,7 +107,7 @@ class UserController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $this->repository->update($request->all(), $id);
+        $this->repository->update($data, $id);
 
         return new UserResource($user);
 
